@@ -1,3 +1,5 @@
+using Tether.CharacterSystems;
+using TileSystem;
 using UnityEngine;
 
 namespace Consystently.Essentials.Math
@@ -32,6 +34,49 @@ namespace Consystently.Essentials.Math
                 default:
                     return CubeCoordDirections.N;
             }
+        }
+
+        public static bool AttackReachable(this UnitController cc, TileController target)
+        {
+            Vector3Int from = cc.TileCoords;
+            bool tileWithinRange = target.tileCoordinate.HexGridDistance(from) <=
+                                   cc.GetData().CombatClass.DefaultAttackRange;
+            if (!tileWithinRange || target.UnitControllers.Count == 0)
+                return false;
+            bool targetContainsAlly = false;
+            foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
+            {
+                if (uc.GetData().Faction == Faction.Ally)
+                    targetContainsAlly = true;
+                break;
+            }
+            return !targetContainsAlly && tileWithinRange;
+        }
+
+        //currently no unique ranges for abilities. We can change this by designing a second diff. HexGridDistance function
+        public static bool AbilityReachable(this UnitController cc, AbilitySO ability, TileController target)
+        {
+            Vector3Int from = cc.TileCoords;
+            bool tileWithinRange = target.tileCoordinate.HexGridDistance(from) <= ability.Range;
+            if (!tileWithinRange)
+                return false;
+            bool targetContainsUnit = target.UnitControllers.Count > 0;
+            bool targetContainsAlly = false;
+            bool targetContainsEnemy = false;
+            foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
+            {
+                if (uc.GetData().Faction == Faction.Ally)
+                    targetContainsAlly = true;
+                else
+                {
+                    targetContainsEnemy = true;
+                    break;
+                }
+            }
+
+            return (targetContainsAlly && ability.HitsAllies) ||
+                   (!targetContainsUnit && ability.CanTargetEmptyTile) ||
+                   (targetContainsEnemy && ability.HitsEnemies);
         }
     }
 }

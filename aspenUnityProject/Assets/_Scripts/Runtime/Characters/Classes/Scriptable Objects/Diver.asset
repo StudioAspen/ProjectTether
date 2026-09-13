@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatClassSO
   defaultAttackElements: 03000000
   className: Diver
+  defaultAttackRange: 1
   classDescription: does stuff

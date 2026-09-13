@@ -34,10 +34,14 @@ public class AbilitySO : ScriptableObject
    [SerializeField] private bool hitsAllies;
    public bool HitsAllies => hitsAllies;
 
+
+   [SerializeField] private bool canTargetEmptyTile;
+   public bool CanTargetEmptyTile => canTargetEmptyTile;
+
    //not useful in MVP. This is for when we decide to have attacks affect tiles.
    //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 
    /*
-   [SerializeField] private TileSO tileEffect; 
+   [SerializeField] private TileSO tileEffect;
    public TileSO TileEffect => tileEffect;
    */
 

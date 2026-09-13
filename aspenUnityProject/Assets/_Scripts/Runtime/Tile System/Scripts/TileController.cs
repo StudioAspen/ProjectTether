@@ -86,9 +86,9 @@ namespace TileSystem
         }
 
         //currently, units can only move to adjacent tiles 
-        public bool IsMoveable(Vector3Int from)
+        public bool IsMoveable(Vector3Int from, int range)
         {
-            if (tileCoordinate == from || UnitControllers.Count >= MaxUnits || from.HexGridDistance(tileCoordinate) > 1)
+            if (tileCoordinate == from || UnitControllers.Count >= MaxUnits || from.HexGridDistance(tileCoordinate) > range)
                 return false;
             foreach (UnitController unit in UnitControllers)
             {

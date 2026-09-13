@@ -14,7 +14,6 @@ namespace Consystently.Essentials
 
         public override void Enter()
         {
-            Debug.Log("Enabled again");
             CombatManager.Input.Enable();
             CombatManager.Input.TileSelect.Confirm.performed += CombatManager.SelectTile;
             CombatManager.Input.TileSelect.Exit.performed += ((PlayerState)BattleState).PopState;
@@ -36,12 +35,10 @@ namespace Consystently.Essentials
         {
             Vector2 move = context.ReadValue<Vector2>();
             CombatManager.MoveTileSelector(move.GetDirection());
-            Debug.Log("makes no sense");
         }
 
         public override void Exit()
         {
-            Debug.Log("This should be disabled");
             CombatManager.Input.TileSelect.Confirm.performed -= CombatManager.SelectTile;
             CombatManager.Input.TileSelect.Exit.performed -= ((PlayerState)BattleState).PopState;
             CombatManager.Input.TileSelect.Move.started -= OnMove;

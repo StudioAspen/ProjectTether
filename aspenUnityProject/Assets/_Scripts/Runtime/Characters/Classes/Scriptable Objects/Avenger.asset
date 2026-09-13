@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatClassSO
   defaultAttackElements: 070000000100000003000000
   className: " \u5FA9\u8B90\u8005  "
+  defaultAttackRange: 1
   classDescription: placeholder class for enemies

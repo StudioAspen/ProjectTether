@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 
-//TODO: disable move button by listening to unit movement
+//TODO: disable move button by listening to unit movement (button just needs to be disabled)
 public class CombatUI : MonoBehaviour
 {
     [SerializeField] private GameObject playerActionsContainer;
@@ -57,7 +57,6 @@ public class CombatUI : MonoBehaviour
 
     private void HandleUserActions(BattleState bs, UnitController unitController)
     {
-        Debug.Log("yo where is the ui");
         abilitiesPanel.SetActive(false);
         cursor.SetActive(false);
         if (bs is PlayerState)

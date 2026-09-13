@@ -86,5 +86,10 @@ public abstract class Unit {
        return CombatClass.DefaultAttackElements; 
    }
 
+   public int DefaultAttackRange()
+   {
+       return CombatClass.DefaultAttackRange;
+   }
+
 
 }

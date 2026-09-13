@@ -17,6 +17,7 @@ namespace Consystently.Essentials
     public class CombatManager : MonoBehaviour
     {
         private const float ArbitraryOffset = 10;
+        private const int TileNum = 19;
         private UnitDataSO[,] initializerData;
         
         //no use in mvp
@@ -24,7 +25,7 @@ namespace Consystently.Essentials
         private Encounter encounter; 
         [SerializeField] private Transform tilesParent;
         public InputSystem_Actions Input { get; private set; }
-        private readonly TileController[] tileControllers = new TileController[19];
+        private readonly TileController[] tileControllers = new TileController[TileNum];
 
         #region directions
         private readonly Vector3Int[] directions = new Vector3Int[] {
@@ -36,24 +37,23 @@ namespace Consystently.Essentials
             new Vector3Int(1, -1, 0) //NE
         };
         #endregion
-        
-        //forgot why I made this an int 
         private Dictionary<Vector3Int, int> TileCubeCoords { get; set; }= new Dictionary<Vector3Int, int>();
         
         //make sure it has references and not copies of the objects, so changes are reflected
-        //TODO: update to match the feature mentioned in the doc 
+        //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class
         public List<UnitController> TurnOrder { get; private set; }= new List<UnitController>();
         public List<UnitController> DeadUnits {get; private set;}= new List<UnitController>();
         
         //TODO: add an enum for this if we ever have more than just enemy/ally turns 
         private readonly BattleState[] phases = new BattleState[2];
         private BattleState currentState;  
+        [SerializeField] private RangeDisplay rangeDisplay; 
         
         #region miscStateManagementVariables
         
         //need totals for defeat/win checks
-        public int TotalAllies { get; private set; }
-        public int TotalEnemies { get; private set; }
+        private int TotalAllies { get; set; }
+        private int TotalEnemies { get; set; }
         public int CurrentUnitTurn { get; private set; }
         private Vector3Int SelectedTile { get; set; }
         public Vector3Int CurrentTile { get; private set; } = new Vector3Int(0, 0, 0);
@@ -61,9 +61,8 @@ namespace Consystently.Essentials
         public int ActionSelection { get; private set; }
         
         #endregion
-         
+
         //TODO: sub to each unit themselves 
-        //use arrays for unitsDead because damage is dealt to entire tiles at a time. have whatever handles animations process unit deaths by iterating
         //TODO: implement the proper response to unit death. For each unit that dies, add them to an array. 
         public static event Action<Unit[]> unitsDead;
         //animation/tile update handled per unit at the instant they move. Perhaps also camera class  
@@ -86,12 +85,13 @@ namespace Consystently.Essentials
             GenerateCoords();
             CreateObjects(); 
             TurnOrder.Sort((a,b) => b.GetData().Speed.CompareTo(a.GetData().Speed));
+            rangeDisplay.Initialize(tileControllers);
+            
             phases[0] = new PlayerState(this);
             phases[1] = new EnemyState(this);
             CombatUI.PlayerAction += HandleAction;
             CombatUI.PlayerSelectiveAction += HandleAction;
             ChangeTurn(); 
-            ValidateData();
         }
 
         private void OnDisable()
@@ -108,7 +108,6 @@ namespace Consystently.Essentials
             }
         }
 
-        //TODO: possibly remove updates from state interfaces
         void Update()
         {
  //          currentState?.Update(); 
@@ -123,8 +122,6 @@ namespace Consystently.Essentials
             } 
         }
         
-        //TODO: subscribe to units 
-
         #region setupRelatedStuff
 
 
@@ -168,7 +165,6 @@ namespace Consystently.Essentials
         //coords are for determining proper tile selection when the user moves across the field 
         //3r(r+1)+1=tiles formula for generic implementation if additional rings are added
         //for reference, tile 18 should be (2,0,-2) 
-        //We could possibly merge the createObjects with this function, but it may be unreadable
         void GenerateCoords()
         {
             int tile = 0;
@@ -226,7 +222,6 @@ namespace Consystently.Essentials
         
         //dead are kept because lazy deletion. Also, there may or may not be a revive feature, so their order being kept is good.
         //I am also not sure if deletion is better because deletion would require searching and result in the entire list shifting. 
-        //TODO: this is currently different from the gcc doc's initiative proposal. Change this to match the gcc later 
         private void ChangeTurn()
         {
             if (DeadUnits.Count >= (TotalAllies + TotalEnemies))
@@ -273,25 +268,28 @@ namespace Consystently.Essentials
         private void HandleAction(CombatActions action)
         {
             ReceivedAction = action;
+            UnitController currUnit = TurnOrder[CurrentUnitTurn];
             Debug.Log("hello 2");
             switch(action)
             {
                case CombatActions.Attack:
                    currentState.PushState();
-                   break;
+                   rangeDisplay.DisplayAttackRange(tileControllers, currUnit);
+                   return;
                case CombatActions.Defend:
-                   //unit defend function 
+                   //defend function
                    FinishSelection();
-                   break;
+                   return;
                case CombatActions.Move:
                    currentState.PushState();
-                   break;
+                   rangeDisplay.DisplayMoveRange(currUnit.TileCoords, tileControllers, 1); //currently only adjacent tiles
+                   return;
               case CombatActions.View:
-                    currentState.PushState();                   
-                   break;
+                    currentState.PushState();
+                    return;
                 default:
                     Debug.Log($"Unknown action: {action}");
-                    break;
+                    return;
             }
         }
 
@@ -300,24 +298,25 @@ namespace Consystently.Essentials
         {
             ReceivedAction = action;
             ActionSelection = selection;
+            UnitController currUnit = TurnOrder[CurrentUnitTurn];
             switch (action)
             {
                case CombatActions.Ability:
                    currentState.PushState();
-                   break;
+                   rangeDisplay.DisplayAbilityRange(tileControllers, currUnit, currUnit.GetData().Moves[selection]);
+                   return;
                case CombatActions.Item:
                    Debug.Log($"unknown action: {action}" );
-                   break;
+                   return;
             }
+//            rangeDisplay.DisplayRange();
         }
         
-
         private TileController GetCurrTileController()
         {
             return tileControllers[TileCubeCoords[TurnOrder[CurrentUnitTurn].TileCoords]];
         }
         
-
         public void ResetCurrentTile()
         {
             SelectedTile = TurnOrder[CurrentUnitTurn].TileCoords;
@@ -341,10 +340,11 @@ namespace Consystently.Essentials
             switch (ReceivedAction)
             {
                case CombatActions.Attack:
-                   HandleSelectAttack(currentUnit);
-                  break;
+                   if (SelectedTile != currentUnit.TileCoords) 
+                       HandleSelectAttack(currentUnit);
+                   break;
                case CombatActions.Move:
-                   if (selectedTileController.IsMoveable(currentUnit.TileCoords) && !currentUnit.HasMoved)
+                   if (selectedTileController.IsMoveable(currentUnit.TileCoords,1) && !currentUnit.HasMoved)
                       HandleSelectMove(selectedTileController, currentUnit); 
                    return;
                case CombatActions.Ability:
@@ -356,17 +356,14 @@ namespace Consystently.Essentials
                    Debug.Log("Unknown action");
                    break;
             }
-            FinishSelection();
         }
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
-            if (SelectedTile != currentUnit.TileCoords)
-            {
-                foreach (UnitController enemy in GetCurrTileController().UnitControllers) 
-                    CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);  
-                FinishSelection();
-            } 
+            foreach (UnitController enemy in GetCurrTileController().UnitControllers) 
+                CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);  
+            rangeDisplay.HideRange();
+            FinishSelection();
         }
         
         private void HandleSelectMove(TileController selectedTileController, UnitController currentUnit)
@@ -374,8 +371,10 @@ namespace Consystently.Essentials
             selectedTileController.AddUnit(GetCurrTileController().RemoveUnit(currentUnit));
             currentUnit.TryMove(selectedTileController.Position(),selectedTileController.tileCoordinate);
             selectedTileController.RepositionUnits(ArbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
+            rangeDisplay.HideRange();
             RedoSelection();
         }
+        
 
         private void UnitHasMoved(UnitController unitController)
         {
@@ -383,8 +382,7 @@ namespace Consystently.Essentials
             unitMoved?.Invoke(unitController);
         }
 
-
-        public void FinishSelection()
+        private void FinishSelection()
         { 
            ChangeTurn();
            ResetCurrentTile();
@@ -393,12 +391,11 @@ namespace Consystently.Essentials
 
         public void RedoSelection()
         {
+            rangeDisplay.HideRange();
             ResetCurrentTile();
             currentState.Exit();
             battlePhaseChanged?.Invoke(currentState, TurnOrder[CurrentUnitTurn]);
         }
-
-
 
     }
 }

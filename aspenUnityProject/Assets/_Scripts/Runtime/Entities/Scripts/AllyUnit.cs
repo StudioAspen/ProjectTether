@@ -46,6 +46,12 @@ public class AllyUnit : Unit
         OnDefend?.Invoke(this);
     }
 
+    public override void EndDefend()
+    {
+        IsBlocking = false;
+        //new event action here for end defend animation
+    }
+
     //TODO: 
     //redesign current xp system into pure c# class before finishing this method
     //leveling up will modify every stat, and stat gain will be dependent on tier

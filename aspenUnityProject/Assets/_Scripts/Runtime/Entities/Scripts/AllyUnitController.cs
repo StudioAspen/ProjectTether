@@ -50,6 +50,7 @@ public class AllyUnitController : UnitController {
 
    public override void ResetValues()
    {
-      HasMoved = false; 
+      HasMoved = false;
+      stats.EndDefend();
    }
 }

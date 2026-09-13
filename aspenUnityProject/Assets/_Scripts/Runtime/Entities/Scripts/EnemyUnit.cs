@@ -25,6 +25,11 @@ public class EnemyUnit : Unit
       OnDefend?.Invoke(this);
    }
 
+   public override void EndDefend()
+   {
+      IsBlocking = false;
+   }
+
    //can modify depending on difficulty desired 
    public override void ChangeEnergyRemaining(int value)
    {

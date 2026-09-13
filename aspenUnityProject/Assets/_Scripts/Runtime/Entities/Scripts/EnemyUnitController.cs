@@ -50,6 +50,7 @@ namespace Tether.CharacterSystems
         public override void ResetValues()
         {
             HasMoved = false;
+            stats.EndDefend();
         }
 
  

@@ -28,8 +28,8 @@ public abstract class Unit {
     public int Precision {get; protected set;}
     public int Evasion {get; protected set;}
 
-    public float HealthRemaining { get; protected set; } 
-    public float EnergyRemaining { get; protected set; }
+    public int HealthRemaining { get; protected set; } 
+    public int EnergyRemaining { get; protected set; }
     
     public bool IsBlocking { get; protected set; } 
     public bool IsDead {get; protected set;}
@@ -67,6 +67,9 @@ public abstract class Unit {
        Luck = Formulae.CalculateStat(Stat.LCK, StatGrowths[Stat.LCK], Level);
        Precision = Formulae.CalculateStat(Stat.PRC, StatGrowths[Stat.PRC], Level);
 
+       HealthRemaining = Health;
+       EnergyRemaining = Energy;
+
        Moves = unit.Moves;
        CombatClass = unit.CombatClass;
    }
@@ -80,6 +83,7 @@ public abstract class Unit {
    public abstract void ChangeEnergyRemaining(int value);
 
    public abstract void Defend();
+   public abstract void EndDefend();
 
    public Element[] DefaultAttackTypes()
    {

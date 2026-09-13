@@ -47,10 +47,10 @@ public static class CombatFormulas
     }
 
     foreach (Element element in attackElements)
-      damage *= defender.GetData().Affinities[element].Multiplier();
+      damage *= defenderStats.Affinities[element].Multiplier();
 
     defenderStats.ChangeHealthRemaining(Mathf.CeilToInt(damage));
-    Debug.Log($"{attacker.name} dealt {Mathf.Ceil(damage)} damage to {defender.name}. {defender.name} has {defenderStats.Health} HP remaining.");
+    Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 
   }
 
   private static bool Crit(UnitController attacker, UnitController defender)

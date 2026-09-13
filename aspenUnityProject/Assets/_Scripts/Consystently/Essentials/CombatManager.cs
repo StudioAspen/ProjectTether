@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Debug = UnityEngine.Debug;
 
+//TODO: NEED COROUTINES when we are past the mvp(?)
 namespace Consystently.Essentials
 {
     /*will not be a traditional manager because it does not 
@@ -269,7 +270,6 @@ namespace Consystently.Essentials
         {
             ReceivedAction = action;
             UnitController currUnit = TurnOrder[CurrentUnitTurn];
-            Debug.Log("hello 2");
             switch(action)
             {
                case CombatActions.Attack:
@@ -277,7 +277,7 @@ namespace Consystently.Essentials
                    rangeDisplay.DisplayAttackRange(tileControllers, currUnit);
                    return;
                case CombatActions.Defend:
-                   //defend function
+                   currUnit.GetData().Defend();
                    FinishSelection();
                    return;
                case CombatActions.Move:
@@ -360,7 +360,7 @@ namespace Consystently.Essentials
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
-            foreach (UnitController enemy in GetCurrTileController().UnitControllers) 
+            foreach (UnitController enemy in tileControllers[TileCubeCoords[SelectedTile]].UnitControllers) 
                 CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);  
             rangeDisplay.HideRange();
             FinishSelection();

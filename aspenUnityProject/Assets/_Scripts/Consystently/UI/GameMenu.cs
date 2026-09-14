@@ -6,10 +6,12 @@ namespace Consystently.UI
 {
   public interface IPanelHandler
   {
-    protected void OpenPanel(Panel newPanel);
-    protected void ClosePanel(Panel panel);
+    void OpenPanel(GameMenu gameMenu);
+    void ClosePanel(GameMenu gameMenu);
   }
 
+  [RequireComponent(typeof(CanvasGroup))]
+  [DisallowMultipleComponent]
   public class GameMenu : MonoBehaviour
   {
     [Header("Game Menu")]
@@ -19,19 +21,17 @@ namespace Consystently.UI
     [SerializeField] protected Panel defaultPanel;
     public Panel DefaultPanel => defaultPanel;
 
-    [SerializeField] protected Text_IE nameDisplayText;
-
     public HashSet<Panel> PanelSet = new HashSet<Panel>();
 
     public Stack<Panel> PanelStack = new Stack<Panel>();
 
     public bool Opened { get; protected set; } = true;
 
+    private CanvasGroup _canvasGroup;
+
     protected virtual void Start()
     {
-      if(nameDisplayText)
-        nameDisplayText.TextMeshComp.text = menuName;
-
+      _canvasGroup ??= GetComponent<CanvasGroup>();
       MenuManager.Instance.AddMenuToSet(this);
       Close();
     }
@@ -45,12 +45,12 @@ namespace Consystently.UI
     {
       if (Opened)
       {
-        Debug.LogWarning($"{menuName} is already open.");
+        // Debug.LogWarning($"{menuName} is already open.");
         return false;
       }
       else if (!defaultPanel)
       {  
-        Debug.LogError($"Default Panel has not been assigned.");
+        // Debug.LogError($"Default Panel has not been assigned.");
         return false;
       }
       else
@@ -58,8 +58,10 @@ namespace Consystently.UI
         ClearStack();
         OpenPanel(defaultPanel);
         Opened = true;
-        gameObject.SetActive(true);
-        Debug.Log($"{menuName} successfully opened.");
+        _canvasGroup.interactable = true;
+        _canvasGroup.blocksRaycasts = true;
+        _canvasGroup.alpha = 1;
+        // Debug.Log($"{menuName} successfully opened.");
         return true;
       }
     }
@@ -68,15 +70,17 @@ namespace Consystently.UI
     {
       if (!Opened)
       {
-        Debug.LogWarning($"{menuName} is already closed.");
+        // Debug.LogWarning($"{menuName} is already closed.");
         return false;
       }
       else
       {
         ClearStack();
         Opened = false;
-        gameObject.SetActive(false);
-        Debug.Log($"{menuName} successfully closed.");
+        _canvasGroup.interactable = false;
+        _canvasGroup.blocksRaycasts = false;
+        _canvasGroup.alpha = 0;
+        // Debug.Log($"{menuName} successfully closed.");
         return true;
       }
     }
@@ -86,10 +90,10 @@ namespace Consystently.UI
       if (!PanelSet.Contains(panel))
       {
         PanelSet.Add(panel);
-        Debug.Log ($"{panel.Name} has been added to the Parent Game Menu's hash set.");
+        // Debug.Log ($"{panel.Name} has been added to the {menuName} Menu's panel stack.");
       }
-      else
-        Debug.LogWarning($"Add failed. {panel.Name} is already present in the Parent Game Menu's hash set!");
+      // else
+        // Debug.LogWarning($"Add failed. {panel.Name} is already present in the {menuName} Menu's panel stack!");
     }
 
     public void RemovePanelFromSet (Panel panel)
@@ -97,10 +101,10 @@ namespace Consystently.UI
       if (PanelSet.Contains(panel))
       {
         PanelSet.Remove(panel);
-        Debug.Log ($"{panel.Name} has been removed the Parent Game Menu's hash set.");
+        // Debug.Log ($"{panel.Name} has been removed from the {menuName} Menu's panel stack.");
       }
-      else
-        Debug.LogWarning($"Remove failed. {panel.Name} was not found in the Parent Game Menu's hash set!");
+      // else
+        // Debug.LogWarning($"Remove failed. {panel.Name} was not found in the {menuName} Menu's panel stack!");
     }
 
 
@@ -111,7 +115,7 @@ namespace Consystently.UI
     {
       if (!PanelStack.Contains(newPanel))
       {
-        Debug.Log($"Opening {newPanel.Name} panel...");
+        // Debug.Log($"Opening {newPanel.Name} panel...");
         if (newPanel.Open())
         {
           if(PanelStack.Count > 0) 
@@ -121,15 +125,15 @@ namespace Consystently.UI
           newPanel.StackIndex = PanelStack.Count;
         }
       }
-      else
-        Debug.LogWarning($"{newPanel.Name} panel is already in the open in the panel stack.");
+      // else
+        // Debug.LogWarning($"{newPanel.Name} panel is already in the open in the {menuName} Menu's panel stack.");
     }
 
     public void ClosePanel (Panel panel)
     {
       if (PanelStack.Peek() == panel)
       {
-        Debug.Log($"Closing {panel.Name} panel...");
+        // Debug.Log($"Closing {panel.Name} panel...");
         if(panel.Close())
         {
           PanelStack.Pop();
@@ -139,8 +143,28 @@ namespace Consystently.UI
             PanelStack.Peek().Show();
         }
       }
-      else
-        Debug.LogWarning($"{panel.Name} panel is not at the top of the panel stack.");
+      // else
+        // Debug.LogWarning($"{panel.Name} panel is not at the top of the {menuName} Menu's panel stack.");
+    }
+    
+    public void OpenPanel(string panelName)
+    {
+      Panel panel = PanelSet.FirstOrDefault(p => p.Name == panelName);
+
+      if (panel)
+        OpenPanel(panel);
+      // else
+        // Debug.LogWarning($"Panel with the name '{panelName}' not found in the {menuName} Menu's panel set.");
+    }
+
+    public void ClosePanel(string panelName)
+    {
+      Panel panel = PanelSet.FirstOrDefault(p => p.Name == panelName);
+
+      if (panel)
+        ClosePanel(panel);
+      // else
+        // Debug.LogWarning($"Panel with the name '{panelName}' not found in the {menuName} Menu's panel set.");
     }
 
     public void ClearStack ()

@@ -7,7 +7,7 @@ namespace Consystently.Essentials
   /// </summary>
   /// <typeparam name="T">The derived class itself, to create the global instance reference.</typeparam>
   [DisallowMultipleComponent]
-  public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+  public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
   {
     /// <summary>
     /// Set the instance, only if no instance existed previously.

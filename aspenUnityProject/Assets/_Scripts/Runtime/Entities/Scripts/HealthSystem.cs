@@ -1,30 +1,19 @@
 using UnityEngine;
 
-namespace Denever27.CharacterSystems
+namespace Tether.CharacterSystems
 {
-    public class HealthSystem : MonoBehaviour, IIntializer
+  public class HealthSystem : MonoBehaviour, IInitializer
+  {
+    private UnitDataSO _unitData;
+    public int MaxHealth { get; private set; }
+    public int CurrentHealth { get; private set; }
+
+    public void Intialize(UnitDataSO unitData)
     {
-        UnitStatsSO _stats;
-        float _currentHealth;
-        float _maxHealth;
+      _unitData ??= unitData;
 
-        public void Intialize(UnitStatsSO stats)
-        {
-            _stats = stats;
-            _maxHealth = (float) _stats.Health;
-            _currentHealth = _maxHealth;
-        }
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+      MaxHealth = Formulae.CalculateStat(Stat.HP, _unitData.Health, _unitData.Level);
+      CurrentHealth = Mathf.Clamp(Mathf.RoundToInt(_unitData.RemainingHealth), 0, MaxHealth);
     }
+  }
 }

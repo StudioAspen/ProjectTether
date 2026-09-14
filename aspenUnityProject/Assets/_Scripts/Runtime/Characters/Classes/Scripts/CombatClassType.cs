@@ -1,10 +1,11 @@
 public enum CombatClassType
 {
-    Breacher,
-    Pharmacist,
-    Duelist,
-    Sniper,
-    Hacker,
-    Mechanic,
-    Ghost
+  Diver, // Default Class
+  Breacher,
+  Pharmacist,
+  Duelist,
+  Sniper,
+  Hacker,
+  Mechanic,
+  Ghost
 }

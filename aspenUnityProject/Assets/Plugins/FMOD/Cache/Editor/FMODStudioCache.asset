@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639194856182121693
+  lastModified: 639230040009281821
   FileSizes:
   - Name: 
     Value: 768
@@ -43,7 +43,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: -6842294400158486420}
   cacheVersion: 131860
-  cacheTime: 639194856182121693
+  cacheTime: 639230040009281821
   SerializableEventsDict:
   - key: event:/PsyKick
     index: 0
@@ -89,6 +89,6 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639194856182121693
+  lastModified: 639230040009261820
   FileSizes: []
   Exists: 1

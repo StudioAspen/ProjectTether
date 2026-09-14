@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2fadaa9994784724a46b33e21e8bb1c, type: 3}
+  m_Name: HuskyData
+  m_EditorClassIdentifier: Assembly-CSharp::PlayableCharacterUnitSO
+  _portrait: {fileID: 0}
+  _name: Husky
+  _model: {fileID: 5934280824751849543, guid: b168caacf0d7739458904bcdb5b80ab3, type: 3}
+  Level: 10
+  ExPtsToNextLevel: 0
+  TotalExPtsGained: 0
+  RemainingHealth: 100
+  RemainingEnergy: 100
+  _health: 0
+  _energy: 2
+  _strength: 1
+  _defense: 0
+  _tech: 4
+  _resistance: 3
+  _speed: 4
+  _luck: 2
+  _precision: 3
+  _evasion: 3
+  _blunt: 0
+  _slash: 0
+  _pierce: 0
+  _blast: 0
+  _water: 0
+  _earth: 0
+  _wind: 0
+  _fire: 0
+  moves:
+  - {fileID: 11400000, guid: 5ba17807c606d90809524740f4ca5cc2, type: 2}
+  combatClass: {fileID: 11400000, guid: c65cbfb3357a276c6984e2b6b525bb83, type: 2}

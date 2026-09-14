@@ -29,15 +29,15 @@ public enum Stat
   /// </summary>
   SPE = 6,
   /// <summary>
+  /// Luck
+  /// </summary>
+  LCK = 7,
+  /// <summary>
   /// Precision
   /// </summary>
-  PRC = 7,
+  PRC = 8,
   /// <summary>
   /// Evasion
   /// </summary>
-  EVA = 8,
-  /// <summary>
-  /// Luck
-  /// </summary>
-  LCK = 9,
+  EVA = 9,
 }

@@ -5,9 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/_Scenes/MVP/MVP-mainMenu.unity
+    guid: 0359e22fe60cc4693bb1aefb56fdee67
+  - enabled: 1
+    path: Assets/_Scenes/MVP/battleScene.unity
+    guid: 26c5f0027842f36ba863fc0c8b2a0803
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

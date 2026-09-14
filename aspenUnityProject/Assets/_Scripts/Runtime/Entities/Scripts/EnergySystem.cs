@@ -1,31 +1,19 @@
 using UnityEngine;
 
-namespace Denever27.CharacterSystems
+namespace Tether.CharacterSystems
 {
-    public class EnergySystem : MonoBehaviour, IIntializer
+  public class EnergySystem : MonoBehaviour, IInitializer
+  {
+    private UnitDataSO _unitData;
+    public int MaxEnergy { get; private set; }
+    public int CurrentEnergy{ get; private set; }
+
+    public void Intialize(UnitDataSO unitData)
     {
-        UnitStatsSO _stats;
-        float _currentEnergy;
-        float _maxEnergy;
+      _unitData ??= unitData;
 
-
-        public void Intialize(UnitStatsSO stats)
-        {
-            _stats = stats;
-            _maxEnergy = (float)_stats.Energy;
-            _currentEnergy = _maxEnergy;
-        }
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
- 
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+      MaxEnergy = Formulae.CalculateStat(Stat.EN, _unitData.Energy, _unitData.Level);
+      CurrentEnergy = Mathf.Clamp(Mathf.RoundToInt(_unitData.RemainingEnergy), 0, MaxEnergy);
     }
+  }
 }

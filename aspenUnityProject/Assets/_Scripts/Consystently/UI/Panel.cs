@@ -1,15 +1,15 @@
 namespace Consystently.UI
 {
   using System.Collections.Generic;
+  using System.Linq;
   using UnityEngine;
 
-  public class Panel : MonoBehaviour
+  public class Panel : VisualElement
   {
     [Header("Panel")]
     [SerializeField] protected string panelName;
     public string Name => panelName;
-    [SerializeField] protected GameMenu rootMenu;
-    public GameMenu RootMenu => rootMenu;
+    public GameMenu Menu { get; protected set; }
 
     /// <summary>
     /// This panel's index in its menu's panel stack. 0 is reserved for the menu itself.
@@ -21,77 +21,86 @@ namespace Consystently.UI
 
     public bool Opened { get; protected set; } = true;
 
-    public HashSet<InterfaceElement> elements { get; protected set; } = new HashSet<InterfaceElement>();
+    public HashSet<VisualElement> Elements { get; protected set; } = new HashSet<VisualElement>();
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected override void Awake()
     {
-      if (transform.root.gameObject.TryGetComponent(out GameMenu gameMenu))
+      base.Awake();
+
+      if (transform.root.gameObject.TryGetComponent(out GameMenu menu))
       {
-        rootMenu ??= gameMenu;
-        rootMenu.AddPanelToSet(this);
-        if (rootMenu.DefaultPanel != this)
-          Close();
+        Menu ??= menu;
+        Menu.AddPanelToSet(this);
+
+        Elements = GetComponentsInChildren<VisualElement>().ToHashSet();
+        foreach (VisualElement e in Elements)
+          e.AssignRootPanel(this);
+        
+        Close();
       }
       else
       {
-        Debug.LogError($"Game Menu not found. Disabling root game object...");
+        // Debug.LogError($"Game Menu not found. Disabling root game object...");
         transform.root.gameObject.SetActive(false);
       }
     }
 
     protected virtual void OnDestroy()
     {
-      rootMenu.RemovePanelFromSet(this);
+      Menu.RemovePanelFromSet(this);
     }
 
-    public bool Open ()
+    public bool Open()
     {
-      if (Opened)
+      if(Opened)
       {
-        Debug.LogWarning($"{panelName} panel is already open.");
+        // Debug.LogWarning($"{panelName} panel is already open.");
         return false;
       }
       else
       {
         Show();
         Opened = true;
-        Debug.Log($"{panelName} panel successfully opened.");
+        // Debug.Log($"{panelName} panel successfully opened.");
         return true;
       }
     }
 
-    public bool Close ()
+    public bool Close()
     {
-      if (!Opened)
+      if(!Opened)
       {
-        Debug.LogWarning($"{panelName} panel is already closed.");
+        // Debug.LogWarning($"{panelName} panel is already closed.");
         return false;
       }
       else
       {
         Hide();
         Opened = false;
-        Debug.Log($"{panelName} panel successfully closed.");
+        // Debug.Log($"{panelName} panel successfully closed.");
         return true;
       }
     }
 
-    public void Hide()
+    public override void Show()
     {
+      _canvasGroup.interactable = true;
+      _canvasGroup.blocksRaycasts = true;
       if(hideInStack)
       {
-        gameObject.SetActive(false);
-        Debug.Log($"{panelName} panel hidden.");
+        _canvasGroup.alpha = 1;
+        // Debug.Log($"{panelName} panel shown.");
       }
     }
 
-    public void Show()
+    public override void Hide()
     {
+      _canvasGroup.interactable = false;
+      _canvasGroup.blocksRaycasts = false;
       if(hideInStack)
       {
-        gameObject.SetActive(true);
-        Debug.Log($"{panelName} panel shown.");
+        _canvasGroup.alpha = 0;
+        // Debug.Log($"{panelName} panel hidden.");
       }
     }
   }

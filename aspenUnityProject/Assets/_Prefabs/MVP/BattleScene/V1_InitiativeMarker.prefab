@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4682893553449378640}
   - component: {fileID: 4539558017667736748}
   m_Layer: 5
-  m_Name: InitiativeMarker
+  m_Name: V1_InitiativeMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -55,11 +55,11 @@ public class CombatUI : MonoBehaviour
         
     }
 
-    private void HandleUserActions(BattleState bs, UnitController unitController)
+    private void HandleUserActions(BattlePhase bs, UnitController unitController)
     {
         abilitiesPanel.SetActive(false);
         cursor.SetActive(false);
-        if (bs is PlayerState)
+        if (bs is PlayerPhase)
         {
             playerActionsContainer.SetActive(true);
             Debug.Log(playerActionsContainer.activeSelf);

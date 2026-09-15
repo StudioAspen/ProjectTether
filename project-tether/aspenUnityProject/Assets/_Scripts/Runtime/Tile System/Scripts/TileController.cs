@@ -45,6 +45,13 @@ namespace TileSystem
             
             return  UnitControllers[position];
         }
+
+        public UnitController PeekUnit()
+        {
+            if (UnitControllers.Count < 1)
+                return null;
+            return UnitControllers[^1];
+        }
         
         //returns deleted controller so the controller can be moved to a different TileController
         //by the CombatManager

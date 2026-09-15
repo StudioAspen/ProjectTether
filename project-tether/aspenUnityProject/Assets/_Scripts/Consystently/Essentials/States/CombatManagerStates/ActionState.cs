@@ -3,12 +3,12 @@ namespace Consystently.Essentials
     public abstract class ActionState : IState
     {
         protected CombatManager CombatManager { get; private set; }
-        protected BattleState BattleState { get; private set; }
+        protected BattlePhase BattlePhase { get; private set; }
 
-        protected ActionState(CombatManager combatManager, BattleState battleState)
+        protected ActionState(CombatManager combatManager, BattlePhase battlePhase)
         {
            CombatManager = combatManager; 
-           BattleState = battleState; 
+           BattlePhase = battlePhase; 
         }
 
         public abstract void Enter();

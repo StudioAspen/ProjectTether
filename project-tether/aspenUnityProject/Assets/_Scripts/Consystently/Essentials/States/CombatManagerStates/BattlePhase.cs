@@ -2,11 +2,11 @@ using UnityEngine.InputSystem;
 
 namespace Consystently.Essentials
 {
-    public abstract class BattleState : IState
+    public abstract class BattlePhase : IState
     {
         protected CombatManager CombatManager { get; private set; }
 
-        protected BattleState(CombatManager combatManager)
+        protected BattlePhase(CombatManager combatManager)
         {
             CombatManager = combatManager; 
         }

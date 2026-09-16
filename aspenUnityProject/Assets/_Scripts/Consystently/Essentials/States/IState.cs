@@ -1,5 +1,6 @@
 namespace Consystently.Essentials
 {
+    //probably remove this interface
     //TODO: get rid of update later?
     public interface IState
     {

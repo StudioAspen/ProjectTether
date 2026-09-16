@@ -93,13 +93,13 @@ namespace TileSystem
         }
 
         //currently, units can only move to adjacent tiles 
-        public bool IsMoveable(Vector3Int from, int range)
+        public bool IsMoveable(Vector3Int from, int range, Faction faction)
         {
             if (tileCoordinate == from || UnitControllers.Count >= MaxUnits || from.HexGridDistance(tileCoordinate) > range)
                 return false;
             foreach (UnitController unit in UnitControllers)
             {
-                if (unit.GetData().Faction == Faction.Enemy)
+                if (unit.GetData().Faction != faction)
                     return false;
             }
             return true; 

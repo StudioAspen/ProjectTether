@@ -2,7 +2,7 @@ using UnityEngine.InputSystem;
 
 namespace Consystently.Essentials
 {
-    public abstract class BattlePhase : IState
+    public abstract class BattlePhase 
     {
         protected CombatManager CombatManager { get; private set; }
 
@@ -12,7 +12,7 @@ namespace Consystently.Essentials
         }
 
         public abstract void Enter();
-        public abstract void Update();
+//        public abstract void Update();
         public abstract void Exit(); 
         public abstract void PushState();
 

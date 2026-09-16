@@ -25,11 +25,11 @@ public class RangeDisplay : MonoBehaviour
     }
     
     
-    public void DisplayMoveRange(Vector3Int from, TileController[] tileControllers, int range)
+    public void DisplayMoveRange(Vector3Int from, TileController[] tileControllers, int range, Faction faction)
     {
         for (int ro = 0; ro < rangeObjects.Count; ro++)
         {
-            if (tileControllers[ro].IsMoveable(from, range))
+            if (tileControllers[ro].IsMoveable(from, range, faction))
             {
                 rangeObjects[ro].SetActive(true);
                 activeObjects.Add(rangeObjects[ro]);

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [CreateAssetMenu(fileName = "CombatClass", menuName = "Scriptable Objects/Misc/Combat Class")]
 public class CombatClassSO : ScriptableObject
@@ -20,4 +19,5 @@ public class CombatClassSO : ScriptableObject
     
     [SerializeField] private string classDescription;
     public string ClassDescription => classDescription;
+    
 }

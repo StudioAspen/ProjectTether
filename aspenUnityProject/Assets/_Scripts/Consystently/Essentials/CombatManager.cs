@@ -26,7 +26,7 @@ namespace Consystently.Essentials
         private Encounter encounter; 
         [SerializeField] private Transform tilesParent;
         public InputSystem_Actions Input { get; private set; }
-        private readonly TileController[] tileControllers = new TileController[TileNum];
+        public TileController[] tileControllers { get; private set; }= new TileController[TileNum];
 
         public Dictionary<Vector3Int, int> TileCubeCoords { get; private set; }= new Dictionary<Vector3Int, int>();
         
@@ -104,10 +104,12 @@ namespace Consystently.Essentials
             PlayerUnits.Clear();
         }
 
+        /*
         void Update()
         {
            currentPhase?.Update(); 
         }
+        */
 
         //Correct order is not guaranteed by GetComponentsInChildren
         private void SortTiles(TileController[] tiles)
@@ -279,7 +281,7 @@ namespace Consystently.Essentials
                    return;
                case CombatActions.Move:
                    currentPhase.PushState();
-                   rangeDisplay.DisplayMoveRange(currUnit.TileCoords, tileControllers, 1); //currently only adjacent tiles
+                   rangeDisplay.DisplayMoveRange(currUnit.TileCoords, tileControllers, 1, Faction.Ally); //currently only adjacent tiles
                    return;
               case CombatActions.View:
                     currentPhase.PushState();
@@ -309,7 +311,7 @@ namespace Consystently.Essentials
 //            rangeDisplay.DisplayRange();
         }
         
-        private TileController GetCurrTileController()
+        public TileController GetCurrTileController()
         {
             return tileControllers[TileCubeCoords[TurnOrder[CurrentUnitTurn].TileCoords]];
         }
@@ -341,7 +343,7 @@ namespace Consystently.Essentials
                        HandleSelectAttack(currentUnit);
                    break;
                case CombatActions.Move:
-                   if (selectedTileController.IsMoveable(currentUnit.TileCoords,1) && !currentUnit.HasMoved)
+                   if (selectedTileController.IsMoveable(currentUnit.TileCoords,1, Faction.Ally) && !currentUnit.HasMoved)
                       HandleSelectMove(selectedTileController, currentUnit); 
                    return;
                case CombatActions.Ability:
@@ -398,6 +400,11 @@ namespace Consystently.Essentials
             ResetCurrentTile();
             currentPhase.Exit();
             battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
+        }
+
+        public UnitController GetCurrentUnit()
+        {
+            return TurnOrder[CurrentUnitTurn]; 
         }
 
     }

@@ -22,12 +22,14 @@ namespace Consystently.Essentials
            stateStack.Clear();
         }
 
+        /*
         //TODO: get rid of update from all states later? 
         public override void Update()
         {
             if(stateStack.Count > 0)
                 stateStack.Peek().Update();
         }
+        */
 
         public override void Exit()
         {

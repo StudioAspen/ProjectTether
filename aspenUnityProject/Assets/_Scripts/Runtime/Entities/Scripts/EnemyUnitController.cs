@@ -15,7 +15,8 @@ namespace Tether.CharacterSystems
         //to be called by the combat manager. Will pass in encounter data and initialize the units. 
         public override void Initialize(UnitDataSO baseStats)
         {
-            stats = new EnemyUnit(baseStats);
+            //let it blow up when wrong UnitDataSO 
+            stats = new EnemyUnit((EnemyUnitSO)baseStats);
             Debug.Log($"{gameObject.name} initialized with stats instance ID: {stats.GetHashCode()}"); 
         }
 

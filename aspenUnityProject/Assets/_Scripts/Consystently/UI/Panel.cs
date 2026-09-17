@@ -23,13 +23,12 @@ namespace Consystently.UI
 
     public HashSet<VisualElement> Elements { get; protected set; } = new HashSet<VisualElement>();
 
-    protected override void Awake()
+    public void Initialize(GameMenu menu)
     {
-      base.Awake();
+      Menu ??= menu;
 
-      if (transform.root.gameObject.TryGetComponent(out GameMenu menu))
+      if (Menu == menu)
       {
-        Menu ??= menu;
         Menu.AddPanelToSet(this);
 
         Elements = GetComponentsInChildren<VisualElement>().ToHashSet();
@@ -37,11 +36,6 @@ namespace Consystently.UI
           e.AssignRootPanel(this);
         
         Close();
-      }
-      else
-      {
-        // Debug.LogError($"Game Menu not found. Disabling root game object...");
-        transform.root.gameObject.SetActive(false);
       }
     }
 

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnitSO
   _portrait: {fileID: 0}
   _name: Mettool
+  _model: {fileID: 8642023848279196920, guid: 128631cd648082e0ab1c702d007c89dd, type: 3}
   Level: 2
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
@@ -37,3 +38,5 @@ MonoBehaviour:
   _earth: 0
   _wind: 0
   _fire: 0
+  moves: []
+  combatClass: {fileID: 11400000, guid: ae5348d884e198b30bd6c06ddc58cfe2, type: 2}

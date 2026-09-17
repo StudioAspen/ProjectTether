@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2fadaa9994784724a46b33e21e8bb1c, type: 3}
   m_Name: NikitaData
   m_EditorClassIdentifier: Assembly-CSharp::PlayableCharacterUnitSO
+  _portrait: {fileID: 0}
   _name: Nikita
+  _model: {fileID: 5387308305515965010, guid: 0d5c7d5cfc9525a1d8bc6f50d04dede0, type: 3}
   Level: 10
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
@@ -36,3 +38,5 @@ MonoBehaviour:
   _earth: 0
   _wind: 0
   _fire: 0
+  moves: []
+  combatClass: {fileID: 11400000, guid: c65cbfb3357a276c6984e2b6b525bb83, type: 2}

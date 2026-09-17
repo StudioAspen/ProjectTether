@@ -1,6 +1,7 @@
 using UnityEngine;
 using Consystently.Essentials;
 
+//remove later
 public class SceneManager : Manager<SceneManager>
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created

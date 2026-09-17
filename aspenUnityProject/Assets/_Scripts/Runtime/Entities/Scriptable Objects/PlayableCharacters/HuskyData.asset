@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2fadaa9994784724a46b33e21e8bb1c, type: 3}
   m_Name: HuskyData
   m_EditorClassIdentifier: Assembly-CSharp::PlayableCharacterUnitSO
+  _portrait: {fileID: 0}
   _name: Husky
+  _model: {fileID: 5934280824751849543, guid: b168caacf0d7739458904bcdb5b80ab3, type: 3}
   Level: 10
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
@@ -36,3 +38,6 @@ MonoBehaviour:
   _earth: 0
   _wind: 0
   _fire: 0
+  moves:
+  - {fileID: 11400000, guid: 5ba17807c606d90809524740f4ca5cc2, type: 2}
+  combatClass: {fileID: 11400000, guid: c65cbfb3357a276c6984e2b6b525bb83, type: 2}

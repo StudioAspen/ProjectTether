@@ -15,6 +15,11 @@ public abstract class UnitDataSO : ScriptableObject
   
   public string Name => _name;
 
+  [Space(5)]
+  [SerializeField] protected GameObject _model;
+  
+  public GameObject Model => _model;
+
   public virtual Faction Faction => Faction.Neutral;
 
   [Header("Progress", order = 1)]
@@ -239,4 +244,11 @@ public abstract class UnitDataSO : ScriptableObject
     { Element.Wind, _wind },
     { Element.Fire, _fire },
   };
+  
+  [SerializeField] private List<AbilitySO> moves = new List<AbilitySO>();
+  public List<AbilitySO> Moves => moves;
+
+  [SerializeField] private CombatClassSO combatClass;
+  public CombatClassSO CombatClass => combatClass;
+
 }

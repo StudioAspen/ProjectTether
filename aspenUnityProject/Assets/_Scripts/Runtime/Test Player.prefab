@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 426216f7ed34f66488b22b4b3917d9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExperienceSystem
+  _level: 1
 --- !u!114 &5394173380878875036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,4 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1797a927c7b5bb24e8fbdb1a5d3b961e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
-  _stats: {fileID: 11400000, guid: 69d9fb953d98610428fdf79827151051, type: 2}
+  _unitData: {fileID: 0}

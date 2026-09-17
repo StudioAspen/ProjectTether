@@ -6,7 +6,7 @@ namespace Consystently.UI
   [DisallowMultipleComponent]
   public class InterfaceFunctions : MonoBehaviour
   {
-    public void PauseGame() => GameManager.Instance?.PauseGame();
+   // public void PauseGame() => GameManager.Instance?.PauseGame();
 
     public void QuitApplication() => GameManager.Instance?.QuitApplication();
 

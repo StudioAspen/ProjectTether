@@ -6,6 +6,7 @@ namespace Consystently.UI
   using System.Linq;
 
   [RequireComponent(typeof(InterfaceFunctions))]
+  //Why is this a singleton? 
   public class MenuManager : Manager<MenuManager>
   {
     // Only one Menu shall be active at a time.
@@ -18,7 +19,10 @@ namespace Consystently.UI
     public void Update()
     {
       if (Input.GetKeyDown(KeyCode.Space))
+      {
         OpenMenu(MenuSet.FirstOrDefault(item => item.Name == "Main Menu"));
+        Debug.Log("test");
+      }
     }
 
     public void AddMenuToSet (GameMenu menu)

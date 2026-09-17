@@ -27,12 +27,16 @@ namespace Consystently.UI
 
     public bool Opened { get; protected set; } = true;
 
-    private CanvasGroup _canvasGroup;
+    protected CanvasGroup _canvasGroup;
 
     protected virtual void Start()
     {
       _canvasGroup ??= GetComponent<CanvasGroup>();
       MenuManager.Instance.AddMenuToSet(this);
+
+      foreach (Panel panel in GetComponentsInChildren<Panel>())
+        panel.Initialize(this);
+        
       Close();
     }
 

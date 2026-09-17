@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Consystently.Essentials;
 using System.Linq;
@@ -18,6 +19,8 @@ public class BattleSimManager : Manager<BattleSimManager>
 
   // public HashSet<UnitPiece> PlayerPieces = new HashSet<UnitPiece>();
   // public HashSet<UnitPiece> EnemyPieces = new HashSet<UnitPiece>();
+
+  public static event Action submitted; 
 
   [SerializeField] Button _battleButton;
 
@@ -107,5 +110,7 @@ public class BattleSimManager : Manager<BattleSimManager>
   public void StartBattle()
   {
     Debug.Log("Start Battle Code");
+    EncounterManager.Instance.GenerateEncounter(BattlefieldMap.Instance.Tiles);
+    submitted?.Invoke();
   }
 }

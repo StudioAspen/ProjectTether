@@ -1,5 +1,7 @@
 using UnityEngine;
 
+//old code. Commented because I do not know if it may be useful later.
+/*
 public class CombatSim : MonoBehaviour
 {
   public GameObject Player;
@@ -21,7 +23,7 @@ public class CombatSim : MonoBehaviour
       UnitStats attackerStats = Attacker.GetComponent<UnitStats>();
       UnitStats defenderStats = Defender.GetComponent<UnitStats>();
       attackerStats.damageCategoriesDealt[0] = UnitStats.damageCategory.Physical; //Change damage types between physical and elemental
-      attackerStats.damageTypesDealt[0] = UnitStats.damageType.Slashing; //How to change the type of an attack
+      attackerStats.damageTypesDealt[0] = UnitStats.damageType.Slashing; //How to change the type of attack
       Fight();
     }
     if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -61,3 +63,4 @@ public class CombatSim : MonoBehaviour
     CombatFormulas.Damage(Attacker, Defender);
   }
 }
+*/

@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 279d2ab0528d3e4c19cd7682bdffa241, type: 3}
   m_Name: Obliterate
   m_EditorClassIdentifier: Assembly-CSharp::MoveSO
-  name: Obliterate
+  abilityName: Obliterate
   description: Destroys the entire world
   damage: 5
-  element: 6
+  element: 0300000007000000
   abilityType: 2
-  range: 0
+  range: 2
   aoe: 0
   hitsEnemies: 1
-  hitsAllies: 1
+  hitsAllies: 0
+  canTargetEmptyTile: 0
+  canMiss: 1

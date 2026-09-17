@@ -1,6 +1,7 @@
 using System;
 using Consystently.Essentials;
 using Tether.CharacterSystems;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -60,10 +61,7 @@ public class CombatUI : MonoBehaviour
         abilitiesPanel.SetActive(false);
         cursor.SetActive(false);
         if (bs is PlayerPhase)
-        {
             playerActionsContainer.SetActive(true);
-            Debug.Log(playerActionsContainer.activeSelf);
-        }
         else
         {
             playerActionsContainer.SetActive(false);
@@ -72,14 +70,14 @@ public class CombatUI : MonoBehaviour
         int currMove = 0;
         foreach (Transform button in abilitiesPanel.transform)
         {
-            currMove++;
-            if(currMove > unitController.GetData().Moves.Capacity)
+            if(currMove > unitController.GetData().Moves.Count-1)
                 button.gameObject.SetActive(false);
             else
             {
                 button.gameObject.SetActive(true);
-                button.GetComponentInChildren<Text>().text = unitController.GetData().Moves[currMove].Name;
+                button.GetComponentInChildren<TextMeshProUGUI>().text = unitController.GetData().Moves[currMove].Name;
             }
+            currMove++;
         }
     }
     
@@ -114,6 +112,7 @@ public class CombatUI : MonoBehaviour
     public void SendSelectedAction(int action, int move)
     {
         abilitiesPanel.SetActive(false);
+        TrySelection();
         PlayerSelectiveAction?.Invoke((CombatActions)action, move);
     } 
     

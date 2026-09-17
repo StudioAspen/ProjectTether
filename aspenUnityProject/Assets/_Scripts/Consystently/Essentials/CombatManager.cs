@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Misc;
+using Consystently.Essentials.Math;
 using Tether.CharacterSystems;
 using TileSystem;
 using UnityEngine;
@@ -10,10 +11,10 @@ using Debug = UnityEngine.Debug;
 //TODO: NEED COROUTINES when we are past the mvp(?)
 namespace Consystently.Essentials
 {
-    /*will not be a traditional manager because it does not 
-    need to be static. EncounterManager will be static and the one 
+    /*will not be a traditional manager because it does not
+    need to be static. EncounterManager will be static and the one
     to send the data over to CombatManager. CombatManager will exist
-    in the battle scene only. The UIManager will need a reference to the CombatManager 
+    in the battle scene only. The UIManager will need a reference to the CombatManager
     */
     public class CombatManager : MonoBehaviour
     {
@@ -107,7 +108,7 @@ namespace Consystently.Essentials
         /*
         void Update()
         {
-           currentPhase?.Update(); 
+           currentPhase?.Update();
         }
         */
 
@@ -168,37 +169,37 @@ namespace Consystently.Essentials
         {
             int tile = 0;
             Vector3Int currentPos = new Vector3Int(0, 0, 0);
- //           Debug.Log($"tile: {tile}, {currentPos}");
+            //           Debug.Log($"tile: {tile}, {currentPos}");
             TileCubeCoords.Add(currentPos, tile);
             tileControllers[tile].tileCoordinate = currentPos;
             for (int ring = 1; ring <= 2; ring++)
             {
-               currentPos += CubeCoordDirections.NE.Vector();
-               tile++;
+                currentPos += CubeCoordDirections.NE.Vector();
+                tile++;
 //               Debug.Log($"tile: {tile}, {currentPos}");
-               TileCubeCoords.Add(currentPos, tile);
-               tileControllers[tile].tileCoordinate = currentPos;
-               for (int southEasts = ring - 1; southEasts > 0; southEasts--)
-               {
+                TileCubeCoords.Add(currentPos, tile);
+                tileControllers[tile].tileCoordinate = currentPos;
+                for (int southEasts = ring - 1; southEasts > 0; southEasts--)
+                {
 //                   currentPos += directions[(int)CubeCoordDirections.SE];
-                   currentPos += CubeCoordDirections.SE.Vector();
-                   tile++;
-  //                 Debug.Log($"tile: {tile}, {currentPos}");
-                   TileCubeCoords.Add(currentPos, tile);
-                   tileControllers[tile].tileCoordinate = currentPos;
-               }
-               for (int direction = (int)CubeCoordDirections.S; direction < Enum.GetNames(typeof(CubeCoordDirections)).Length; direction++)
-               {
-                   for (int times = ring; times > 0; times--)
-                   {
-                       currentPos += ((CubeCoordDirections)direction).Vector();
-                       tile++;
-   //                    Debug.Log($"tile: {tile}, {currentPos}");
-                       TileCubeCoords.Add(currentPos, tile);
-    //                   Debug.Log($"tileControllers size: {tileControllers.Length}");
-                       tileControllers[tile].tileCoordinate = currentPos;
-                   }
-               }
+                    currentPos += CubeCoordDirections.SE.Vector();
+                    tile++;
+                    //                 Debug.Log($"tile: {tile}, {currentPos}");
+                    TileCubeCoords.Add(currentPos, tile);
+                    tileControllers[tile].tileCoordinate = currentPos;
+                }
+                for (int direction = (int)CubeCoordDirections.S; direction < Enum.GetNames(typeof(CubeCoordDirections)).Length; direction++)
+                {
+                    for (int times = ring; times > 0; times--)
+                    {
+                        currentPos += ((CubeCoordDirections)direction).Vector();
+                        tile++;
+                        //                    Debug.Log($"tile: {tile}, {currentPos}");
+                        TileCubeCoords.Add(currentPos, tile);
+                        //                   Debug.Log($"tileControllers size: {tileControllers.Length}");
+                        tileControllers[tile].tileCoordinate = currentPos;
+                    }
+                }
             }
         } 
 
@@ -237,9 +238,9 @@ namespace Consystently.Essentials
                 CurrentUnitTurn = (CurrentUnitTurn + 1)%TurnOrder.Count;
             }
             if (TurnOrder[CurrentUnitTurn].GetData().Faction == Faction.Ally)
-               currentPhase = phases[0];
+                currentPhase = phases[0];
             else if (TurnOrder[CurrentUnitTurn].GetData().Faction==Faction.Enemy)
-               currentPhase = phases[1];
+                currentPhase = phases[1];
             else
                 return;
             TurnOrder[CurrentUnitTurn].ResetValues();
@@ -259,11 +260,11 @@ namespace Consystently.Essentials
         }
         
         /*
-        the player's selectTileState (pushed by this function) will tell this manager when to 
-        execute the SelectTile function. 
+        the player's selectTileState (pushed by this function) will tell this manager when to
+        execute the SelectTile function.
         I opted for states because the player may undo actions.
         Usually, the first requirement after selecting an action
-        is selecting a tile. 
+        is selecting a tile.
         */
         private void HandleAction(CombatActions action)
         {
@@ -271,19 +272,19 @@ namespace Consystently.Essentials
             UnitController currUnit = TurnOrder[CurrentUnitTurn];
             switch(action)
             {
-               case CombatActions.Attack:
-                   currentPhase.PushState();
-                   rangeDisplay.DisplayAttackRange(tileControllers, currUnit);
-                   return;
-               case CombatActions.Defend:
-                   currUnit.GetData().Defend();
-                   FinishSelection();
-                   return;
-               case CombatActions.Move:
-                   currentPhase.PushState();
-                   rangeDisplay.DisplayMoveRange(currUnit.TileCoords, tileControllers, 1, Faction.Ally); //currently only adjacent tiles
-                   return;
-              case CombatActions.View:
+                case CombatActions.Attack:
+                    currentPhase.PushState();
+                    rangeDisplay.DisplayAttackRange(tileControllers, currUnit);
+                    return;
+                case CombatActions.Defend:
+                    currUnit.GetData().Defend();
+                    FinishSelection();
+                    return;
+                case CombatActions.Move:
+                    currentPhase.PushState();
+                    rangeDisplay.DisplayMoveRange(currUnit.TileCoords, tileControllers, 1, Faction.Ally); //currently only adjacent tiles
+                    return;
+                case CombatActions.View:
                     currentPhase.PushState();
                     return;
                 default:
@@ -300,13 +301,13 @@ namespace Consystently.Essentials
             UnitController currUnit = TurnOrder[CurrentUnitTurn];
             switch (action)
             {
-               case CombatActions.Ability:
-                   currentPhase.PushState();
-                   rangeDisplay.DisplayAbilityRange(tileControllers, currUnit, currUnit.GetData().Moves[selection]);
-                   return;
-               case CombatActions.Item:
-                   Debug.Log($"unknown action: {action}" );
-                   return;
+                case CombatActions.Ability:
+                    currentPhase.PushState();
+                    rangeDisplay.DisplayAbilityRange(tileControllers, currUnit, currUnit.GetData().Moves[selection]);
+                    return;
+                case CombatActions.Item:
+                    Debug.Log($"unknown action: {action}" );
+                    return;
             }
 //            rangeDisplay.DisplayRange();
         }
@@ -338,22 +339,24 @@ namespace Consystently.Essentials
             UnitController currentUnit = TurnOrder[CurrentUnitTurn];
             switch (ReceivedAction)
             {
-               case CombatActions.Attack:
-                   if (SelectedTile != currentUnit.TileCoords) 
-                       HandleSelectAttack(currentUnit);
-                   break;
-               case CombatActions.Move:
-                   if (selectedTileController.IsMoveable(currentUnit.TileCoords,1, Faction.Ally) && !currentUnit.HasMoved)
-                      HandleSelectMove(selectedTileController, currentUnit); 
-                   return;
-               case CombatActions.Ability:
-                   break;
-               case CombatActions.Item:
-                   Debug.Log("items are not implemented in mvp");
-                   break;
-               default:
-                   Debug.Log("Unknown action");
-                   break;
+                case CombatActions.Attack:
+                    if (currentUnit.AttackReachable(selectedTileController)) 
+                        HandleSelectAttack(currentUnit);
+                    break;
+                case CombatActions.Move:
+                    if (selectedTileController.IsMoveable(currentUnit.TileCoords,1, Faction.Ally) && !currentUnit.HasMoved)
+                        HandleSelectMove(selectedTileController, currentUnit); 
+                    return;
+                case CombatActions.Ability:
+                    if(currentUnit.AbilityReachable(currentUnit.GetData().Moves[ActionSelection],selectedTileController))
+                        HandleSelectAbility(currentUnit); 
+                    break;
+                case CombatActions.Item:
+                    Debug.Log("items are not implemented in mvp");
+                    break;
+                default:
+                    Debug.Log("Unknown action");
+                    break;
             }
         }
         
@@ -364,8 +367,39 @@ namespace Consystently.Essentials
             rangeDisplay.HideRange();
             FinishSelection();
         }
+
+        private void HandleSelectAbility(UnitController currentUnit)
+        {
+            TileController epicenter =  tileControllers[TileCubeCoords[SelectedTile]];
+            AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
+            rangeDisplay.HideRange();           
+            //epicenter hit 
+            foreach (UnitController enemy in tileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
+                CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
+            
+            //hit the area surrounding the epicenter
+            if (ability.AOE > 0)
+            {
+                foreach (CubeCoordDirections direction in Enum.GetValues(typeof(CubeCoordDirections)))
+                {
+                    Vector3Int affectedTile = epicenter.tileCoordinate;
+                    for (int tilesFromEpicenter = 0; tilesFromEpicenter < ability.AOE; tilesFromEpicenter++)
+                    {
+                        affectedTile += direction.Vector();
+                        if (TileCubeCoords.TryGetValue(affectedTile, out _))
+                        {
+                            foreach (UnitController enemy in tileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
+                                CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+
+            FinishSelection();
+        }
         
-        public void EnemyAttack() {}
         
         private void HandleSelectMove(TileController selectedTileController, UnitController currentUnit)
         {
@@ -389,13 +423,14 @@ namespace Consystently.Essentials
 
         private void FinishSelection()
         { 
-           ChangeTurn();
-           ResetCurrentTile();
-           battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
+            ChangeTurn();
+            ResetCurrentTile();
+            battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
         }
 
         public void RedoSelection()
         {
+            Debug.Log("redo selection");
             rangeDisplay.HideRange();
             ResetCurrentTile();
             currentPhase.Exit();

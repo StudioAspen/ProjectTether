@@ -1,6 +1,7 @@
 using System;
 using Consystently.Essentials;
 using Tether.CharacterSystems;
+using TileSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +41,9 @@ public class CombatUI : MonoBehaviour
         cursor.SetActive(false); 
         CombatManager.battlePhaseChanged += HandleUserActions;
         cancelSubmenu.performed += OnCloseSubmenu;
+        CombatManager.examinedTile += ExamineTile;
+        CombatManager.exitedExamine += ExitExamine;
+        CombatManager.examinedUnit += ExamineUnit;
         if (abilityButtons == null || abilityButtons.Length == 0)
         {
            abilityButtons = abilitiesPanel.GetComponentsInChildren<Button>();
@@ -58,6 +62,8 @@ public class CombatUI : MonoBehaviour
     void OnDisable()
     {
         CombatManager.battlePhaseChanged -= HandleUserActions;
+        CombatManager.examinedTile -= ExamineTile;
+        CombatManager.exitedExamine -= ExitExamine;
         if (abilityButtons == null)
             return;
         foreach (Button button in abilityButtons)
@@ -101,6 +107,23 @@ public class CombatUI : MonoBehaviour
         playerActionsContainer.SetActive(false);
         uiInputModule.enabled = false;
         cursor.SetActive(true);
+    }
+
+    private void ExamineTile(TileController tc)
+    {
+        cursor.SetActive(false);
+        //do more stuff related to ui
+    }
+
+    private void ExitExamine()
+    {
+        cursor.SetActive(true);
+    }
+
+    //does nothing for now but will do stuff related to ui later
+    private void ExamineUnit(UnitController uc)
+    {
+       Debug.Log(uc.GetData().Name); 
     }
 
     //buttons on the combat panel will use this function

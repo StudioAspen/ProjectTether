@@ -53,7 +53,7 @@ namespace Consystently.Essentials.Math
             return !targetContainsAlly && tileWithinRange;
         }
 
-        //currently no unique ranges for abilities. We can change this by designing a second diff. HexGridDistance function
+        //currently no unique ranges for abilities. We can change this by designing a diff. overloaded HexGridDistance function
         public static bool AbilityReachable(this UnitController cc, AbilitySO ability, TileController target)
         {
             Vector3Int from = cc.TileCoords;

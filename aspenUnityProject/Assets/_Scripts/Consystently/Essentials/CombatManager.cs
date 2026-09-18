@@ -14,7 +14,7 @@ namespace Consystently.Essentials
     /*will not be a traditional manager because it does not
     need to be static. EncounterManager will be static and the one
     to send the data over to CombatManager. CombatManager will exist
-    in the battle scene only. The UIManager will need a reference to the CombatManager
+    in the battle scene only.
     */
     public class CombatManager : MonoBehaviour
     {
@@ -50,7 +50,7 @@ namespace Consystently.Essentials
         //for easier targeting calculation
         public List<AllyUnitController> PlayerUnits { get; private set; } = new List<AllyUnitController>();
         public int CurrentUnitTurn { get; private set; }
-        private Vector3Int SelectedTile { get; set; }
+        public Vector3Int SelectedTile { get; private set; }
         private Vector3Int CurrentTile { get; set; } = new Vector3Int(0, 0, 0);
         private CombatActions ReceivedAction { get; set; }
         public int ActionSelection { get; private set; }
@@ -65,6 +65,9 @@ namespace Consystently.Essentials
         //we may want sounds when the cursor moves around 
         public static event Action<Vector3> hoverTileChanged;  
         public static event Action<BattlePhase, UnitController> battlePhaseChanged;
+        public static event Action<TileController> examinedTile;
+        public static event Action<UnitController> examinedUnit;
+        public static event Action exitedExamine; 
 
         private void Awake()
         {
@@ -156,6 +159,7 @@ namespace Consystently.Essentials
                     TurnOrder.Add(tileControllers[tile].GetUnitAt(unit));
                     tileControllers[tile].GetUnitAt(unit).SetTile(tileControllers[tile].tileCoordinate);
                     tileControllers[tile].GetUnitAt(unit).OnUnitMove += UnitHasMoved;
+                    Debug.Log(tileControllers[tile].UnitControllers[unit].GetData().Name);
                 }
                 tileControllers[tile].RepositionUnits(ArbitraryOffset);
             }
@@ -349,6 +353,7 @@ namespace Consystently.Essentials
                     Debug.Log("items are not implemented in mvp");
                     break;
                 case CombatActions.View:
+                    ExamineTile();
                     currentPhase.PushState();
                     break;
                 default:
@@ -431,6 +436,21 @@ namespace Consystently.Essentials
             ResetCurrentTile();
             currentPhase.Exit();
             battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
+        }
+
+        private void ExamineTile()
+        {
+           examinedTile?.Invoke(GetTileController(SelectedTile)); 
+        }
+
+        public void ExamineUnit(UnitController unitController)
+        {
+            examinedUnit?.Invoke(unitController);
+        }
+
+        public void ExitExamine()
+        {
+            exitedExamine?.Invoke();
         }
         
         public UnitController GetCurrentUnit()

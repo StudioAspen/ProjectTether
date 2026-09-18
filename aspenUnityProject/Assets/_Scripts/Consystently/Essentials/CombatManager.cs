@@ -58,7 +58,7 @@ namespace Consystently.Essentials
         #endregion
 
         //TODO: sub to each unit themselves 
-        //TODO: implement the proper response to unit death. For each unit that dies, add them to an array. 
+        //TODO: figure out what to do when a unit dies 
         public static event Action<Unit[]> unitsDead;
         //animation/tile update handled per unit at the instant they move. Perhaps also camera class  
         public static event Action<UnitController> unitMoved;
@@ -324,18 +324,12 @@ namespace Consystently.Essentials
             hoverTileChanged?.Invoke(tileControllers[TileCubeCoords[CurrentTile]].Position());
         }
         
-
         //attack is basic attack with no ability selection. 
-        //attacks do not target individual enemies and hit every enemy in a tile
-        //TODO: for abilities, we may need a new function when we want added functionality
-        //TODO: fix redoSelection, fix unitControllers not changing the tile 
-        //TODO: break into functions
+        //attacks do not target individual enemies and hit every enemy in a tile (per the gcc)
         public void SelectTile(InputAction.CallbackContext context)
         {
             SelectedTile = CurrentTile;
             TileController selectedTileController = tileControllers[TileCubeCoords[SelectedTile]];
-            if (ReceivedAction == CombatActions.View) 
-                return;
             UnitController currentUnit = TurnOrder[CurrentUnitTurn];
             switch (ReceivedAction)
             {
@@ -353,6 +347,9 @@ namespace Consystently.Essentials
                     break;
                 case CombatActions.Item:
                     Debug.Log("items are not implemented in mvp");
+                    break;
+                case CombatActions.View:
+                    currentPhase.PushState();
                     break;
                 default:
                     Debug.Log("Unknown action");
@@ -396,7 +393,6 @@ namespace Consystently.Essentials
                     }
                 }
             }
-
             FinishSelection();
         }
         
@@ -436,7 +432,7 @@ namespace Consystently.Essentials
             currentPhase.Exit();
             battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
         }
-
+        
         public UnitController GetCurrentUnit()
         {
             return TurnOrder[CurrentUnitTurn]; 

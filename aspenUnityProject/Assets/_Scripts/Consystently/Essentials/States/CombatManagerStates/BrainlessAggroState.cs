@@ -9,15 +9,12 @@ namespace Consystently.Essentials
     public class BrainlessAggroState : EnemyStateSO
     {
 
-        //percentage 
-        [SerializeField] private float percentHPAtExit;
-        //add weights or something 
-        
         //I believe we need to pass ep because of how scriptable objects work
+        //the ep usage looks atrocious, but I am not sure how we could connect the SO to the combat states/data
         public override void Enter(EnemyPhase ep)
         {
             ep.SetTarget(GetNearestTarget(ep));
-            if (ep.Euc.GetData().HealthRemaining * 1.0 <= ep.Euc.GetData().Health * percentHPAtExit)
+            if (ep.Euc.GetData().HealthRemaining * 1.0 <= ep.Euc.GetData().Health * PercentHPAtExit)
                 ep.PopState();
 
             DoBattle(ep);
@@ -38,7 +35,7 @@ namespace Consystently.Essentials
         private void DoBattle(EnemyPhase ep)
         {
             if (ep.Euc.TileCoords.HexGridDistance(ep.Target) > ep.Euc.GetData().DefaultAttackRange() && !ep.Euc.HasMoved)
-                Move(ep.Target, ep);
+                Move(ep);
             if (ep.Attack())
                 Debug.Log("enemy attacked");
             else
@@ -50,7 +47,7 @@ namespace Consystently.Essentials
             ep.GetGM().ChangeTurn();
         }
 
-        //brainless targeting for now 
+        //brainless targeting for now. Target closest player unit 
         private Vector3Int GetNearestTarget(EnemyPhase ep)
         {
             //impossibly large distance for 19 tiles. Any number above 4 or 5 should work 
@@ -68,7 +65,8 @@ namespace Consystently.Essentials
             return currentTarget;
         }
 
-        private void Move(Vector3Int target, EnemyPhase ep)
+        //brainless aggro, so constantly moves towards player unit
+        private void Move(EnemyPhase ep)
         {
            Vector3Int currPos = ep.Euc.TileCoords; 
            Vector3Int newPos = new Vector3Int();

@@ -14,6 +14,7 @@ namespace Consystently.Essentials
         public PlayerPhase(CombatManager combatManager) : base(combatManager)
         {
            states.Add(new SelectTileState(combatManager, this)); 
+           states.Add(new SelectUnitState(combatManager, this));
         }
 
         public override void Enter()

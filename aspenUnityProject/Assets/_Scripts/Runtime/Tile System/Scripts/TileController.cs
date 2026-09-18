@@ -9,6 +9,8 @@ namespace TileSystem
 {
     public class TileController : MonoBehaviour
     {
+        [SerializeField] private TileSO baseData;
+        
         private Tile tileData;
         private const int MaxUnits = 4;
         private const float ArbitraryOffset = 10;
@@ -18,10 +20,9 @@ namespace TileSystem
 
         public Vector3Int tileCoordinate;
         
-        //change to array if positions ever matter. Everything else so far has been an array because
+        //change to array if unit positions should not change on unit removal. Everything else so far has been an array because
         //I assumed early on that specific positions within the tile mattered (they don't currently) 
         public List<UnitController> UnitControllers { get; private set; }= new List<UnitController>();
-
 
         public void Initialize(TileSO baseData)
         {

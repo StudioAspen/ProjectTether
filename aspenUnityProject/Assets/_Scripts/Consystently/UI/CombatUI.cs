@@ -5,29 +5,41 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 
-//TODO: disable move button by listening to unit movement (button just needs to be disabled)
+//TODO: disable move button by subscribing to unit movement (button just needs to be disabled)
+//CAN probably refactor because I was not sure how Unity UI works when making this. 
 public class CombatUI : MonoBehaviour
 {
+    
     [SerializeField] private GameObject playerActionsContainer;
     [SerializeField] private GameObject abilitiesPanel;
     [SerializeField] private Button firstButton; 
     [SerializeField] private GameObject cursor;
-    [SerializeField] private InputSystemUIInputModule inputSystemUIInput;
+
+    [SerializeField] private InputSystemUIInputModule uiInputModule;
+    private InputAction cancelSubmenu;
     
     private Button[] abilityButtons;
 
     public static event Action<CombatActions> PlayerAction;
     public static event Action<CombatActions, int> PlayerSelectiveAction;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private void Awake()
+    {
+        if (uiInputModule != null)
+            cancelSubmenu = uiInputModule.cancel.action; 
+    }
+
+
     void OnEnable()
     {
         playerActionsContainer.SetActive(false);
         abilitiesPanel.SetActive(false);
         cursor.SetActive(false); 
         CombatManager.battlePhaseChanged += HandleUserActions;
+        cancelSubmenu.performed += OnCloseSubmenu;
         if (abilityButtons == null || abilityButtons.Length == 0)
         {
            abilityButtons = abilitiesPanel.GetComponentsInChildren<Button>();
@@ -39,7 +51,9 @@ public class CombatUI : MonoBehaviour
            }
 
         }
+   
     }
+
 
     void OnDisable()
     {
@@ -66,7 +80,7 @@ public class CombatUI : MonoBehaviour
         {
             playerActionsContainer.SetActive(false);
         }
-        inputSystemUIInput.enabled = playerActionsContainer.activeSelf; //painful concurrency bug if this is removed
+        uiInputModule.enabled = playerActionsContainer.activeSelf; //painful concurrency bug if this is removed
         int currMove = 0;
         foreach (Transform button in abilitiesPanel.transform)
         {
@@ -85,7 +99,7 @@ public class CombatUI : MonoBehaviour
     private void TrySelection()
     {
         playerActionsContainer.SetActive(false);
-        inputSystemUIInput.enabled = false;
+        uiInputModule.enabled = false;
         cursor.SetActive(true);
     }
 
@@ -101,12 +115,26 @@ public class CombatUI : MonoBehaviour
         Debug.Log(pAction);
     }
 
-    public void OpenAbilitiesMenu()
+    //convert into openSubmenu for both inventory and abilities in the future 
+    private void OpenAbilitiesMenu()
     {
         abilitiesPanel.SetActive(true);        
         playerActionsContainer.SetActive(false);
     }
+
+    private void CloseAbilitiesMenu()
+    {
+       abilitiesPanel.SetActive(false);
+       playerActionsContainer.SetActive(true);
+    }
     
+    //Band-Aid QoL fix  
+    private void OnCloseSubmenu(InputAction.CallbackContext context)
+    {
+       if(abilitiesPanel.activeSelf) 
+           CloseAbilitiesMenu(); 
+    }
+
     
     //for actions that require selection of other things like items, moves, etc.
     public void SendSelectedAction(int action, int move)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{7e0e63f9-f996-4ed1-82b1-b188bcaeb200}">
+		<property name="assetPath">
+			<value>BATTLE/Slash DMG/Gore, Stab, Knife, Slice, Slash Skin, Fleshy, Gore 02 SND22380 S00.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.73987499999999995</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2eae5f86-1b6c-4557-97c2-04055b4dc054}</destination>
+		</relationship>
+	</object>
+</objects>

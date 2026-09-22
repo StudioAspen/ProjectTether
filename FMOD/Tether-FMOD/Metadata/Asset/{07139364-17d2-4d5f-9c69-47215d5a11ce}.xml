@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EncodableAsset" id="{07139364-17d2-4d5f-9c69-47215d5a11ce}">
+		<property name="assetPath">
+			<value>BATTLE/Earth DMG/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2eae5f86-1b6c-4557-97c2-04055b4dc054}</destination>
+		</relationship>
+	</object>
+</objects>

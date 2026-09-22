@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="Workspace" id="{82ed8d78-0df9-4b92-9bd0-35324554e329}">
+		<property name="builtBanksOutputDirectory">
+			<value>../../../../../Documents/GitHub/project-tether/FMOD</value>
+		</property>
+		<relationship name="masterEventFolder">
+			<destination>{4ccf88f2-de63-4957-9063-86da3fff1260}</destination>
+		</relationship>
+		<relationship name="masterTagFolder">
+			<destination>{66eb5cba-776d-4935-a5fd-4dd49db97ac9}</destination>
+		</relationship>
+		<relationship name="masterEffectPresetFolder">
+			<destination>{5775eb76-a59b-4115-abf3-8b1a745c382e}</destination>
+		</relationship>
+		<relationship name="masterParameterPresetFolder">
+			<destination>{477be9af-7e15-4adf-94c0-14cd35f2c3db}</destination>
+		</relationship>
+		<relationship name="masterBankFolder">
+			<destination>{20004031-944f-4d77-bb68-61cd74bbb899}</destination>
+		</relationship>
+		<relationship name="masterSandboxFolder">
+			<destination>{8200b0a0-14e1-46db-81f6-e6d6d7ef5a2c}</destination>
+		</relationship>
+		<relationship name="masterAssetFolder">
+			<destination>{2eae5f86-1b6c-4557-97c2-04055b4dc054}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{61ffea06-1d2e-4657-be27-53930357d7e5}</destination>
+		</relationship>
+		<relationship name="profilerSessionFolder">
+			<destination>{75071531-e794-40f3-85f8-c2d3ad83d56b}</destination>
+		</relationship>
+		<relationship name="platforms">
+			<destination>{c8880157-f1e3-4a80-b145-8f36a4d88c20}</destination>
+		</relationship>
+	</object>
+</objects>

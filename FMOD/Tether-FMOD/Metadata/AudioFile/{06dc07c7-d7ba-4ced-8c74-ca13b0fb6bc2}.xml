@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{06dc07c7-d7ba-4ced-8c74-ca13b0fb6bc2}">
+		<property name="assetPath">
+			<value>BATTLE/Water DMG/Water, Splash, Throw Water From Bucket Into Water, Lake, MKH8060 MS 01 SND114429 S03.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>192</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>3.2507812500000002</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2eae5f86-1b6c-4557-97c2-04055b4dc054}</destination>
+		</relationship>
+	</object>
+</objects>

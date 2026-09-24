@@ -4,16 +4,17 @@ using UnityEngine.InputSystem;
 
 namespace Consystently.Essentials
 {
-    public class PlayerState : BattleState
+    public class PlayerPhase : BattlePhase
     {
         private Stack<ActionState>  stateStack = new Stack<ActionState>();
         
         //TODO: add new state class for individual unit selection
         private List<ActionState> states  = new List<ActionState>();
 
-        public PlayerState(CombatManager combatManager) : base(combatManager)
+        public PlayerPhase(CombatManager combatManager) : base(combatManager)
         {
            states.Add(new SelectTileState(combatManager, this)); 
+           states.Add(new SelectUnitState(combatManager, this));
         }
 
         public override void Enter()
@@ -22,12 +23,14 @@ namespace Consystently.Essentials
            stateStack.Clear();
         }
 
+        /*
         //TODO: get rid of update from all states later? 
         public override void Update()
         {
             if(stateStack.Count > 0)
                 stateStack.Peek().Update();
         }
+        */
 
         public override void Exit()
         {

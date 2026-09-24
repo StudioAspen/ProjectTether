@@ -24,7 +24,7 @@ public static class CombatFormulas
     if(attackerStats.Strength > attackerStats.Tech) 
       damage = MathF.Round(attackerStats.Strength*(166f / (166f + defenderStats.Defense)) * Random.Range(0.9f, 1.1f)); //Round up
     else
-      damage = MathF.Round(attackerStats.Tech*(166f / (166f + defenderStats.Defense)) * Random.Range(0.9f, 1.1f)); //Round up
+      damage = MathF.Round(attackerStats.Tech*(166f / (166f + defenderStats.Resistance)) * Random.Range(0.9f, 1.1f)); //Round up
     
     //Dodge Chance
     if(miss)
@@ -45,10 +45,68 @@ public static class CombatFormulas
       damage = Mathf.Floor(damage * 0.5f);
       Debug.Log($"{defender.name} was blocking!");
     }
-
+    Debug.Log(damage);
     foreach (Element element in attackElements)
       damage *= defenderStats.Affinities[element].Multiplier();
+    defenderStats.ChangeHealthRemaining(Mathf.CeilToInt(damage));
+    Debug.Log(damage);
+    Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 
+  }
 
+  
+  public static void AbilityDamage(UnitController attacker, UnitController defender, AbilitySO ability)
+  {
+    Unit attackerStats = attacker.GetData();
+    Unit defenderStats = defender.GetData();
+    bool crit = Crit(attacker, defender);
+    bool miss = Miss(attacker, defender);
+    float damage = 0f;
+    
+    if (attackerStats == null || defenderStats == null)
+    {
+      Debug.LogError("Missing UnitStats");
+      return;
+    }
+
+    //TODO: ability damage scaling needs to be changed (waiting on design team)
+    switch (ability.AbilityType)
+    {
+      case AbilityType.Physical:
+        damage = MathF.Round(attackerStats.Strength * (166f / (166f + defenderStats.Defense)) *
+                             Random.Range(0.9f, 1.1f) + ability.Damage); //Round up
+        break;
+      case AbilityType.Technical: 
+        damage = MathF.Round(attackerStats.Tech * (166f / (166f + defenderStats.Resistance)) *
+                             Random.Range(0.9f, 1.1f) + ability.Damage); //Round up
+        break;
+      case AbilityType.Status:
+        Debug.Log("Do something with status in the future");
+        break;
+      default:
+        Debug.Log("Unknown ability type");
+        break;
+    }
+
+    if(miss && ability.CanMiss)
+    {
+      Debug.Log($"{attacker.name} missed!");
+      return;
+    }
+    
+    if(crit)
+    {
+      damage*=2f;
+      Debug.Log($"{attacker.name} CRIT!");
+    }
+   
+    if(defenderStats.IsBlocking)
+    {
+      damage = Mathf.Floor(damage * 0.5f);
+      Debug.Log($"{defender.name} was blocking!");
+    }
+
+    foreach (Element element in ability.Element)
+      damage *= defenderStats.Affinities[element].Multiplier();
     defenderStats.ChangeHealthRemaining(Mathf.CeilToInt(damage));
     Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 
   }

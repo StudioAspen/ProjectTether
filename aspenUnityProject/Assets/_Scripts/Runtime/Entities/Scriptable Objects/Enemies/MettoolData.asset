@@ -15,7 +15,7 @@ MonoBehaviour:
   _portrait: {fileID: 0}
   _name: Mettool
   _model: {fileID: 8642023848279196920, guid: 128631cd648082e0ab1c702d007c89dd, type: 3}
-  Level: 2
+  Level: 11
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
   RemainingHealth: 100
@@ -38,5 +38,8 @@ MonoBehaviour:
   _earth: 0
   _wind: 0
   _fire: 0
-  moves: []
+  moves:
+  - {fileID: 11400000, guid: 5ba17807c606d90809524740f4ca5cc2, type: 2}
   combatClass: {fileID: 11400000, guid: ae5348d884e198b30bd6c06ddc58cfe2, type: 2}
+  behaviourStates:
+  - {fileID: 11400000, guid: 75195412c4b6d430a9c93b177815a978, type: 2}

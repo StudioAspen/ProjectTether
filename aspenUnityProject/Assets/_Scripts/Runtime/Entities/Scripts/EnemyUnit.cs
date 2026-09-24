@@ -1,15 +1,19 @@
 using System;
+using System.Collections.Generic;
+using Consystently.Essentials;
 
 //TODO: xp system
 public class EnemyUnit : Unit
 {
    
+   public List<EnemyStateSO> behaviourStates { get; private set; }
    public event Action<EnemyUnit> OnDeath;
    public event Action<EnemyUnit> OnDefend;
    
-   public EnemyUnit(UnitDataSO unit) : base(unit)
+   public EnemyUnit(EnemyUnitSO unit) : base(unit)
    {
       SetFaction(Faction.Enemy);
+      behaviourStates = unit.BehaviourStates;
    }
 
    public override void ChangeHealthRemaining(int value)

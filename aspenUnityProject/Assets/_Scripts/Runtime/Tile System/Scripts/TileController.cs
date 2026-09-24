@@ -9,6 +9,8 @@ namespace TileSystem
 {
     public class TileController : MonoBehaviour
     {
+        [SerializeField] private TileSO baseData;
+        
         private Tile tileData;
         private const int MaxUnits = 4;
         private const float ArbitraryOffset = 10;
@@ -18,10 +20,9 @@ namespace TileSystem
 
         public Vector3Int tileCoordinate;
         
-        //change to array if positions ever matter. Everything else so far has been an array because
+        //change to array if unit positions should not change on unit removal. Everything else so far has been an array because
         //I assumed early on that specific positions within the tile mattered (they don't currently) 
         public List<UnitController> UnitControllers { get; private set; }= new List<UnitController>();
-
 
         public void Initialize(TileSO baseData)
         {
@@ -44,6 +45,13 @@ namespace TileSystem
                 return null;
             
             return  UnitControllers[position];
+        }
+
+        public UnitController PeekUnit()
+        {
+            if (UnitControllers.Count < 1)
+                return null;
+            return UnitControllers[^1];
         }
         
         //returns deleted controller so the controller can be moved to a different TileController
@@ -86,13 +94,13 @@ namespace TileSystem
         }
 
         //currently, units can only move to adjacent tiles 
-        public bool IsMoveable(Vector3Int from, int range)
+        public bool IsMoveable(Vector3Int from, int range, Faction faction)
         {
             if (tileCoordinate == from || UnitControllers.Count >= MaxUnits || from.HexGridDistance(tileCoordinate) > range)
                 return false;
             foreach (UnitController unit in UnitControllers)
             {
-                if (unit.GetData().Faction == Faction.Enemy)
+                if (unit.GetData().Faction != faction)
                     return false;
             }
             return true; 

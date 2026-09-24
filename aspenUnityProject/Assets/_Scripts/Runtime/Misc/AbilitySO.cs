@@ -37,6 +37,9 @@ public class AbilitySO : ScriptableObject
 
    [SerializeField] private bool canTargetEmptyTile;
    public bool CanTargetEmptyTile => canTargetEmptyTile;
+   
+   [SerializeField] private bool canMiss;
+   public bool CanMiss => canMiss;
 
    //not useful in MVP. This is for when we decide to have attacks affect tiles.
    //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 

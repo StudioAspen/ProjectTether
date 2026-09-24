@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{ebe80097-731b-4bfc-b3d5-dec1b38fa828}">
+		<property name="assetPath">
+			<value>BATTLE/Blast DMG/Explosions, Designed, Short, Impactful, Close, No Debris, Variations 02 SND134894 S02 1.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>5.9160937499999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2eae5f86-1b6c-4557-97c2-04055b4dc054}</destination>
+		</relationship>
+	</object>
+</objects>

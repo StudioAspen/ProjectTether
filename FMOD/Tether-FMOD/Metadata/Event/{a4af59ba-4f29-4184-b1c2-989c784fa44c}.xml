@@ -30,6 +30,7 @@
 		</relationship>
 		<relationship name="banks">
 			<destination>{a548009e-0814-4cdd-945f-b66d6a550b21}</destination>
+			<destination>{76efd946-678b-4974-8feb-1a88f061e9e5}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixer" id="{b137a59d-c89e-467c-8f57-116db8ecb44e}">
@@ -79,7 +80,7 @@
 			<value>1.6000000000000001</value>
 		</property>
 		<property name="volume">
-			<value>-6.5</value>
+			<value>-15.5</value>
 		</property>
 		<relationship name="fadeOutCurve">
 			<destination>{006b5c28-9966-49fa-ad8f-0cea9f40200b}</destination>
@@ -118,7 +119,7 @@
 			<value>1</value>
 		</property>
 		<property name="curveShape">
-			<value>0.25471893</value>
+			<value>-0.946899951</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{7f8c9273-6837-4adf-abdd-bfd3b9d816be}">

@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-=======
 using System;
 using UnityEngine;
 
->>>>>>> production/battle-scene
 namespace Consystently.Essentials
 {
     public enum CubeCoordDirections
@@ -15,9 +12,6 @@ namespace Consystently.Essentials
        N,
        NE
     }
-<<<<<<< HEAD
-}
-=======
 
     public static class CubeCoordDirectionsExtensions
     {
@@ -33,7 +27,6 @@ namespace Consystently.Essentials
        };
 
     }
-}
 
 /*
 #region directions
@@ -47,4 +40,5 @@ private readonly Vector3Int[] directions = new Vector3Int[] {
 };
 
 */
->>>>>>> production/battle-scene
+
+}

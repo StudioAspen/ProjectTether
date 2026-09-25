@@ -1,7 +1,9 @@
 using UnityEngine;
 using TileSystem;
-using Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 
+/*
+ old code
 public class TileManager : Singleton<TileManager>
 {
     // For all future tiles, follow a flow similar to PLAIN_TILE
@@ -47,3 +49,5 @@ public class TileManager : Singleton<TileManager>
             .Build();
     }
 }
+
+*/

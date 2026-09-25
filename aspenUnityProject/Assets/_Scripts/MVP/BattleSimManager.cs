@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 using System.Linq;
+using _Scripts.Consystently.Essentials;
 using UnityEngine;
 using UnityEngine.UI;
-using Consystently.UI;
+using _Scripts.Consystently.UI;
 
 /*
  * 

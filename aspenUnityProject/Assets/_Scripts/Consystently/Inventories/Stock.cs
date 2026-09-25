@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Consystently
+namespace _Scripts
 {
   namespace Inventories
   {

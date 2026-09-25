@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Consystently.UI
+namespace _Scripts.Consystently.UI
 {
   public interface IPanelHandler
   {

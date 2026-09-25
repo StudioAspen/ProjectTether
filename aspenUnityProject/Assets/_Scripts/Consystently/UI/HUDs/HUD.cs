@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Consystently.UI
+namespace _Scripts.Consystently.UI
 {
   [RequireComponent(typeof(CanvasGroup))]
   [DisallowMultipleComponent]

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Scriptable Objects/Unit/Enemy", order = 1)]

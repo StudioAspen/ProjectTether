@@ -4,13 +4,16 @@ using TileSystem;
 using UnityEditor;
 using UnityEngine;
 
-
+//OLD CODE
+/*
 /* Note: IF we need to optimize, create a tile object pool that holds tile creation data,
  * stores them in a dict and looksup tile data whenever its required
  */
 
 // Customizing the tile dictionary in the editor to make it more user friendly for designers
 
+
+/*
 [CustomEditor(typeof(TilePlacementManager))]
 public class CustomTilePlacementManagerEditor : Editor
 {
@@ -148,3 +151,4 @@ public class TilePlacementManager : MonoBehaviour
         }
     }
 }
+*/

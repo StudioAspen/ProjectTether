@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Misc;
-using Consystently.Essentials.Math;
+using _Scripts.Runtime.Managers.Math;
+using _Scripts.Runtime.UI;
 using Tether.CharacterSystems;
 using TileSystem;
 using UnityEngine;
@@ -9,7 +10,7 @@ using UnityEngine.InputSystem;
 using Debug = UnityEngine.Debug;
 
 //TODO: NEED COROUTINES when we are past the mvp(?)
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     /*will not be a traditional manager because it does not
     need to be static. EncounterManager will be static and the one
@@ -18,7 +19,7 @@ namespace Consystently.Essentials
     */
     public class CombatManager : MonoBehaviour
     {
-        private const float ArbitraryOffset = 10;
+        private const float _arbitraryOffset = 10;
         private const int TileNum = 19;
         private UnitDataSO[,] initializerData;
         
@@ -32,11 +33,11 @@ namespace Consystently.Essentials
         public Dictionary<Vector3Int, int> TileCubeCoords { get; private set; }= new Dictionary<Vector3Int, int>();
         
         //make sure it has references and not copies of the objects, so changes are reflected
-        //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class
+        //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
         public List<UnitController> TurnOrder { get; private set; }= new List<UnitController>();
         public List<UnitController> DeadUnits {get; private set;}= new List<UnitController>();
         
-        //TODO: add an enum for this if we ever have more than just enemy/ally turns 
+        //TODO: add an enum for this if we ever have more than just enemy/ally turns?
         private readonly BattlePhase[] phases = new BattlePhase[2];
         private BattlePhase currentPhase;  
         [SerializeField] private RangeDisplay rangeDisplay; 
@@ -44,15 +45,15 @@ namespace Consystently.Essentials
         #region miscStateManagementVariables
         
         //need totals for defeat/win checks
-        private int TotalAllies { get; set; }
-        private int TotalEnemies { get; set; }
+        private int _totalAllies { get; set; }
+        private int _totalEnemies { get; set; }
         
         //for easier targeting calculation
         public List<AllyUnitController> PlayerUnits { get; private set; } = new List<AllyUnitController>();
         public int CurrentUnitTurn { get; private set; }
         public Vector3Int SelectedTile { get; private set; }
-        private Vector3Int CurrentTile { get; set; } = new Vector3Int(0, 0, 0);
-        private CombatActions ReceivedAction { get; set; }
+        private Vector3Int _currentTile { get; set; } = new Vector3Int(0, 0, 0);
+        private CombatActions _receivedAction { get; set; }
         public int ActionSelection { get; private set; }
         
         #endregion
@@ -143,13 +144,13 @@ namespace Consystently.Essentials
                     if (initializerData[tile, unit].Faction == Faction.Ally)
                     {
                         tileControllers[tile].AddUnit(newTempObject.GetComponent<AllyUnitController>());
-                        TotalAllies++;
+                        _totalAllies++;
                         PlayerUnits.Add((AllyUnitController)tileControllers[tile].PeekUnit());
                     }
                     else if (initializerData[tile, unit].Faction == Faction.Enemy)
                     {
                         tileControllers[tile].AddUnit(newTempObject.GetComponent<EnemyUnitController>());
-                        TotalEnemies++;
+                        _totalEnemies++;
                     }
                     else 
                         Debug.Log("neutral units not yet implemented");
@@ -161,7 +162,7 @@ namespace Consystently.Essentials
                     tileControllers[tile].GetUnitAt(unit).OnUnitMove += UnitHasMoved;
                     Debug.Log(tileControllers[tile].UnitControllers[unit].GetData().Name);
                 }
-                tileControllers[tile].RepositionUnits(ArbitraryOffset);
+                tileControllers[tile].RepositionUnits(_arbitraryOffset);
             }
         }
 
@@ -227,9 +228,10 @@ namespace Consystently.Essentials
         
         //dead are kept because lazy deletion. Also, there may or may not be a revive feature, so their order being kept is good.
         //I am also not sure if deletion is better because deletion would require searching and result in the entire list shifting. 
+        //TODO: turn system needs to match gcc. Currently only sorts by unit speed and has the fastest unit go first
         public void ChangeTurn()
         {
-            if (DeadUnits.Count >= (TotalAllies + TotalEnemies))
+            if (DeadUnits.Count >= (_totalAllies + _totalEnemies))
             {
                 Debug.Log("All units dead.");
                 return;
@@ -255,11 +257,11 @@ namespace Consystently.Essentials
         //functions for camera/ui movement/whatever 
         public void MoveTileSelector(CubeCoordDirections direction)
         {
-            Vector3Int projectedTile = CurrentTile + direction.Vector(); 
+            Vector3Int projectedTile = _currentTile + direction.Vector(); 
             if(TileCubeCoords.TryGetValue(projectedTile, out _))
             {
-                CurrentTile = projectedTile;
-                hoverTileChanged?.Invoke(tileControllers[TileCubeCoords[CurrentTile]].Position());
+                _currentTile = projectedTile;
+                hoverTileChanged?.Invoke(tileControllers[TileCubeCoords[_currentTile]].Position());
             }
         }
         
@@ -272,7 +274,7 @@ namespace Consystently.Essentials
         */
         private void HandleAction(CombatActions action)
         {
-            ReceivedAction = action;
+            _receivedAction = action;
             UnitController currUnit = TurnOrder[CurrentUnitTurn];
             switch(action)
             {
@@ -300,7 +302,7 @@ namespace Consystently.Essentials
         //for when action requires selection like with abilities/items
         private void HandleAction(CombatActions action, int selection)
         {
-            ReceivedAction = action;
+            _receivedAction = action;
             ActionSelection = selection;
             UnitController currUnit = TurnOrder[CurrentUnitTurn];
             switch (action)
@@ -324,18 +326,18 @@ namespace Consystently.Essentials
         public void ResetCurrentTile()
         {
             SelectedTile = TurnOrder[CurrentUnitTurn].TileCoords;
-            CurrentTile = SelectedTile;
-            hoverTileChanged?.Invoke(tileControllers[TileCubeCoords[CurrentTile]].Position());
+            _currentTile = SelectedTile;
+            hoverTileChanged?.Invoke(tileControllers[TileCubeCoords[_currentTile]].Position());
         }
         
         //attack is basic attack with no ability selection. 
         //attacks do not target individual enemies and hit every enemy in a tile (per the gcc)
         public void SelectTile(InputAction.CallbackContext context)
         {
-            SelectedTile = CurrentTile;
+            SelectedTile = _currentTile;
             TileController selectedTileController = tileControllers[TileCubeCoords[SelectedTile]];
             UnitController currentUnit = TurnOrder[CurrentUnitTurn];
-            switch (ReceivedAction)
+            switch (_receivedAction)
             {
                 case CombatActions.Attack:
                     if (currentUnit.AttackReachable(selectedTileController)) 
@@ -406,7 +408,7 @@ namespace Consystently.Essentials
         {
             selectedTileController.AddUnit(GetCurrTileController().RemoveUnit(currentUnit));
             currentUnit.TryMove(selectedTileController.Position(),selectedTileController.tileCoordinate);
-            selectedTileController.RepositionUnits(ArbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
+            selectedTileController.RepositionUnits(_arbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
             rangeDisplay.HideRange();
             RedoSelection();
         }

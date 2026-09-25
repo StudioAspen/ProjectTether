@@ -1,6 +1,9 @@
 using UnityEngine;
 using TileSystem;
 
+/*
+old code
+
 public class TileContainer : MonoBehaviour
 {
     // Tiles Properties
@@ -20,3 +23,5 @@ public class TileContainer : MonoBehaviour
 
     public void SetTile(Tile tile) => _tileProp = tile;
 }
+
+*/

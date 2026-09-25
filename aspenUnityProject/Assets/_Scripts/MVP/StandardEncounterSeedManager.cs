@@ -1,4 +1,5 @@
-using Consystently.Essentials;
+using _Scripts.Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 using UnityEngine;
 
 public class StandardEncounterSeedManager : Manager<StandardEncounterSeedManager>

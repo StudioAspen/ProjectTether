@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     public class PlayerPhase : BattlePhase
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Consystently.Essentials;
-using Consystently.UI;
+using _Scripts.Runtime.Managers;
+using _Scripts.Consystently.UI;
 using UnityEngine;
 
 public class BattlefieldMap : MonoBehaviour

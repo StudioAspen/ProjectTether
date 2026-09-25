@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
-using Consystently.Essentials.Math;
+using _Scripts.Runtime.Managers.Math;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
 
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     //the state when the player is selecting a tile for an action (e.g., attacking, viewing, etc.)
     public class SelectTileState : ActionState

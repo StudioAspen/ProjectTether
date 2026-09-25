@@ -1,9 +1,11 @@
-namespace Consystently.Essentials
+using UnityEditor;
+using UnityEngine;
+using System;
+using System.Collections.Generic;
+using _Scripts.Consystently.Essentials;
+
+namespace _Scripts.Runtime.Managers
 {
-  using UnityEditor;
-  using UnityEngine;
-  using System;
-  using System.Collections.Generic;
 
   public class GameManager : Manager<GameManager>
   {

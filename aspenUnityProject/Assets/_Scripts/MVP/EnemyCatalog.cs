@@ -1,5 +1,5 @@
 using UnityEngine;
-using Consystently;
+using _Scripts;
 
 public class EnemyCatalog : Catalog<EnemyUnitSO>
 {

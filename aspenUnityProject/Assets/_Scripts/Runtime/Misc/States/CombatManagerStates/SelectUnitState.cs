@@ -3,7 +3,7 @@ using TileSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     public class SelectUnitState : ActionState 
     {

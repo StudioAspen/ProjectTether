@@ -2,7 +2,7 @@ using Tether.CharacterSystems;
 using TileSystem;
 using UnityEngine;
 
-namespace Consystently.Essentials.Math
+namespace _Scripts.Runtime.Managers.Math
 {
     public static class GenericMathClass
     {

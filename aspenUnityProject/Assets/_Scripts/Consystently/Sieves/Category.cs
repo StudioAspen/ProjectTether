@@ -1,4 +1,4 @@
-namespace Consystently
+namespace _Scripts
 {
   namespace Sieves
   {

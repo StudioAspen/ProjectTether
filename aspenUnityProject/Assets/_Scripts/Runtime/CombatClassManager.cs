@@ -1,6 +1,7 @@
-using Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts.Consystently.Essentials;
 using UnityEngine;
 
 public class CombatClassManager : Singleton<CombatClassManager>

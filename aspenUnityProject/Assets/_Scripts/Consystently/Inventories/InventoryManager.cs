@@ -1,7 +1,9 @@
-namespace Consystently.Inventories
+using _Scripts.Consystently.Essentials;
+
+namespace _Scripts.Inventories
 {
   using UnityEngine;
-  using Essentials;
+  using Runtime.Managers;
 
   public class InventoryManager : Manager<InventoryManager>
   {

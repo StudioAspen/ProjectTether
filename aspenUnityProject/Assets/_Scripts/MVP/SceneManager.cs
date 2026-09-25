@@ -1,5 +1,6 @@
+using _Scripts.Consystently.Essentials;
 using UnityEngine;
-using Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 
 //remove later
 public class SceneManager : Manager<SceneManager>

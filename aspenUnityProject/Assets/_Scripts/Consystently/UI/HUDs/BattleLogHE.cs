@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Consystently.UI
+namespace _Scripts.Consystently.UI
 {
   public class BattleLogHE : HUDElement
   {

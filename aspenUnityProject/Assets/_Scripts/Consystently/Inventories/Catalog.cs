@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using _Scripts.Consystently.Essentials;
 
-namespace Consystently 
+namespace _Scripts 
 {
-  using Essentials;
+  using Runtime.Managers;
   
   public class Catalog<T> : Singleton<Catalog<T>> where T : ScriptableObject
   {

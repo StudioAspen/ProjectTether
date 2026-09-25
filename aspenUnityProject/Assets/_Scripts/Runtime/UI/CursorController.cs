@@ -1,4 +1,4 @@
-using Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 using UnityEngine;
 
 public class CursorController : MonoBehaviour

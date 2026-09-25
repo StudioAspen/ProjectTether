@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Consystently.UI
+namespace _Scripts.Consystently.UI
 {
   public class UnitVitals : MonoBehaviour
   {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using Consystently.UI;
+using _Scripts.Consystently.UI;
 
 public class TileDetails : Panel
 {

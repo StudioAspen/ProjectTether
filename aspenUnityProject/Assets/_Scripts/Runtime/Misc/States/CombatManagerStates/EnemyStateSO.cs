@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     public abstract class EnemyStateSO : ScriptableObject
     {

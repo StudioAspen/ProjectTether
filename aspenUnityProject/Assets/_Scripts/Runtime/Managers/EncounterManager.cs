@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Misc;
-using Tether.CharacterSystems;
 using UnityEngine;
+using _Scripts.Consystently.Essentials;
 
-namespace Consystently.Essentials
+
+namespace _Scripts.Runtime.Managers
 {
     public class EncounterManager : Manager<EncounterManager>
     {

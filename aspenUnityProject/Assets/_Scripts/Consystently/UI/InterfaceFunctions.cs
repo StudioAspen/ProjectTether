@@ -1,6 +1,8 @@
-namespace Consystently.UI
+using _Scripts.Runtime.Managers;
+
+namespace _Scripts.Consystently.UI
 {
-  using Consystently.Essentials;
+  using Runtime.Managers;
   using UnityEngine;
 
   [DisallowMultipleComponent]

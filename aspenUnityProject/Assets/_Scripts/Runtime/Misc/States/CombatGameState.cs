@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     public class CombatGameState : GameState
     {

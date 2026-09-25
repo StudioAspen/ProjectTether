@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     public class MainMenuGameState : GameState
     {

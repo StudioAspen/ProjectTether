@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Consystently.Essentials.Math;
+using _Scripts.Runtime.Managers.Math;
 using Tether.CharacterSystems;
 using Unity.VisualScripting;
 using UnityEngine;

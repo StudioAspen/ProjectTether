@@ -1,4 +1,4 @@
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     //probably remove this interface
     //TODO: get rid of update later?

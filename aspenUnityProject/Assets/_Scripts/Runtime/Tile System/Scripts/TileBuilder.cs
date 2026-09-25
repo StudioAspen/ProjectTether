@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/*
+OLD CODE
+
 namespace TileSystem
 {
     // Follows the builder design pattern
@@ -48,3 +51,5 @@ namespace TileSystem
         }
     }
 }
+
+*/

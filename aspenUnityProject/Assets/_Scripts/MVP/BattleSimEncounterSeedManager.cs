@@ -1,5 +1,6 @@
+using _Scripts.Consystently.Essentials;
 using AYellowpaper.SerializedCollections;
-using Consystently.Essentials;
+using _Scripts.Runtime.Managers;
 using UnityEngine;
 
 public class BattleSimEncounterSeedManager : Manager<BattleSimEncounterSeedManager>

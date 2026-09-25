@@ -1,9 +1,9 @@
 using System;
-using Consystently.Essentials.Math;
+using _Scripts.Runtime.Managers.Math;
 using Tether.CharacterSystems;
 using UnityEngine;
 
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     [CreateAssetMenu(fileName="BrainlessAggroState",menuName="Scriptable Objects/Behavior/BrainlessAggro")]
     public class BrainlessAggroState : EnemyStateSO

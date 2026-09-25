@@ -1,4 +1,4 @@
-namespace Consystently.UI
+namespace _Scripts.Consystently.UI
 {
   using UnityEngine;
   using UnityEngine.UI;

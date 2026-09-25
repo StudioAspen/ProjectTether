@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Consystently.Essentials;
-using Consystently.Essentials.Math;
+using _Scripts.Runtime.Managers.Math;
 using Tether.CharacterSystems;
 using TileSystem;
 using UnityEngine;

@@ -1,8 +1,10 @@
-namespace Consystently.UI
+using _Scripts.Consystently.Essentials;
+
+namespace _Scripts.Consystently.UI
 {
   using UnityEngine;
   using System.Collections.Generic;
-  using Essentials;
+  using Runtime.Managers;
   using System.Linq;
 
   [RequireComponent(typeof(InterfaceFunctions))]

@@ -1,4 +1,4 @@
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     public enum CombatActions
     {

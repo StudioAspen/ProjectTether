@@ -1,4 +1,4 @@
-namespace Consystently.Essentials
+namespace _Scripts.Runtime.Managers
 {
     //combat manager will get pools from level 
     //get inputActions that invoke using GameManager function for UImanager

@@ -1,8 +1,7 @@
 using System;
-using TileSystem;
 using UnityEngine;
 
-namespace Tether.CharacterSystems
+namespace _Scripts.Runtime.Entities.Scripts
 {
     public abstract class UnitController : MonoBehaviour
     {

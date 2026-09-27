@@ -1,8 +1,6 @@
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
-namespace _Scripts.Runtime.Misc
+namespace _Scripts.Runtime.Combat
 {
     //for creating new encounters within the game.
     //because unitPositions starts at index 0, there may be off-by-one errors. 

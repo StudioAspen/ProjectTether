@@ -1,3 +1,4 @@
+using _Scripts.Runtime.Entities.Scripts;
 using UnityEngine;
 
 [RequireComponent(typeof(ExperienceSystem), typeof(CombatClassSystem))]

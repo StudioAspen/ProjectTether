@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using TileSystem;
+using _Scripts.Runtime.Managers;
+using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace _Scripts.Runtime.Managers
+namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
     public class SelectUnitState : ActionState 
     {

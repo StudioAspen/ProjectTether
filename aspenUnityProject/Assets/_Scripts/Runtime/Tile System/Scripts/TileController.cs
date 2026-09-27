@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using _Scripts.Runtime.Managers.Math;
-using Tether.CharacterSystems;
-using Unity.VisualScripting;
+using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Math;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-namespace TileSystem
+namespace _Scripts.Runtime.Tile_System.Scripts
 {
     public class TileController : MonoBehaviour
     {

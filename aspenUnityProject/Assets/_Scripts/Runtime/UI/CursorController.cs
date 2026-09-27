@@ -1,27 +1,30 @@
 using _Scripts.Runtime.Managers;
 using UnityEngine;
 
-public class CursorController : MonoBehaviour
+namespace _Scripts.Runtime.UI
 {
-    void OnEnable()
+    public class CursorController : MonoBehaviour
     {
-        CombatManager.hoverTileChanged += Move;
-    }
+        void OnEnable()
+        {
+            CombatManager.hoverTileChanged += Move;
+        }
 
-    void OnDisable()
-    {
-        CombatManager.hoverTileChanged -= Move;
-    }
+        void OnDisable()
+        {
+            CombatManager.hoverTileChanged -= Move;
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Update is called once per frame
+        void Update()
+        {
         
-    }
+        }
 
-    void Move(Vector3 newPosition)
-    {
-       gameObject.transform.position = newPosition; 
-    }
+        void Move(Vector3 newPosition)
+        {
+            gameObject.transform.position = newPosition; 
+        }
     
+    }
 }

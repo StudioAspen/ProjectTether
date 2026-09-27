@@ -1,9 +1,8 @@
-using System;
-using Unity.VisualScripting;
+using _Scripts.Runtime.Combat;
 using UnityEngine;
 
 //this script must be attached to the object before converting it to a prefab and dragging it to a unit SO. 
-namespace Tether.CharacterSystems
+namespace _Scripts.Runtime.Entities.Scripts
 {
     public class EnemyUnitController : UnitController
     {

@@ -1,4 +1,6 @@
-namespace _Scripts.Runtime.Managers
+using _Scripts.Runtime.Managers;
+
+namespace _Scripts.Runtime.Combat.States
 {
     public class OpenMenuGameState : GameState
     {

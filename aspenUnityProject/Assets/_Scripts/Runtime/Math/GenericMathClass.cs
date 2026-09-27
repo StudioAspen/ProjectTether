@@ -1,8 +1,9 @@
-using Tether.CharacterSystems;
-using TileSystem;
+using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Managers.Math
+namespace _Scripts.Runtime.Math
 {
     public static class GenericMathClass
     {

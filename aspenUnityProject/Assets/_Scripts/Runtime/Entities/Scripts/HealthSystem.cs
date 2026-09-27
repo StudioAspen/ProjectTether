@@ -1,6 +1,7 @@
+using _Scripts.Runtime.Combat;
 using UnityEngine;
 
-namespace Tether.CharacterSystems
+namespace _Scripts.Runtime.Entities.Scripts
 {
   public class HealthSystem : MonoBehaviour, IInitializer
   {

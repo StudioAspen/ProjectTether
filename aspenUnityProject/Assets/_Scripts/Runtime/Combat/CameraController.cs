@@ -1,6 +1,5 @@
 using _Scripts.Runtime.Managers;
-using Tether.CharacterSystems;
-using TileSystem;
+using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat {

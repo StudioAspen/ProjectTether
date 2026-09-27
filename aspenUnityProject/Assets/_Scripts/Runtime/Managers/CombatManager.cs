@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using _Scripts.Runtime.Misc;
-using _Scripts.Runtime.Managers.Math;
+using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.States.CombatManagerStates;
+using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Math;
+using _Scripts.Runtime.Tile_System.Scripts;
 using _Scripts.Runtime.UI;
-using Tether.CharacterSystems;
-using TileSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Debug = UnityEngine.Debug;
@@ -19,12 +20,10 @@ namespace _Scripts.Runtime.Managers
     */
     public class CombatManager : MonoBehaviour
     {
-        private const float _arbitraryOffset = 10;
+        private const float ArbitraryOffset = 10;
         private const int TileNum = 19;
         private UnitDataSO[,] initializerData;
         
-        //no use in mvp
-        //private TileSO[] tiles;
         private Encounter encounter; 
         [SerializeField] private Transform tilesParent;
         public InputSystem_Actions Input { get; private set; }
@@ -32,14 +31,13 @@ namespace _Scripts.Runtime.Managers
 
         public Dictionary<Vector3Int, int> TileCubeCoords { get; private set; }= new Dictionary<Vector3Int, int>();
         
-        //make sure it has references and not copies of the objects, so changes are reflected
         //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
         public List<UnitController> TurnOrder { get; private set; }= new List<UnitController>();
         public List<UnitController> DeadUnits {get; private set;}= new List<UnitController>();
         
         //TODO: add an enum for this if we ever have more than just enemy/ally turns?
-        private readonly BattlePhase[] phases = new BattlePhase[2];
-        private BattlePhase currentPhase;  
+        private readonly BattlePhase[] _phases = new BattlePhase[2];
+        private BattlePhase _currentPhase;  
         [SerializeField] private RangeDisplay rangeDisplay; 
         
         #region miscStateManagementVariables
@@ -61,7 +59,7 @@ namespace _Scripts.Runtime.Managers
         //TODO: sub to each unit themselves 
         //TODO: figure out what to do when a unit dies 
         public static event Action<Unit[]> unitsDead;
-        //animation/tile update handled per unit at the instant they move. Perhaps also camera class  
+        //animation/tile update handled per unit at the instant they move. 
         public static event Action<UnitController> unitMoved;
         //we may want sounds when the cursor moves around 
         public static event Action<Vector3> hoverTileChanged;  
@@ -86,8 +84,8 @@ namespace _Scripts.Runtime.Managers
             TurnOrder.Sort((a,b) => b.GetData().Speed.CompareTo(a.GetData().Speed));
             rangeDisplay.Initialize(tileControllers);
             
-            phases[0] = new PlayerPhase(this);
-            phases[1] = new EnemyPhase(this);
+            _phases[0] = new PlayerPhase(this);
+            _phases[1] = new EnemyPhase(this);
             CombatUI.PlayerAction += HandleAction;
             CombatUI.PlayerSelectiveAction += HandleAction;
             ChangeTurn(); 
@@ -101,9 +99,7 @@ namespace _Scripts.Runtime.Managers
             foreach (TileController tc in tileControllers)
             {
                 foreach (UnitController uc in tc.UnitControllers)
-                {
                     uc.OnUnitMove -= UnitHasMoved;
-                }
             }
             TurnOrder.Clear();
             PlayerUnits.Clear();
@@ -162,7 +158,7 @@ namespace _Scripts.Runtime.Managers
                     tileControllers[tile].GetUnitAt(unit).OnUnitMove += UnitHasMoved;
                     Debug.Log(tileControllers[tile].UnitControllers[unit].GetData().Name);
                 }
-                tileControllers[tile].RepositionUnits(_arbitraryOffset);
+                tileControllers[tile].RepositionUnits(ArbitraryOffset);
             }
         }
 
@@ -238,20 +234,20 @@ namespace _Scripts.Runtime.Managers
             }
             while (TurnOrder[CurrentUnitTurn].GetData().IsDead)
                 CurrentUnitTurn = (CurrentUnitTurn + 1)%TurnOrder.Count;
-            if (currentPhase != null)
+            if (_currentPhase != null)
             {
-                currentPhase.Exit();
+                _currentPhase.Exit();
                 CurrentUnitTurn = (CurrentUnitTurn + 1)%TurnOrder.Count;
             }
             if (TurnOrder[CurrentUnitTurn].GetData().Faction == Faction.Ally)
-                currentPhase = phases[0];
+                _currentPhase = _phases[0];
             else if (TurnOrder[CurrentUnitTurn].GetData().Faction==Faction.Enemy)
-                currentPhase = phases[1];
+                _currentPhase = _phases[1];
             else
                 return;
             TurnOrder[CurrentUnitTurn].ResetValues();
-            currentPhase.Enter();
-            battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
+            _currentPhase.Enter();
+            battlePhaseChanged?.Invoke(_currentPhase, TurnOrder[CurrentUnitTurn]);
         } 
         
         //functions for camera/ui movement/whatever 
@@ -279,7 +275,7 @@ namespace _Scripts.Runtime.Managers
             switch(action)
             {
                 case CombatActions.Attack:
-                    currentPhase.PushState();
+                    _currentPhase.PushState();
                     rangeDisplay.DisplayAttackRange(tileControllers, currUnit);
                     return;
                 case CombatActions.Defend:
@@ -287,11 +283,11 @@ namespace _Scripts.Runtime.Managers
                     FinishSelection();
                     return;
                 case CombatActions.Move:
-                    currentPhase.PushState();
+                    _currentPhase.PushState();
                     rangeDisplay.DisplayMoveRange(currUnit.TileCoords, tileControllers, 1, Faction.Ally); //currently only adjacent tiles
                     return;
                 case CombatActions.View:
-                    currentPhase.PushState();
+                    _currentPhase.PushState();
                     return;
                 default:
                     Debug.Log($"Unknown action: {action}");
@@ -308,7 +304,7 @@ namespace _Scripts.Runtime.Managers
             switch (action)
             {
                 case CombatActions.Ability:
-                    currentPhase.PushState();
+                    _currentPhase.PushState();
                     rangeDisplay.DisplayAbilityRange(tileControllers, currUnit, currUnit.GetData().Moves[selection]);
                     return;
                 case CombatActions.Item:
@@ -356,7 +352,7 @@ namespace _Scripts.Runtime.Managers
                     break;
                 case CombatActions.View:
                     ExamineTile();
-                    currentPhase.PushState();
+                    _currentPhase.PushState();
                     break;
                 default:
                     Debug.Log("Unknown action");
@@ -408,7 +404,7 @@ namespace _Scripts.Runtime.Managers
         {
             selectedTileController.AddUnit(GetCurrTileController().RemoveUnit(currentUnit));
             currentUnit.TryMove(selectedTileController.Position(),selectedTileController.tileCoordinate);
-            selectedTileController.RepositionUnits(_arbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
+            selectedTileController.RepositionUnits(ArbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
             rangeDisplay.HideRange();
             RedoSelection();
         }
@@ -428,7 +424,7 @@ namespace _Scripts.Runtime.Managers
         { 
             ChangeTurn();
             ResetCurrentTile();
-            battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
+            battlePhaseChanged?.Invoke(_currentPhase, TurnOrder[CurrentUnitTurn]);
         }
 
         public void RedoSelection()
@@ -436,8 +432,8 @@ namespace _Scripts.Runtime.Managers
             Debug.Log("redo selection");
             rangeDisplay.HideRange();
             ResetCurrentTile();
-            currentPhase.Exit();
-            battlePhaseChanged?.Invoke(currentPhase, TurnOrder[CurrentUnitTurn]);
+            _currentPhase.Exit();
+            battlePhaseChanged?.Invoke(_currentPhase, TurnOrder[CurrentUnitTurn]);
         }
 
         private void ExamineTile()

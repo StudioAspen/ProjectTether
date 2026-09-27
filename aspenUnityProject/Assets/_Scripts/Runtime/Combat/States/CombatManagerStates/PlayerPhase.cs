@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using _Scripts.Runtime.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace _Scripts.Runtime.Managers
+namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
     public class PlayerPhase : BattlePhase
     {

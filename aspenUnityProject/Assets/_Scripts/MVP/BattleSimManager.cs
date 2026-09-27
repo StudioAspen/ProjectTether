@@ -6,6 +6,7 @@ using _Scripts.Consystently.Essentials;
 using UnityEngine;
 using UnityEngine.UI;
 using _Scripts.Consystently.UI;
+using _Scripts.Runtime.Combat;
 
 /*
  * 
@@ -21,7 +22,7 @@ public class BattleSimManager : Manager<BattleSimManager>
   // public HashSet<UnitPiece> PlayerPieces = new HashSet<UnitPiece>();
   // public HashSet<UnitPiece> EnemyPieces = new HashSet<UnitPiece>();
 
-  public static event Action submitted; 
+  public static event Action<bool> submitted;
 
   [SerializeField] Button _battleButton;
 
@@ -112,6 +113,6 @@ public class BattleSimManager : Manager<BattleSimManager>
   {
     Debug.Log("Start Battle Code");
     EncounterManager.Instance.GenerateEncounter(BattlefieldMap.Instance.Tiles);
-    submitted?.Invoke();
+    submitted?.Invoke(true);
   }
 }

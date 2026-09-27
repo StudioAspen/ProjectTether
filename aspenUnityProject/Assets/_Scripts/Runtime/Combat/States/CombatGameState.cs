@@ -1,7 +1,7 @@
+using _Scripts.Runtime.Managers;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace _Scripts.Runtime.Managers
+namespace _Scripts.Runtime.Combat.States
 {
     public class CombatGameState : GameState
     {

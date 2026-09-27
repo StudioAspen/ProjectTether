@@ -1,44 +1,48 @@
 using System;
 using System.Collections.Generic;
-using _Scripts.Runtime.Managers;
+using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.States.CombatManagerStates;
 
 //TODO: xp system
-public class EnemyUnit : Unit
+namespace _Scripts.Runtime.Entities.Scripts
 {
+   public class EnemyUnit : Unit
+   {
    
-   public List<EnemyStateSO> behaviourStates { get; private set; }
-   public event Action<EnemyUnit> OnDeath;
-   public event Action<EnemyUnit> OnDefend;
+      public List<EnemyStateSO> behaviourStates { get; private set; }
+      public event Action<EnemyUnit> OnDeath;
+      public event Action<EnemyUnit> OnDefend;
    
-   public EnemyUnit(EnemyUnitSO unit) : base(unit)
-   {
-      SetFaction(Faction.Enemy);
-      behaviourStates = unit.BehaviourStates;
-   }
+      public EnemyUnit(EnemyUnitSO unit) : base(unit)
+      {
+         SetFaction(Faction.Enemy);
+         behaviourStates = unit.BehaviourStates;
+      }
 
-   public override void ChangeHealthRemaining(int value)
-   {
-      HealthRemaining -= value; 
-      if(HealthRemaining <= 0)
-         OnDeath?.Invoke(this);
-   }
+      public override void ChangeHealthRemaining(int value)
+      {
+         HealthRemaining -= value; 
+         if(HealthRemaining <= 0)
+            OnDeath?.Invoke(this);
+      }
 
-   public override void Defend()
-   {
-      IsBlocking = true;
-      OnDefend?.Invoke(this);
-   }
+      public override void Defend()
+      {
+         IsBlocking = true;
+         OnDefend?.Invoke(this);
+      }
 
-   public override void EndDefend()
-   {
-      IsBlocking = false;
-   }
+      public override void EndDefend()
+      {
+         IsBlocking = false;
+      }
 
-   //can modify depending on difficulty desired 
-   public override void ChangeEnergyRemaining(int value)
-   {
-      EnergyRemaining -= value;
-   }
+      //can modify depending on difficulty desired 
+      public override void ChangeEnergyRemaining(int value)
+      {
+         EnergyRemaining -= value;
+      }
     
    
+   }
 }

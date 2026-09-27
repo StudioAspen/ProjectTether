@@ -1,4 +1,6 @@
-namespace _Scripts.Runtime.Managers
+using _Scripts.Runtime.Managers;
+
+namespace _Scripts.Runtime.Combat.States
 {
     //combat manager will get pools from level 
     //get inputActions that invoke using GameManager function for UImanager

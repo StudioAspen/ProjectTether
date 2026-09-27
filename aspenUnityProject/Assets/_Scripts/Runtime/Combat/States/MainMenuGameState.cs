@@ -1,7 +1,7 @@
-using System;
+using _Scripts.Runtime.Managers;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Managers
+namespace _Scripts.Runtime.Combat.States
 {
     public class MainMenuGameState : GameState
     {

@@ -1,3 +1,4 @@
+using _Scripts.Runtime.Entities.Scripts;
 using UnityEngine;
 
 public abstract class CombatClass

@@ -1,22 +1,24 @@
 using UnityEngine;
-using Tether.CharacterSystems;
 
-[RequireComponent(typeof(HealthSystem), typeof(EnergySystem))]
-public abstract class Entity : MonoBehaviour
+namespace _Scripts.Runtime.Entities.Scripts
 {
-  [Header("Entity")]
-  [SerializeField] private UnitDataSO _unitData;
-  public UnitDataSO UnitData => _unitData;
-  protected HealthSystem _healthSystem;
-  protected EnergySystem _energySystem;
-
-  protected virtual void Awake()
+  [RequireComponent(typeof(HealthSystem), typeof(EnergySystem))]
+  public abstract class Entity : MonoBehaviour
   {
-    _healthSystem ??= GetComponent<HealthSystem>();
-    _energySystem ??= GetComponent<EnergySystem>();
+    [Header("Entity")]
+    [SerializeField] private UnitDataSO _unitData;
+    public UnitDataSO UnitData => _unitData;
+    protected HealthSystem _healthSystem;
+    protected EnergySystem _energySystem;
 
-    _healthSystem.Intialize(_unitData);
-    _energySystem.Intialize(_unitData);
+    protected virtual void Awake()
+    {
+      _healthSystem ??= GetComponent<HealthSystem>();
+      _energySystem ??= GetComponent<EnergySystem>();
+
+      _healthSystem.Intialize(_unitData);
+      _energySystem.Intialize(_unitData);
+    }
+
   }
-
 }

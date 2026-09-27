@@ -1,6 +1,8 @@
-namespace _Scripts.Runtime.Managers
+using _Scripts.Runtime.Managers;
+
+namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
-    public abstract class ActionState : IState
+    public abstract class ActionState
     {
         protected CombatManager CombatManager { get; private set; }
         protected BattlePhase BattlePhase { get; private set; }

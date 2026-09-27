@@ -1,3 +1,4 @@
+using _Scripts.Runtime.Combat;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CombatClass", menuName = "Scriptable Objects/Misc/Combat Class")]

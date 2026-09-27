@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Managers
+namespace _Scripts.Runtime.Combat
 {
     public enum CubeCoordDirections
     {

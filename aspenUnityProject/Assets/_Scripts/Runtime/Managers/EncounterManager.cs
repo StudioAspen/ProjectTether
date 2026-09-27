@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
-using _Scripts.Runtime.Misc;
 using UnityEngine;
 using _Scripts.Consystently.Essentials;
+using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.States;
+using _Scripts.Runtime.Entities.Scripts;
 
 
 namespace _Scripts.Runtime.Managers
@@ -17,8 +19,11 @@ namespace _Scripts.Runtime.Managers
         
         //initial unit formation generated from BattlefieldMap for the mvp 
         private Encounter encounter;
-        public static event Action encountered; 
         
+        //false from not battle sim
+        public static event Action<bool> encountered; 
+        
+        //probably useless 
         void OnEnable()
         {
             GameManager.ChangedGameState += HandleState;
@@ -42,27 +47,6 @@ namespace _Scripts.Runtime.Managers
             return initializerData;
         }
 
-        //called from EnemyUnitController
-        //update to generate encounter type 
-        public void StartEncounter(EncounterSO encounterSo)
-        {
-           GenerateEncounter(encounterSo);
-           encountered?.Invoke();
-        }
-
-        //if ever add randomized enemy positioning for encounters, we will have to update and use this function. 
-        /* 
-        public void StartEncounter(Encounter encounter)
-        {
-           this.encounter = encounter; 
-           GameManager.Instance.ChangeGameState(new CombatGameState(GameManager.Instance)); 
-        }
-        */
-
-        public void StartEncounter()
-        {
-            encountered?.Invoke();
-        }
 
         //TODO: when we add tile effects, add tile data to generate methods
         //for mvp primarily 

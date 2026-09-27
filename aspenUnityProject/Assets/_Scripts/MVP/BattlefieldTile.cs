@@ -5,6 +5,7 @@ using System.Linq;
 using _Scripts.Consystently.UI;
 using Unity.VisualScripting;
 using System;
+using _Scripts.Runtime.Combat;
 
 [RequireComponent(typeof(Button))]
 public class BattlefieldTile : MonoBehaviour

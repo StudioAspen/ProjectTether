@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TileSystem
+namespace _Scripts.Runtime.Tile_System.Scripts
 {
     public class Tile
     {

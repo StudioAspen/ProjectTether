@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
+using _Scripts.Runtime.Combat.States;
 
 namespace _Scripts.Runtime.Managers
 {
@@ -67,7 +68,7 @@ namespace _Scripts.Runtime.Managers
     }
 
     //probably add an enum or something for the states later
-    public void EnterCombat()
+    public void EnterCombat(bool isBattleSim)
     {
       ChangeGameState(gameStates[1]);      
     }

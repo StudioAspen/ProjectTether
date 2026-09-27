@@ -1,38 +1,42 @@
-using UnityEngine;
+using _Scripts.Runtime.Entities.Scripts;
 using TMPro;
+using UnityEngine;
 
-public class TestUI : MonoBehaviour
+namespace _Scripts.Runtime
 {
-    [SerializeField] GameObject _playerPrefab;
-    [SerializeField] TextMeshProUGUI _playerText;
-    [SerializeField] TextMeshProUGUI _classText;
-
-    UnitDataSO _stats;
-    CombatClassSystem _combatClassSystem;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class TestUI : MonoBehaviour
     {
-        _stats = _playerPrefab.GetComponent<Character>().UnitData as UnitDataSO;
-        _combatClassSystem = _playerPrefab.GetComponent<CombatClassSystem>();
+        [SerializeField] GameObject _playerPrefab;
+        [SerializeField] TextMeshProUGUI _playerText;
+        [SerializeField] TextMeshProUGUI _classText;
 
-        _playerText.text = $"Health: {_stats.Health}\nEnergy: {_stats.Energy}\nStrength: {_stats.Strength}\nDefense: {_stats.Defense}\nTech: {_stats.Tech}\nResistance: {_stats.Resistance}\nSpeed: {_stats.Speed}\nPrecision: {_stats.Precision}\nEvasion: {_stats.Evasion}\nLuck: {_stats.Luck}";
+        UnitDataSO _stats;
+        CombatClassSystem _combatClassSystem;
 
-    }
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            _stats = _playerPrefab.GetComponent<Character>().UnitData as UnitDataSO;
+            _combatClassSystem = _playerPrefab.GetComponent<CombatClassSystem>();
 
-    private void Update()
-    {
-        string text = _combatClassSystem.SelectedClass == null ? "None" : _combatClassSystem.SelectedClass.ClassType.ToString();
-        _classText.text = $"Class: {text}";
-    }
+            _playerText.text = $"Health: {_stats.Health}\nEnergy: {_stats.Energy}\nStrength: {_stats.Strength}\nDefense: {_stats.Defense}\nTech: {_stats.Tech}\nResistance: {_stats.Resistance}\nSpeed: {_stats.Speed}\nPrecision: {_stats.Precision}\nEvasion: {_stats.Evasion}\nLuck: {_stats.Luck}";
 
-    public void ForceAddClass()
-    {
-        _combatClassSystem.AddClass(CombatClassType.Breacher);
-    }
+        }
 
-    public void ForceSwitchclass()
-    {
-        _combatClassSystem.SwitchClass(CombatClassType.Breacher);
+        private void Update()
+        {
+            string text = _combatClassSystem.SelectedClass == null ? "None" : _combatClassSystem.SelectedClass.ClassType.ToString();
+            _classText.text = $"Class: {text}";
+        }
+
+        public void ForceAddClass()
+        {
+            _combatClassSystem.AddClass(CombatClassType.Breacher);
+        }
+
+        public void ForceSwitchclass()
+        {
+            _combatClassSystem.SwitchClass(CombatClassType.Breacher);
+        }
     }
 }

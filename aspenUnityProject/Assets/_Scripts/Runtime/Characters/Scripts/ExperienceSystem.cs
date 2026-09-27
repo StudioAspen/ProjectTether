@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Runtime.Entities.Scripts;
 using UnityEngine;
 
 public class ExperienceSystem : MonoBehaviour, IInitializer

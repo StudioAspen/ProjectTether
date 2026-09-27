@@ -1,6 +1,8 @@
-namespace _Scripts.Runtime.Managers
+using _Scripts.Runtime.Managers;
+
+namespace _Scripts.Runtime.Combat.States
 {
-    public abstract class GameState : IState
+    public abstract class GameState 
     {
         protected GameManager gameManager;
 

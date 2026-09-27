@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using _Scripts.Runtime.Managers.Math;
-using Tether.CharacterSystems;
-using TileSystem;
+using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Managers;
+using _Scripts.Runtime.Math;
+using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace _Scripts.Runtime.Managers
+namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
     //current implementation is for the mvp 
     public class EnemyPhase : BattlePhase

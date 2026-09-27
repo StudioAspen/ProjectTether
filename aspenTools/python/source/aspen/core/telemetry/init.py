@@ -11,7 +11,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-END_POINT = '135.180.232.175:4317'
+END_POINT = '0'
 
 def initialize(service_name: str):
     """Initialize the telemetry providers and handlers."""

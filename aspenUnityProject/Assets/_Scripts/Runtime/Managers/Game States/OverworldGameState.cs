@@ -1,6 +1,6 @@
 using _Scripts.Runtime.Combat.States.ContextData;
 
-namespace _Scripts.Runtime.Combat.States
+namespace _Scripts.Runtime.Managers.Game_States
 {
     //combat manager will get pools from level 
     //get inputActions that invoke using GameManager function for UImanager

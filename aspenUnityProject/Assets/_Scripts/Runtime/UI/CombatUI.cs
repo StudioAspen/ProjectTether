@@ -14,9 +14,16 @@ using UnityEngine.InputSystem.UI;
 namespace _Scripts.Runtime.UI {
     public class CombatUI : MonoBehaviour
     {
+
+        private bool _designerMode;
+        private bool toggledManualEnemy;
         
+        //rushed this class for the mvp
+        //research+find better or cleaner way of doing this (having a million references in this one class) 
+        //probably break down by moving code into the diff ui components 
         [SerializeField] private GameObject playerActionsContainer;
         [SerializeField] private GameObject abilitiesPanel;
+        [SerializeField] private GameObject manualEnemyButton;
         [SerializeField] private Button firstButton; 
         [SerializeField] private GameObject cursor;
 
@@ -28,8 +35,11 @@ namespace _Scripts.Runtime.UI {
         public static event Action<CombatActions> PlayerAction;
         public static event Action<CombatActions, int> PlayerSelectiveAction;
 
+        public static event Action<bool> ToggledManualEnemy;
+
         private void Awake()
         {
+            _designerMode = GameManager.Instance.DesignerMode;
             if (uiInputModule != null)
                 cancelSubmenu = uiInputModule.cancel.action; 
         }
@@ -40,6 +50,7 @@ namespace _Scripts.Runtime.UI {
             playerActionsContainer.SetActive(false);
             abilitiesPanel.SetActive(false);
             cursor.SetActive(false); 
+            manualEnemyButton.SetActive(_designerMode);
             CombatManager.battlePhaseChanged += HandleUserActions;
             cancelSubmenu.performed += OnCloseSubmenu;
             CombatManager.examinedTile += ExamineTile;
@@ -87,7 +98,7 @@ namespace _Scripts.Runtime.UI {
             {
                 playerActionsContainer.SetActive(false);
             }
-            uiInputModule.enabled = playerActionsContainer.activeSelf; //painful concurrency bug if this is removed
+            uiInputModule.enabled = playerActionsContainer.activeSelf; //painful bug if this is removed where enter is read by the ui input immediately
             int currMove = 0;
             foreach (Transform button in abilitiesPanel.transform)
             {
@@ -157,6 +168,12 @@ namespace _Scripts.Runtime.UI {
         {
            if(abilitiesPanel.activeSelf) 
                CloseAbilitiesMenu(); 
+        }
+
+        public void ToggleManual()
+        {
+           toggledManualEnemy = !toggledManualEnemy;
+           ToggledManualEnemy?.Invoke(toggledManualEnemy);
         }
 
         

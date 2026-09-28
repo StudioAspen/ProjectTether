@@ -1,8 +1,7 @@
 using _Scripts.Runtime.Combat.States.ContextData;
-using _Scripts.Runtime.Managers;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Combat.States
+namespace _Scripts.Runtime.Managers.Game_States
 {
     public class MainMenuGameState : GameState
     {

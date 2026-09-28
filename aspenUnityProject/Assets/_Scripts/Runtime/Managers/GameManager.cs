@@ -7,6 +7,7 @@ using _Scripts.Runtime.Combat.States;
 using _Scripts.Runtime.Combat.States.ContextData;
 using UnityEngine.InputSystem;
 using System.Linq;
+using _Scripts.Runtime.Managers.Game_States;
 
 namespace _Scripts.Runtime.Managers
 {
@@ -21,6 +22,8 @@ namespace _Scripts.Runtime.Managers
     public GameState _currentGameState { get; private set; }
     private readonly Stack<GameState> _previousGameStates = new Stack<GameState>();
     private bool _menuOpened = false;
+
+    public bool DesignerMode { get; private set; }
 
 
     protected override void Awake()
@@ -102,7 +105,8 @@ namespace _Scripts.Runtime.Managers
     //probably add an enum or something for the states later
     void EnterCombat(bool isBattleSim)
     {
-      ChangeGameState(gameStates[1]);      
+      ChangeGameState(gameStates[1]);
+      DesignerMode = isBattleSim;
     }
 
 

@@ -47,11 +47,11 @@ namespace _Scripts.Runtime.Math
             bool targetContainsAlly = false;
             foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
             {
-                if (uc.GetData().Faction == Faction.Ally)
+                if (uc.GetData().Faction == cc.GetData().Faction)
                     targetContainsAlly = true;
                 break;
             }
-            return !targetContainsAlly && tileWithinRange;
+            return !targetContainsAlly;
         }
 
         //currently no unique ranges for abilities. We can change this by designing a diff. overloaded HexGridDistance function
@@ -66,7 +66,7 @@ namespace _Scripts.Runtime.Math
             bool targetContainsEnemy = false;
             foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
             {
-                if (uc.GetData().Faction == Faction.Ally)
+                if (uc.GetData().Faction == cc.GetData().Faction)
                     targetContainsAlly = true;
                 else
                 {

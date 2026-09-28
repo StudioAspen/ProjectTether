@@ -24,6 +24,8 @@ namespace _Scripts.Runtime.Managers
         private const float ArbitraryOffset = 10;
         private const int TileNum = 19;
         private UnitDataSO[,] initializerData;
+
+        private bool toggledManualEnemy;
         
         private Encounter encounter; 
         [SerializeField] private Transform tilesParent;
@@ -92,6 +94,7 @@ namespace _Scripts.Runtime.Managers
             _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
             CombatUI.PlayerAction += HandleAction;
             CombatUI.PlayerSelectiveAction += HandleAction;
+            CombatUI.ToggledManualEnemy += ToggleManualEnemy;
             ChangeTurn(); 
         }
 
@@ -243,7 +246,7 @@ namespace _Scripts.Runtime.Managers
                 _currentPhase.Exit();
                 CurrentUnitTurn = (CurrentUnitTurn + 1)%TurnOrder.Count;
             }
-            if (TurnOrder[CurrentUnitTurn].GetData().Faction == Faction.Ally)
+            if (toggledManualEnemy || TurnOrder[CurrentUnitTurn].GetData().Faction == Faction.Ally)
                 _currentPhase = _phases[0];
             else if (TurnOrder[CurrentUnitTurn].GetData().Faction==Faction.Enemy)
                 _currentPhase = _phases[1];
@@ -288,7 +291,7 @@ namespace _Scripts.Runtime.Managers
                     return;
                 case CombatActions.Move:
                     _currentPhase.PushState();
-                    rangeDisplay.DisplayMoveRange(currUnit.TileCoords, TileControllers, 1, Faction.Ally); //currently only adjacent tiles
+                    rangeDisplay.DisplayMoveRange(currUnit.TileCoords, TileControllers, 1, GetCurrentUnit().GetData().Faction); //currently only adjacent tiles
                     return;
                 case CombatActions.View:
                     _currentPhase.PushState();
@@ -314,6 +317,9 @@ namespace _Scripts.Runtime.Managers
                 case CombatActions.Item:
                     Debug.Log($"unknown action: {action}" );
                     return;
+                default:
+                    Debug.Log($"Unknown action: {action}");
+                    break;
             }
 //            rangeDisplay.DisplayRange();
         }
@@ -453,7 +459,7 @@ namespace _Scripts.Runtime.Managers
         public void ExitExamine() { exitedExamine?.Invoke(); }
         public UnitController GetCurrentUnit() { return TurnOrder[CurrentUnitTurn]; }
         public Vector3Int GetSelectedTile() { return _currentTile; }
-        
 
+        private void ToggleManualEnemy(bool b) { toggledManualEnemy = b; }
     }
 }

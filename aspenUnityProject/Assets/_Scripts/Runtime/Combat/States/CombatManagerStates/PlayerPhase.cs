@@ -8,10 +8,9 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
     public class PlayerPhase : BattlePhase
     {
-        private Stack<ActionState>  stateStack = new Stack<ActionState>();
+        private readonly Stack<ActionState>  stateStack = new Stack<ActionState>();
         
-        //TODO: add new state class for individual unit selection
-        private List<ActionState> states  = new List<ActionState>();
+        private readonly List<ActionState> states  = new List<ActionState>();
 
         public PlayerPhase(CombatContext combatContext) : base(combatContext)
         {

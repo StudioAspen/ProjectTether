@@ -25,6 +25,7 @@ namespace _Scripts.Runtime.Entities.Scripts
         //use if you want unit movement animation but don't want vars to be changed
         public abstract void MoveInvoke(Vector3 position);
         
+        //I made this getter method really early on and don't feel like refactoring
         //possibly refactor and make the data public 
         public abstract Unit GetData();
 

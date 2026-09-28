@@ -1,8 +1,7 @@
-using System;
 using _Scripts.Runtime.Combat.States.ContextData;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Combat.States
+namespace _Scripts.Runtime.Managers.Game_States
 {
     public class CombatGameState : GameState
     {

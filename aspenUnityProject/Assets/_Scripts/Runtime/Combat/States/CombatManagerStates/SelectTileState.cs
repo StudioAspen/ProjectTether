@@ -1,3 +1,4 @@
+using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Math;
 using UnityEngine.InputSystem;
@@ -8,15 +9,15 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
     //the state when the player is selecting a tile for an action (e.g., attacking, viewing, etc.)
     public class SelectTileState : ActionState
     {
-        public SelectTileState(CombatManager combatManager, PlayerPhase battlePhase) : base(combatManager, battlePhase) {}
+        public SelectTileState(CombatContext combatContext, PlayerPhase battlePhase) : base(combatContext, battlePhase) {}
         
        
         public override void Enter()
         {
-            CombatManager.Input.Enable();
-            CombatManager.Input.TileSelect.Confirm.performed += CombatManager.SelectTile;
-            CombatManager.Input.TileSelect.Exit.performed += ((PlayerPhase)BattlePhase).PopState;
-            CombatManager.Input.TileSelect.Move.started += OnMove;
+            CombatContext.Input.Enable();
+            CombatContext.Input.TileSelect.Confirm.performed += CombatContext.CombatFunctionProvider.SelectTile;
+            CombatContext.Input.TileSelect.Exit.performed += ((PlayerPhase)BattlePhase).PopState;
+            CombatContext.Input.TileSelect.Move.started += OnMove;
         }
 
         public override void Update()
@@ -33,15 +34,15 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         private void OnMove(InputAction.CallbackContext context)
         {
             Vector2 move = context.ReadValue<Vector2>();
-            CombatManager.MoveTileSelector(move.GetDirection());
+            CombatContext.CombatFunctionProvider.MoveTileSelector(move.GetDirection());
         }
 
         public override void Exit()
         {
-            CombatManager.Input.TileSelect.Confirm.performed -= CombatManager.SelectTile;
-            CombatManager.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
-            CombatManager.Input.TileSelect.Move.started -= OnMove;
-            CombatManager.Input.Disable();
+            CombatContext.Input.TileSelect.Confirm.performed -= CombatContext.CombatFunctionProvider.SelectTile;
+            CombatContext.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
+            CombatContext.Input.TileSelect.Move.started -= OnMove;
+            CombatContext.Input.Disable();
         }
     }
 }

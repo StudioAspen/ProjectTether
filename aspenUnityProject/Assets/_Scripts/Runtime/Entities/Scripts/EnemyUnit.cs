@@ -9,6 +9,7 @@ namespace _Scripts.Runtime.Entities.Scripts
    public class EnemyUnit : Unit
    {
    
+      //TODO: add skills here because enemies do not have classes
       public List<EnemyStateSO> behaviourStates { get; private set; }
       public event Action<EnemyUnit> OnDeath;
       public event Action<EnemyUnit> OnDefend;

@@ -21,12 +21,13 @@ namespace _Scripts.Runtime.Managers
         private Encounter encounter;
         
         //false from not battle sim
+        //static because too lazy to fix initialization issues with .instance 
         public static event Action<bool> encountered; 
         
         //probably useless 
         void OnEnable()
         {
-            GameManager.ChangedGameState += HandleState;
+            GameManager.Instance.ChangedGameState += HandleState;
         }
 
 

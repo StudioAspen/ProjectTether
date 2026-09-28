@@ -1,4 +1,4 @@
-using _Scripts.Runtime.Managers;
+using _Scripts.Runtime.Combat.States.ContextData;
 
 namespace _Scripts.Runtime.Combat.States
 {
@@ -6,16 +6,18 @@ namespace _Scripts.Runtime.Combat.States
     //get inputActions that invoke using GameManager function for UImanager
     public class OverworldGameState : GameState
     {
-       public OverworldGameState(GameManager gameManager) : base(gameManager) { }
+       public OverworldGameState(GameStateContext gameStateContext) : base(gameStateContext) { }
 
        public override void Enter()
        {
+           gameStateContext.PreviousStates.Push(this);
        }
        public override void Update()
        {}
 
        public override void Exit()
        {
+           gameStateContext.PreviousStates.Pop();
        }
     }
 }

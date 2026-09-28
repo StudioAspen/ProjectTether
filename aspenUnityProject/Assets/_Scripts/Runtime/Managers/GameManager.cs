@@ -4,85 +4,107 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
 using _Scripts.Runtime.Combat.States;
+using _Scripts.Runtime.Combat.States.ContextData;
+using UnityEngine.InputSystem;
+using System.Linq;
 
 namespace _Scripts.Runtime.Managers
 {
 
   public class GameManager : Manager<GameManager>
   {
-    public bool GameIsPaused { get; private set; } = false;
-    
-    public static event Action<GameState> ChangedGameState;
+    public event Action<GameState> ChangedGameState;
 
     private List<GameState> gameStates = new List<GameState>();
+    public InputSystem_Actions InputSystemActions { get; private set; }
 
-    private GameState currentGameGameState;
-    //push to stack for certain states 
-    private GameState previousGameState;
-    private readonly Stack<GameState> previousGameStates = new Stack<GameState>();
+    public GameState _currentGameState { get; private set; }
+    private readonly Stack<GameState> _previousGameStates = new Stack<GameState>();
+    private bool _menuOpened = false;
 
 
-    void Instantiate()
+    protected override void Awake()
     {
-      EncounterManager.encountered += EnterCombat;
-      BattleSimManager.submitted += EnterCombat;
-      gameStates.Add(new MainMenuGameState(this));
-      gameStates.Add(new CombatGameState(this));
-      
-      ChangeGameState(gameStates[0]);
+      base.Awake();
+      InputSystemActions = new InputSystem_Actions();
+      gameStates.Add(new MainMenuGameState(new GameStateContext(_previousGameStates)));
+      gameStates.Add(new CombatGameState(new GameStateContext(_previousGameStates)));
+      gameStates.Add(new OpenMenuGameState(new GameStateContext(_previousGameStates)));
+     ChangeGameState(gameStates[0]);
     }
     
-    public void PauseGame ()
+    void OnEnable()
     {
-      GameIsPaused = !GameIsPaused;
-      Time.timeScale = GameIsPaused ? 0f : 1f;
+     EncounterManager.encountered += EnterCombat;
+     BattleSimManager.submitted += EnterCombat;
+     InputSystemActions.Global.Enable(); 
+     InputSystemActions.Global.OpenMenu.performed += ToggleMenu;
+    }
+    
+    //don't know if this matters with a singleton but who knows 
+    void OnDisable()
+    {
+      EncounterManager.encountered -= EnterCombat; 
+      BattleSimManager.submitted -= EnterCombat; 
+      InputSystemActions.Global.Disable();
+    }
+
+    void Update()
+    {
+      _currentGameState?.Update();
     }
 
     //have separate public methods that will decide the state being changed to 
-    //PERHAPS have an array of all game states and remove the parameter; swap between them with logic in the method
     private void ChangeGameState(GameState newGameState)
     {
-      if (currentGameGameState == newGameState)
+      if (_currentGameState == newGameState)
         return;
-      currentGameGameState?.Exit();
-      previousGameState = currentGameGameState;
-      currentGameGameState = newGameState;
-      currentGameGameState?.Enter();
+      _currentGameState?.Exit();
+      _currentGameState = newGameState;
+      _currentGameState?.Enter();
       ChangedGameState?.Invoke(newGameState);
     }
 
     //primarily for pause screens, menu screens, and other states that can transition to any other state 
     private void ReturnGameState()
     {
-      if (previousGameStates.Count < 1)
+      if (_previousGameStates.Count < 1)
         return;
-      currentGameGameState?.Exit();
-      currentGameGameState = previousGameStates.Pop();
-      currentGameGameState?.Enter(); 
-      ChangedGameState?.Invoke(currentGameGameState);
+      _currentGameState?.Exit();
+      _currentGameState = _previousGameStates.Pop();
+      _currentGameState?.Enter(); 
+      ChangedGameState?.Invoke(_currentGameState);
     }
 
-    public void PushOldState()
+    private void ToggleMenu(InputAction.CallbackContext context)
     {
-      previousGameStates.Push(previousGameState);
+      _menuOpened = !_menuOpened;
+      Debug.Log(_menuOpened);
+        
+      //no menu ui yet (different from main menu, which is the starting menu) 
+      /*
+      var enabledMaps = _inputSystemActions.asset.actionMaps.Where(map => map.enabled).ToList();
+      if(_menuOpened) 
+      { 
+        foreach (var map in enabledMaps) 
+          map.Disable(); 
+        _inputSystemActions.Global.Enable();
+        _currentGameState = gameStates[2];
+      }else{
+         foreach (var map in enabledMaps) 
+           map.Enable();
+         _currentGameState.Exit(); 
+         _currentGameState = _previousGameStates.Peek();
+      }
+      */
     }
 
     //probably add an enum or something for the states later
-    public void EnterCombat(bool isBattleSim)
+    void EnterCombat(bool isBattleSim)
     {
       ChangeGameState(gameStates[1]);      
     }
 
-    protected override void Awake()
-    {
-      base.Awake();
-      Instantiate();
-    }
-
-    void Update()
-    {
-      currentGameGameState?.Update();
-    }
 
     public void QuitApplication ()
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
+using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Math;
 using _Scripts.Runtime.Tile_System.Scripts;
@@ -18,7 +19,7 @@ namespace _Scripts.Runtime.Managers
     to send the data over to CombatManager. CombatManager will exist
     in the battle scene only.
     */
-    public class CombatManager : MonoBehaviour
+    public class CombatManager : MonoBehaviour, ICombatFunctionProvider
     {
         private const float ArbitraryOffset = 10;
         private const int TileNum = 19;
@@ -26,14 +27,14 @@ namespace _Scripts.Runtime.Managers
         
         private Encounter encounter; 
         [SerializeField] private Transform tilesParent;
-        public InputSystem_Actions Input { get; private set; }
-        public TileController[] tileControllers { get; private set; }= new TileController[TileNum];
+        private InputSystem_Actions Input { get; set; }
+        private TileController[] TileControllers { get; }= new TileController[TileNum];
 
-        public Dictionary<Vector3Int, int> TileCubeCoords { get; private set; }= new Dictionary<Vector3Int, int>();
+        private Dictionary<Vector3Int, int> TileCubeCoords { get; }= new Dictionary<Vector3Int, int>();
         
         //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
-        public List<UnitController> TurnOrder { get; private set; }= new List<UnitController>();
-        public List<UnitController> DeadUnits {get; private set;}= new List<UnitController>();
+        private List<UnitController> TurnOrder { get; }= new List<UnitController>();
+        private List<UnitController> DeadUnits {get; }= new List<UnitController>();
         
         //TODO: add an enum for this if we ever have more than just enemy/ally turns?
         private readonly BattlePhase[] _phases = new BattlePhase[2];
@@ -47,12 +48,12 @@ namespace _Scripts.Runtime.Managers
         private int _totalEnemies { get; set; }
         
         //for easier targeting calculation
-        public List<AllyUnitController> PlayerUnits { get; private set; } = new List<AllyUnitController>();
-        public int CurrentUnitTurn { get; private set; }
-        public Vector3Int SelectedTile { get; private set; }
+        private List<AllyUnitController> PlayerUnits { get; } = new List<AllyUnitController>();
+        private int CurrentUnitTurn { get; set; }
+        private Vector3Int SelectedTile { get; set; }
         private Vector3Int _currentTile { get; set; } = new Vector3Int(0, 0, 0);
         private CombatActions _receivedAction { get; set; }
-        public int ActionSelection { get; private set; }
+        private int ActionSelection { get; set; }
         
         #endregion
 
@@ -66,11 +67,14 @@ namespace _Scripts.Runtime.Managers
         public static event Action<BattlePhase, UnitController> battlePhaseChanged;
         public static event Action<TileController> examinedTile;
         public static event Action<UnitController> examinedUnit;
-        public static event Action exitedExamine; 
+        public static event Action exitedExamine;
+        
+        public static event Action finishedBattle; 
+        
 
         private void Awake()
         {
-            Input = new InputSystem_Actions();
+            Input = GameManager.Instance.InputSystemActions;
         }
 
         //must occur after OnEnable bc other classes will subscribe OnEnable
@@ -82,10 +86,10 @@ namespace _Scripts.Runtime.Managers
             GenerateCoords();
             CreateObjects(); 
             TurnOrder.Sort((a,b) => b.GetData().Speed.CompareTo(a.GetData().Speed));
-            rangeDisplay.Initialize(tileControllers);
+            rangeDisplay.Initialize(TileControllers);
             
-            _phases[0] = new PlayerPhase(this);
-            _phases[1] = new EnemyPhase(this);
+            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
+            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
             CombatUI.PlayerAction += HandleAction;
             CombatUI.PlayerSelectiveAction += HandleAction;
             ChangeTurn(); 
@@ -96,7 +100,7 @@ namespace _Scripts.Runtime.Managers
             CombatUI.PlayerAction -= HandleAction;
             CombatUI.PlayerSelectiveAction -= HandleAction;
             Input.Disable();
-            foreach (TileController tc in tileControllers)
+            foreach (TileController tc in TileControllers)
             {
                 foreach (UnitController uc in tc.UnitControllers)
                     uc.OnUnitMove -= UnitHasMoved;
@@ -117,7 +121,7 @@ namespace _Scripts.Runtime.Managers
         {
             foreach (TileController tileController in tiles)
             {
-                tileControllers[tileController.Num()] = tileController;
+                TileControllers[tileController.Num()] = tileController;
             } 
         }
         
@@ -134,31 +138,31 @@ namespace _Scripts.Runtime.Managers
                 {
                     if (unit > encounter.UnitCountAtTile(tile) - 1)
                         break;
-                    GameObject newTempObject = Instantiate(encounter[tile,unit], tileControllers[tile].Position(), Quaternion.Euler(-90f,0,0));
+                    GameObject newTempObject = Instantiate(encounter[tile,unit], TileControllers[tile].Position(), Quaternion.Euler(-90f,0,0));
                     //set up controllers after object instantiation so objects don't override each other's data
                     //the newly cloned object does not share the same reference as the original prefab, so there is no overriding
                     if (initializerData[tile, unit].Faction == Faction.Ally)
                     {
-                        tileControllers[tile].AddUnit(newTempObject.GetComponent<AllyUnitController>());
+                        TileControllers[tile].AddUnit(newTempObject.GetComponent<AllyUnitController>());
                         _totalAllies++;
-                        PlayerUnits.Add((AllyUnitController)tileControllers[tile].PeekUnit());
+                        PlayerUnits.Add((AllyUnitController)TileControllers[tile].PeekUnit());
                     }
                     else if (initializerData[tile, unit].Faction == Faction.Enemy)
                     {
-                        tileControllers[tile].AddUnit(newTempObject.GetComponent<EnemyUnitController>());
+                        TileControllers[tile].AddUnit(newTempObject.GetComponent<EnemyUnitController>());
                         _totalEnemies++;
                     }
                     else 
                         Debug.Log("neutral units not yet implemented");
 //                    Debug.Log($"{tile}: {unit}, {tileControllers[tile].UnitCount()}");
-                    tileControllers[tile].GetUnitAt(unit).Initialize(initializerData[tile,unit]);
-                    tileControllers[tile].GetUnitAt(unit).SetTile(tileControllers[tile].tileCoordinate);
-                    TurnOrder.Add(tileControllers[tile].GetUnitAt(unit));
-                    tileControllers[tile].GetUnitAt(unit).SetTile(tileControllers[tile].tileCoordinate);
-                    tileControllers[tile].GetUnitAt(unit).OnUnitMove += UnitHasMoved;
-                    Debug.Log(tileControllers[tile].UnitControllers[unit].GetData().Name);
+                    TileControllers[tile].GetUnitAt(unit).Initialize(initializerData[tile,unit]);
+                    TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
+                    TurnOrder.Add(TileControllers[tile].GetUnitAt(unit));
+                    TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
+                    TileControllers[tile].GetUnitAt(unit).OnUnitMove += UnitHasMoved;
+                    Debug.Log(TileControllers[tile].UnitControllers[unit].GetData().Name);
                 }
-                tileControllers[tile].RepositionUnits(ArbitraryOffset);
+                TileControllers[tile].RepositionUnits(ArbitraryOffset);
             }
         }
 
@@ -172,14 +176,14 @@ namespace _Scripts.Runtime.Managers
             Vector3Int currentPos = new Vector3Int(0, 0, 0);
             //           Debug.Log($"tile: {tile}, {currentPos}");
             TileCubeCoords.Add(currentPos, tile);
-            tileControllers[tile].tileCoordinate = currentPos;
+            TileControllers[tile].tileCoordinate = currentPos;
             for (int ring = 1; ring <= 2; ring++)
             {
                 currentPos += CubeCoordDirections.NE.Vector();
                 tile++;
 //               Debug.Log($"tile: {tile}, {currentPos}");
                 TileCubeCoords.Add(currentPos, tile);
-                tileControllers[tile].tileCoordinate = currentPos;
+                TileControllers[tile].tileCoordinate = currentPos;
                 for (int southEasts = ring - 1; southEasts > 0; southEasts--)
                 {
 //                   currentPos += directions[(int)CubeCoordDirections.SE];
@@ -187,7 +191,7 @@ namespace _Scripts.Runtime.Managers
                     tile++;
                     //                 Debug.Log($"tile: {tile}, {currentPos}");
                     TileCubeCoords.Add(currentPos, tile);
-                    tileControllers[tile].tileCoordinate = currentPos;
+                    TileControllers[tile].tileCoordinate = currentPos;
                 }
                 for (int direction = (int)CubeCoordDirections.S; direction < Enum.GetNames(typeof(CubeCoordDirections)).Length; direction++)
                 {
@@ -198,7 +202,7 @@ namespace _Scripts.Runtime.Managers
                         //                    Debug.Log($"tile: {tile}, {currentPos}");
                         TileCubeCoords.Add(currentPos, tile);
                         //                   Debug.Log($"tileControllers size: {tileControllers.Length}");
-                        tileControllers[tile].tileCoordinate = currentPos;
+                        TileControllers[tile].tileCoordinate = currentPos;
                     }
                 }
             }
@@ -215,7 +219,7 @@ namespace _Scripts.Runtime.Managers
                 {
                     if (unit > encounter.UnitCountAtTile(tile) - 1)
                         break;
-                    Debug.Log($"{tileControllers[tile].GetUnitAt(unit).GetData().Name}:  {tileControllers[tile].GetUnitAt(unit).GetData().Speed}");
+                    Debug.Log($"{TileControllers[tile].GetUnitAt(unit).GetData().Name}:  {TileControllers[tile].GetUnitAt(unit).GetData().Speed}");
                     
                 }
             }
@@ -257,7 +261,7 @@ namespace _Scripts.Runtime.Managers
             if(TileCubeCoords.TryGetValue(projectedTile, out _))
             {
                 _currentTile = projectedTile;
-                hoverTileChanged?.Invoke(tileControllers[TileCubeCoords[_currentTile]].Position());
+                hoverTileChanged?.Invoke(TileControllers[TileCubeCoords[_currentTile]].Position());
             }
         }
         
@@ -276,7 +280,7 @@ namespace _Scripts.Runtime.Managers
             {
                 case CombatActions.Attack:
                     _currentPhase.PushState();
-                    rangeDisplay.DisplayAttackRange(tileControllers, currUnit);
+                    rangeDisplay.DisplayAttackRange(TileControllers, currUnit);
                     return;
                 case CombatActions.Defend:
                     currUnit.GetData().Defend();
@@ -284,7 +288,7 @@ namespace _Scripts.Runtime.Managers
                     return;
                 case CombatActions.Move:
                     _currentPhase.PushState();
-                    rangeDisplay.DisplayMoveRange(currUnit.TileCoords, tileControllers, 1, Faction.Ally); //currently only adjacent tiles
+                    rangeDisplay.DisplayMoveRange(currUnit.TileCoords, TileControllers, 1, Faction.Ally); //currently only adjacent tiles
                     return;
                 case CombatActions.View:
                     _currentPhase.PushState();
@@ -305,7 +309,7 @@ namespace _Scripts.Runtime.Managers
             {
                 case CombatActions.Ability:
                     _currentPhase.PushState();
-                    rangeDisplay.DisplayAbilityRange(tileControllers, currUnit, currUnit.GetData().Moves[selection]);
+                    rangeDisplay.DisplayAbilityRange(TileControllers, currUnit, currUnit.GetData().Moves[selection]);
                     return;
                 case CombatActions.Item:
                     Debug.Log($"unknown action: {action}" );
@@ -316,14 +320,14 @@ namespace _Scripts.Runtime.Managers
         
         public TileController GetCurrTileController()
         {
-            return tileControllers[TileCubeCoords[TurnOrder[CurrentUnitTurn].TileCoords]];
+            return TileControllers[TileCubeCoords[TurnOrder[CurrentUnitTurn].TileCoords]];
         }
         
-        public void ResetCurrentTile()
+        private void ResetCurrentTile()
         {
             SelectedTile = TurnOrder[CurrentUnitTurn].TileCoords;
             _currentTile = SelectedTile;
-            hoverTileChanged?.Invoke(tileControllers[TileCubeCoords[_currentTile]].Position());
+            hoverTileChanged?.Invoke(TileControllers[TileCubeCoords[_currentTile]].Position());
         }
         
         //attack is basic attack with no ability selection. 
@@ -331,7 +335,7 @@ namespace _Scripts.Runtime.Managers
         public void SelectTile(InputAction.CallbackContext context)
         {
             SelectedTile = _currentTile;
-            TileController selectedTileController = tileControllers[TileCubeCoords[SelectedTile]];
+            TileController selectedTileController = TileControllers[TileCubeCoords[SelectedTile]];
             UnitController currentUnit = TurnOrder[CurrentUnitTurn];
             switch (_receivedAction)
             {
@@ -362,7 +366,7 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
-            foreach (UnitController enemy in tileControllers[TileCubeCoords[SelectedTile]].UnitControllers) 
+            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers) 
                 CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);  
             rangeDisplay.HideRange();
             FinishSelection();
@@ -370,11 +374,11 @@ namespace _Scripts.Runtime.Managers
 
         private void HandleSelectAbility(UnitController currentUnit)
         {
-            TileController epicenter =  tileControllers[TileCubeCoords[SelectedTile]];
+            TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
             AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
             rangeDisplay.HideRange();           
             //epicenter hit 
-            foreach (UnitController enemy in tileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
+            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
                 CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
             
             //hit the area surrounding the epicenter
@@ -388,7 +392,7 @@ namespace _Scripts.Runtime.Managers
                         affectedTile += direction.Vector();
                         if (TileCubeCoords.TryGetValue(affectedTile, out _))
                         {
-                            foreach (UnitController enemy in tileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
+                            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
                                 CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
                         }
                         else
@@ -411,7 +415,7 @@ namespace _Scripts.Runtime.Managers
 
         public TileController GetTileController(Vector3Int pos)
         {
-            return tileControllers[TileCubeCoords[pos]];
+            return TileControllers[TileCubeCoords[pos]];
         }
         
         private void UnitHasMoved(UnitController unitController)
@@ -446,15 +450,10 @@ namespace _Scripts.Runtime.Managers
             examinedUnit?.Invoke(unitController);
         }
 
-        public void ExitExamine()
-        {
-            exitedExamine?.Invoke();
-        }
+        public void ExitExamine() { exitedExamine?.Invoke(); }
+        public UnitController GetCurrentUnit() { return TurnOrder[CurrentUnitTurn]; }
+        public Vector3Int GetSelectedTile() { return _currentTile; }
         
-        public UnitController GetCurrentUnit()
-        {
-            return TurnOrder[CurrentUnitTurn]; 
-        }
 
     }
 }

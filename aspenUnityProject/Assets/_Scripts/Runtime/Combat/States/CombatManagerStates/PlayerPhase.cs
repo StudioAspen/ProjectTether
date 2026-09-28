@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,10 +13,10 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         //TODO: add new state class for individual unit selection
         private List<ActionState> states  = new List<ActionState>();
 
-        public PlayerPhase(CombatManager combatManager) : base(combatManager)
+        public PlayerPhase(CombatContext combatContext) : base(combatContext)
         {
-           states.Add(new SelectTileState(combatManager, this)); 
-           states.Add(new SelectUnitState(combatManager, this));
+           states.Add(new SelectTileState(combatContext, this)); 
+           states.Add(new SelectUnitState(combatContext, this));
         }
 
         public override void Enter()
@@ -39,6 +40,11 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                state.Exit();
             stateStack.Clear();
         }
+        
+        public override void PopState()
+        {
+            
+        }
 
         public void PopState(InputAction.CallbackContext context)
         {
@@ -46,7 +52,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                 return;
            stateStack.Pop().Exit();
            if (stateStack.Count == 0)
-               CombatManager.RedoSelection(); 
+               CombatContext.CombatFunctionProvider.RedoSelection(); 
            else
                stateStack.Peek().Enter();
         }

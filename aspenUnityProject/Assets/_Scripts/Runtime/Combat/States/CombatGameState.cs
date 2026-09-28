@@ -1,14 +1,17 @@
-using _Scripts.Runtime.Managers;
+using System;
+using _Scripts.Runtime.Combat.States.ContextData;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat.States
 {
     public class CombatGameState : GameState
     {
-       public CombatGameState (GameManager gameManager) : base(gameManager) { }
+       public CombatGameState (GameStateContext gameStateContext) : base(gameStateContext) { }
+       
        public override void Enter()
        {
            Debug.Log("combat game state entered");
+           gameStateContext.PreviousStates.Push(this);
            UnityEngine.SceneManagement.SceneManager.LoadScene("battleScene");
        }
        public override void Update()
@@ -18,6 +21,7 @@ namespace _Scripts.Runtime.Combat.States
 
        public override void Exit()
        {
+           gameStateContext.PreviousStates.Pop();
        }
     }
 }

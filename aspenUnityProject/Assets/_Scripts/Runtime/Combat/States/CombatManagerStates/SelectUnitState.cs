@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
     public class SelectUnitState : ActionState 
     {
-        public SelectUnitState(CombatManager combatManager, PlayerPhase battlePhase) : base(combatManager, battlePhase) {}
+        public SelectUnitState(CombatContext combatContext, PlayerPhase battlePhase) : base(combatContext, battlePhase) {}
         
       
         //trying to generalize a formula for the positions is difficult, so I am using 4 dictionaries 
@@ -44,12 +45,12 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         public override void Enter()
         {
             //tileSelect's input also works for this case
-            CombatManager.Input.Enable();
-            if(CombatManager.GetTileController(CombatManager.SelectedTile).UnitCount() > 0)
-                CombatManager.Input.TileSelect.Move.started += OnMove;
+            CombatContext.Input.Enable();
+            if(CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile()).UnitCount() > 0)
+                CombatContext.Input.TileSelect.Move.started += OnMove;
             //use confirm if we want to display details on unit select specifically
             //CombatManager.Input.TileSelect.Confirm.performed += 
-            CombatManager.Input.TileSelect.Exit.performed += ((PlayerPhase)BattlePhase).PopState;
+            CombatContext.Input.TileSelect.Exit.performed += ((PlayerPhase)BattlePhase).PopState;
         }
 
         public override void Update()
@@ -59,11 +60,11 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         public override void Exit()
         {
             Debug.Log("exiting");
-            CombatManager.ExitExamine(); 
-            if(CombatManager.GetTileController(CombatManager.SelectedTile).UnitCount() > 0)
-                CombatManager.Input.TileSelect.Move.started -= OnMove;
-            CombatManager.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
-            CombatManager.Input.Disable();
+            CombatContext.CombatFunctionProvider.ExitExamine(); 
+            if(CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile()).UnitCount() > 0)
+                CombatContext.Input.TileSelect.Move.started -= OnMove;
+            CombatContext.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
+            CombatContext.Input.Disable();
         }
 
         private void OnMove(InputAction.CallbackContext context)
@@ -71,10 +72,10 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             initialPos = new Vector2(0, 0);
             Vector2 move = context.ReadValue<Vector2>();
             Vector2 tryMove = initialPos + move;
-            TileController currTileController = CombatManager.GetTileController(CombatManager.SelectedTile);
+            TileController currTileController = CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile());
             if (dictionaries[currTileController.UnitCount() - 1].ContainsKey(tryMove)){
                 initialPos = tryMove;
-                CombatManager.ExamineUnit(
+                CombatContext.CombatFunctionProvider.ExamineUnit(
                     currTileController.GetUnitAt(dictionaries[currTileController.UnitCount() - 1][initialPos]));
             }
         }

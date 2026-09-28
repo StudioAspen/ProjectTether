@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Math;
@@ -8,7 +9,7 @@ using UnityEngine;
 namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
     //current implementation is for the mvp 
-    public class EnemyPhase : BattlePhase
+    public class EnemyPhase : BattlePhase, IEnemyFunctionProvider
     {
 
         //since we're using a stack already, we could represent enemy 'phases' with them quite easily
@@ -19,15 +20,16 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 
         private List<EnemyStateSO> behaviourStates;
         public EnemyUnitController Euc {get; private set;}  
-        public Vector3Int Target {get; private set;}
 
-        public EnemyPhase(CombatManager combatManager) : base(combatManager) { }
+        public EnemyPhase(CombatContext combatContext) : base(combatContext) { }
 
+        private EnemyCombatContext ecb;
         public override void Enter()
         {
+            ecb = new EnemyCombatContext(CombatContext, this);
             Debug.Log("enemy phase entered");
             stateStack.Clear();
-            Euc = (EnemyUnitController)CombatManager.GetCurrentUnit();
+            Euc = (EnemyUnitController)CombatContext.CombatFunctionProvider.GetCurrentUnit();
             Debug.Log(((EnemyUnit)Euc.GetData()).behaviourStates[0]);
             behaviourStates = ((EnemyUnit)Euc.GetData()).behaviourStates;
             PushState();
@@ -56,58 +58,59 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                 Debug.Log(eso);
             }
             if (stateStack.Count > 0)
-                stateStack.Peek().Enter(this);
+                stateStack.Peek().Enter(ecb);
         }
 
         //to be used when the enemy transitions 'phases' in the future.
         //e.g., an enemy is attacked and loses enough hp to transition into 
         //a cautious state
-        public void PopState()
+        public override void PopState()
         {
             if (stateStack.Count == 0)
                 return;
-            stateStack.Pop().Exit(this);
+            stateStack.Pop().Exit(ecb);
             if(stateStack.Count == 0)
                 Debug.Log("Enemy should be dead before/at this stage in the future implementation"); 
             else
-                stateStack.Peek().Enter(this);
+                stateStack.Peek().Enter(ecb);
         }
         
         public void SetTarget(Vector3Int target)
         {
-            Target = target;
+            ecb.Target = target;
         }
 
-        //will be the same for every EnemyStateSO
+        #region reusable functions for various enemy states 
+        //attack will probably be the same for every EnemyStateSO
         public bool Attack()
         {
-            if (Euc.GetData().DefaultAttackRange() < Target.HexGridDistance(Euc.TileCoords))
+            if (Euc.GetData().DefaultAttackRange() < ecb.Target.HexGridDistance(Euc.TileCoords))
                 return false;
-            foreach (UnitController receiver in CombatManager.tileControllers[CombatManager.TileCubeCoords[Target]].UnitControllers) 
+            foreach (UnitController receiver in CombatContext.TileControllers[CombatContext.TileCubeCoords[ecb.Target]].UnitControllers) 
                 CombatFormulas.Damage(Euc, Euc.GetData().DefaultAttackTypes(), receiver);  
             return true;
         }
 
         public bool CanMove(Vector3Int from, Vector3Int to, int range)
         {
-            return CombatManager.TileCubeCoords.ContainsKey(to) && CombatManager.GetTileController(to).IsMoveable(from, range, Faction.Enemy);
+            return CombatContext.TileCubeCoords.ContainsKey(to) && CombatContext.CombatFunctionProvider.GetTileController(to).IsMoveable(from, range, Faction.Enemy);
         }
 
         public void HandleMove(Vector3Int from, Vector3Int to, int range)
         {
             if(!CanMove(from, to, range))
                 return;
-            TileController selectedTile = CombatManager.GetTileController(to);
-            selectedTile.AddUnit(CombatManager.GetCurrTileController().RemoveUnit(Euc));
+            TileController selectedTile = CombatContext.CombatFunctionProvider.GetTileController(to);
+            selectedTile.AddUnit(CombatContext.CombatFunctionProvider.GetCurrTileController().RemoveUnit(Euc));
             Euc.TryMove(selectedTile.Position(),selectedTile.tileCoordinate); 
             selectedTile.RepositionUnits(ArbitraryOffset);
         }
-        
-        //I guess man 
-        public CombatManager GetGM()
+
+        //I guess bro
+        public ICombatFunctionProvider GetGM()
         {
-            return CombatManager;
+            return CombatContext.CombatFunctionProvider;
         }
-            
+        #endregion
     }
 }

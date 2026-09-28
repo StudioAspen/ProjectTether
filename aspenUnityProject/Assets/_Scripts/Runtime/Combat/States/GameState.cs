@@ -1,20 +1,22 @@
+using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Managers;
 
 namespace _Scripts.Runtime.Combat.States
 {
-    public abstract class GameState 
+    public abstract class GameState
     {
-        protected GameManager gameManager;
+        protected GameStateContext gameStateContext;
 
-        protected GameState(GameManager gameManager)
+        protected GameState(GameStateContext gameStateContext)
         {
-            this.gameManager = gameManager;
+            this.gameStateContext = gameStateContext;
         }
         
         //GameManager performs once upon entering state 
         public abstract void Enter();
         
         //actions that will be looped by GameManager while in state 
+        //honestly probably not going to be used 
         public abstract void Update();
         
         //GameManager performs once before exiting state 

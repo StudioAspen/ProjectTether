@@ -238,6 +238,8 @@ namespace _Scripts.Runtime.Entities.Scripts {
     public List<AbilitySO> Moves => moves;
 
     [SerializeField] private CombatClassSO combatClass;
+    
+    //note: enemies do not have classes, so move this to PlayableCharacterUnitSO
     public CombatClassSO CombatClass => combatClass;
 
   }

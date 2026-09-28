@@ -1,3 +1,4 @@
+using _Scripts.Runtime.Combat.States.ContextData;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat.States.CombatManagerStates
@@ -10,8 +11,8 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         
         //add weights or something 
 
-        public abstract void Enter(EnemyPhase ep);
+        public abstract void Enter(EnemyCombatContext ecb);
       //  public abstract void Update(EnemyPhase ep);
-        public abstract void Exit(EnemyPhase ep);
+        public abstract void Exit(EnemyCombatContext ecb);
     }
 }

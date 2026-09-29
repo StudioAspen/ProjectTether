@@ -1,7 +1,7 @@
 using UnityEngine;
 
 //this script must be dragged to an object before making it a prefab and dragging the prefab to a unit SO.
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
    public class AllyUnitController : UnitController {
       private AllyUnit stats;

@@ -4,6 +4,7 @@ using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
 using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
 using _Scripts.Runtime.Tile_System.Scripts;
 using _Scripts.Runtime.UI;
@@ -102,7 +103,7 @@ namespace _Scripts.Runtime.Managers
         {
             CombatUI.PlayerAction -= HandleAction;
             CombatUI.PlayerSelectiveAction -= HandleAction;
-            Input.Disable();
+            Input.TileSelect.Disable();
             foreach (TileController tc in TileControllers)
             {
                 foreach (UnitController uc in tc.UnitControllers)

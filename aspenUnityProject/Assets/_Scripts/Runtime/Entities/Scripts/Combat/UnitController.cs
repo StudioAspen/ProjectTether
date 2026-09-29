@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
     public abstract class UnitController : MonoBehaviour
     {
@@ -26,7 +26,6 @@ namespace _Scripts.Runtime.Entities.Scripts
         public abstract void MoveInvoke(Vector3 position);
         
         //I made this getter method really early on and don't feel like refactoring
-        //possibly refactor and make the data public 
         public abstract Unit GetData();
 
         public void SetTile(Vector3Int tileCubeCoord)

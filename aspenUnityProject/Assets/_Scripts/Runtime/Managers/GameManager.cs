@@ -83,20 +83,23 @@ namespace _Scripts.Runtime.Managers
     {
       _menuOpened = !_menuOpened;
       Debug.Log(_menuOpened);
-        
+
+      if (_currentGameState == gameStates[0])
+        return;
+
       //no menu ui yet (different from main menu, which is the starting menu) 
       /*
       var enabledMaps = _inputSystemActions.asset.actionMaps.Where(map => map.enabled).ToList();
-      if(_menuOpened) 
-      { 
-        foreach (var map in enabledMaps) 
-          map.Disable(); 
+      if(_menuOpened)
+      {
+        foreach (var map in enabledMaps)
+          map.Disable();
         _inputSystemActions.Global.Enable();
         _currentGameState = gameStates[2];
       }else{
-         foreach (var map in enabledMaps) 
+         foreach (var map in enabledMaps)
            map.Enable();
-         _currentGameState.Exit(); 
+         _currentGameState.Exit();
          _currentGameState = _previousGameStates.Peek();
       }
       */

@@ -14,7 +14,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
        
         public override void Enter()
         {
-            CombatContext.Input.Enable();
+            CombatContext.Input.TileSelect.Enable();
             CombatContext.Input.TileSelect.Confirm.performed += CombatContext.CombatFunctionProvider.SelectTile;
             CombatContext.Input.TileSelect.Exit.performed += ((PlayerPhase)BattlePhase).PopState;
             CombatContext.Input.TileSelect.Move.started += OnMove;
@@ -42,7 +42,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             CombatContext.Input.TileSelect.Confirm.performed -= CombatContext.CombatFunctionProvider.SelectTile;
             CombatContext.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
             CombatContext.Input.TileSelect.Move.started -= OnMove;
-            CombatContext.Input.Disable();
+            CombatContext.Input.TileSelect.Disable();
         }
     }
 }

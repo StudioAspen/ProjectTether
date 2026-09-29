@@ -1,6 +1,7 @@
 using UnityEngine;
 using _Scripts;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 
 public class EnemyCatalog : Catalog<EnemyUnitSO>
 {

@@ -4,7 +4,7 @@ using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
 
 //TODO: xp system
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
    public class EnemyUnit : Unit
    {

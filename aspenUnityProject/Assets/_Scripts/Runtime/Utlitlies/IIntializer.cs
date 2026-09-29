@@ -1,5 +1,6 @@
 
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 
 public interface IInitializer
 {

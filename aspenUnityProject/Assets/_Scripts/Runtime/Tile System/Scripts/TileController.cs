@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
 using UnityEngine;
 

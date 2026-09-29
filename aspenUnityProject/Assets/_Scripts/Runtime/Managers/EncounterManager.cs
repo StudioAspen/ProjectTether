@@ -5,7 +5,9 @@ using _Scripts.Consystently.Essentials;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.States;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Managers.Game_States;
+using _Scripts.Runtime.Tile_System.Scripts;
 
 
 namespace _Scripts.Runtime.Managers

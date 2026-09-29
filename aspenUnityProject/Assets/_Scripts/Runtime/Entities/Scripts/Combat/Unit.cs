@@ -1,9 +1,8 @@
-using UnityEngine;
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
+using UnityEngine;
 
-
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
     public abstract class Unit
     {

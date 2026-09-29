@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using _Scripts.Consystently.UI;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 

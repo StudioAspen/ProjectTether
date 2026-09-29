@@ -1,7 +1,7 @@
 using System;
 using _Scripts.Runtime.Combat;
 
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
     public class AllyUnit : Unit
     {

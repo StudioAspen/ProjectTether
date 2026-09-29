@@ -1,4 +1,5 @@
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using TMPro;
 using UnityEngine;
 

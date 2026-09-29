@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Math;
 using _Scripts.Runtime.Tile_System.Scripts;

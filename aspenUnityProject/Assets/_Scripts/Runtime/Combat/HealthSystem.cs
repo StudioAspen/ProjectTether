@@ -1,8 +1,11 @@
-using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Combat
 {
+  //old code 
+  //not sure how this is supposed to be used 
   public class HealthSystem : MonoBehaviour, IInitializer
   {
     private UnitDataSO _unitData;

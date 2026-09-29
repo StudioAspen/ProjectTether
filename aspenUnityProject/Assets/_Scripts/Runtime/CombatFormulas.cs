@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

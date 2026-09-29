@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 
 public class CombatClassSystem : MonoBehaviour, IInitializer
 {

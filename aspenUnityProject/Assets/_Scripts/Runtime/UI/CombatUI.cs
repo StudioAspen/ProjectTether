@@ -2,6 +2,7 @@ using System;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Tile_System.Scripts;
 using TMPro;

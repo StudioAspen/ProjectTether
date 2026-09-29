@@ -1,5 +1,6 @@
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 
@@ -54,7 +55,7 @@ namespace _Scripts.Runtime.Math
             return !targetContainsAlly;
         }
 
-        //currently no unique ranges for abilities. We can change this by designing a diff. overloaded HexGridDistance function
+        //currently no unique ranges for abilities. We can change this by designing a diff. HexGridDistance function
         public static bool AbilityReachable(this UnitController cc, AbilitySO ability, TileController target)
         {
             Vector3Int from = cc.TileCoords;

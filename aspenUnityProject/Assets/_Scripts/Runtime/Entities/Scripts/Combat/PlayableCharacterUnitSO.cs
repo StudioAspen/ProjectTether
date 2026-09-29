@@ -1,7 +1,7 @@
 using _Scripts.Runtime.Combat;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
   [CreateAssetMenu(fileName = "NewPlayableCharacterData", menuName = "Scriptable Objects/Unit/Playable Character", order = 0)]
   public class PlayableCharacterUnitSO : UnitDataSO

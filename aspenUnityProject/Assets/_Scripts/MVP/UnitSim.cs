@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 
 public class UnitSim : MonoBehaviour
 {

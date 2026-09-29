@@ -1,7 +1,10 @@
+using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts
 {
+  //old code. Delete if there is no use in the future
   [RequireComponent(typeof(HealthSystem), typeof(EnergySystem))]
   public abstract class Entity : MonoBehaviour
   {

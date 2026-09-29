@@ -5,6 +5,7 @@ using _Scripts.Consystently.UI;
 using _Scripts.Runtime;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

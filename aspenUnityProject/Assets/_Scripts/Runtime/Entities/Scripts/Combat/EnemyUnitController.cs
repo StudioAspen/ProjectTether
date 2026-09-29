@@ -2,7 +2,7 @@ using _Scripts.Runtime.Combat;
 using UnityEngine;
 
 //this script must be attached to the object before converting it to a prefab and dragging it to a unit SO. 
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
     public class EnemyUnitController : UnitController
     {

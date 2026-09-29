@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
 using UnityEngine;
 
+//old code. 
 public class CombatClassManager : Singleton<CombatClassManager>
 {
    public Dictionary<CombatClassType, CombatClass> CombatClassDict {  get; private set; }

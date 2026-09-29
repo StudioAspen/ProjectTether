@@ -1,8 +1,10 @@
-using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Entities.Scripts
+namespace _Scripts.Runtime.Combat
 {
+  //old code with a lot of changes necessary
   public class EnergySystem : MonoBehaviour, IInitializer
   {
     private UnitDataSO _unitData;

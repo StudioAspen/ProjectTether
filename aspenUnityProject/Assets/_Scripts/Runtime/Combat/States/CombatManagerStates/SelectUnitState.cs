@@ -45,7 +45,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         public override void Enter()
         {
             //tileSelect's input also works for this case
-            CombatContext.Input.Enable();
+            CombatContext.Input.TileSelect.Enable();
             if(CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile()).UnitCount() > 0)
                 CombatContext.Input.TileSelect.Move.started += OnMove;
             //use confirm if we want to display details on unit select specifically
@@ -64,7 +64,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             if(CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile()).UnitCount() > 0)
                 CombatContext.Input.TileSelect.Move.started -= OnMove;
             CombatContext.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
-            CombatContext.Input.Disable();
+            CombatContext.Input.TileSelect.Disable();
         }
 
         private void OnMove(InputAction.CallbackContext context)

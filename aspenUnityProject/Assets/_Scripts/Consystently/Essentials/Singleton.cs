@@ -24,6 +24,11 @@ namespace _Scripts.Consystently.Essentials
       else
         Destroy(gameObject);
     }
+
+    protected virtual void OnDestroy()
+    {
+      Instance = null;
+    }
   }
 }
 

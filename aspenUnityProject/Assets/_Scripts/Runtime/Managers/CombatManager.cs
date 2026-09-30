@@ -77,7 +77,7 @@ namespace _Scripts.Runtime.Managers
 
         private void Awake()
         {
-            Input = GameManager.Instance.InputSystemActions;
+            Input = InputManager.Instance.Actions;
         }
 
         //must occur after OnEnable bc other classes will subscribe OnEnable

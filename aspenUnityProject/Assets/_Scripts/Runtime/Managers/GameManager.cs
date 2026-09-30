@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
 using _Scripts.Runtime.Combat.States;
 using _Scripts.Runtime.Combat.States.ContextData;
-using UnityEngine.InputSystem;
-using System.Linq;
 using _Scripts.Runtime.Managers.Game_States;
 
 namespace _Scripts.Runtime.Managers
@@ -17,7 +15,6 @@ namespace _Scripts.Runtime.Managers
     public event Action<GameState> ChangedGameState;
 
     private List<GameState> gameStates = new List<GameState>();
-    public InputSystem_Actions InputSystemActions { get; private set; }
 
     public GameState _currentGameState { get; private set; }
     private readonly Stack<GameState> _previousGameStates = new Stack<GameState>();
@@ -29,7 +26,6 @@ namespace _Scripts.Runtime.Managers
     protected override void Awake()
     {
       base.Awake();
-      InputSystemActions = new InputSystem_Actions();
       gameStates.Add(new MainMenuGameState(new GameStateContext(_previousGameStates)));
       gameStates.Add(new CombatGameState(new GameStateContext(_previousGameStates)));
       gameStates.Add(new OpenMenuGameState(new GameStateContext(_previousGameStates)));
@@ -40,8 +36,6 @@ namespace _Scripts.Runtime.Managers
     {
      EncounterManager.encountered += EnterCombat;
      BattleSimManager.submitted += EnterCombat;
-     InputSystemActions.Global.Enable(); 
-     InputSystemActions.Global.OpenMenu.performed += ToggleMenu;
     }
     
     //don't know if this matters with a singleton but who knows 
@@ -49,7 +43,6 @@ namespace _Scripts.Runtime.Managers
     {
       EncounterManager.encountered -= EnterCombat; 
       BattleSimManager.submitted -= EnterCombat; 
-      InputSystemActions.Global.Disable();
     }
 
     void Update()
@@ -79,7 +72,7 @@ namespace _Scripts.Runtime.Managers
       ChangedGameState?.Invoke(_currentGameState);
     }
 
-    private void ToggleMenu(InputAction.CallbackContext context)
+    public void ToggleMenu()
     {
       _menuOpened = !_menuOpened;
       Debug.Log(_menuOpened);

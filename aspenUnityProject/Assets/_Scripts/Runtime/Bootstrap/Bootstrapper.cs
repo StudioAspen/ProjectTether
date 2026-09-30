@@ -4,7 +4,6 @@ namespace _Scripts.Runtime.Bootstrap
 {
     /// <summary>
     /// Controls the Bootstrap scene, serving as the Single Entry Point manager.
-    /// Handles the initial game state to a target scene inside the editor through the BootstrapConfigSO.
     /// </summary>
     public class Bootstrapper : MonoBehaviour
     {

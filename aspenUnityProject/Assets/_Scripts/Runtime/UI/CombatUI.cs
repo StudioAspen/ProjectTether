@@ -140,7 +140,6 @@ namespace _Scripts.Runtime.UI {
         }
 
         //buttons on the combat panel will use this function
-        //convert to use enum later 
         //for player actions that do not require selection of items, moves, etc. 
         public void SendAction(int action)
         {
@@ -151,7 +150,6 @@ namespace _Scripts.Runtime.UI {
             Debug.Log(pAction);
         }
 
-        //convert into openSubmenu for both inventory and abilities in the future 
         private void OpenAbilitiesMenu()
         {
             abilitiesPanel.SetActive(true);        

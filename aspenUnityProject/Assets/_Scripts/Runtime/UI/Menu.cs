@@ -11,6 +11,8 @@ namespace _Scripts.Runtime.UI
     /// <summary>
     /// UI screen navigation manager. State machine + stack.
     /// </summary>
+    [RequireComponent(typeof(CanvasGroup))]
+    [DisallowMultipleComponent]
     public class Menu : MonoBehaviour
     {
         /// <summary>
@@ -29,20 +31,8 @@ namespace _Scripts.Runtime.UI
         [field: Header("Events")]
         [field: SerializeField] public UnityEvent OnFocused { get; private set; } = new();
         [field: SerializeField] public UnityEvent OnUnfocused { get; private set; } = new();
-
-        private CanvasGroup _group = null;
-        public CanvasGroup Group
-        {
-            get
-            {
-                if (_group == null)
-                {
-                    _group = GetComponent<CanvasGroup>();
-                }
-
-                return _group;
-            }
-        }
+        
+        public CanvasGroup Group { get; private set; }
 
         public Menu PreviousPanel { get; private set; }
         public static Stack<Menu> MenuStack = new();
@@ -52,13 +42,19 @@ namespace _Scripts.Runtime.UI
         public static Menu CurrentActiveMenu => MenuStack.Count > 0 ? MenuStack.Peek() : null;
         public static event Action<Menu> OnPanelChanged = delegate { };
 
+        private void Awake()
+        {
+            Group = GetComponent<CanvasGroup>();
+        }
+
         /// <summary>
         /// Helper to hide the active panel.
         /// Good for temporarily hiding and showing again later.
         /// </summary>
         public static void HideActive()
         {
-            CurrentActiveMenu.gameObject.SetActive(false);
+            if (CurrentActiveMenu != null)
+                CurrentActiveMenu.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -67,7 +63,8 @@ namespace _Scripts.Runtime.UI
         /// </summary>
         public static void ShowActive()
         {
-            CurrentActiveMenu.gameObject.SetActive(true);
+            if (CurrentActiveMenu != null)
+                CurrentActiveMenu.gameObject.SetActive(true);
         }
 
         public static void Focus(Menu panel)
@@ -118,14 +115,14 @@ namespace _Scripts.Runtime.UI
                     OnPanelChanged?.Invoke(null);
                     return;
                 }
-                Debug.LogWarning($"Active UIScreen {this} is being destroyed");
+                Debug.LogWarning($"Active Menu {this} is being destroyed");
                 Back();
             }
         }
 
         private void OnApplicationQuit()
         {
-        OnPanelChanged = delegate { };
+            OnPanelChanged = delegate { };
         }
 
         public void FocusPanel(Menu panel)

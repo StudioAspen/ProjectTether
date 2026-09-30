@@ -270,7 +270,7 @@ namespace _Scripts.Runtime.UI
                 return false;
 
             Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(null, rectTransform.position);
-        var pointerData = new PointerEventData(eventSystem) { position = screenPoint };
+            var pointerData = new PointerEventData(eventSystem) { position = screenPoint };
 
             List<RaycastResult> results = new List<RaycastResult>();
             eventSystem.RaycastAll(pointerData, results);

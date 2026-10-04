@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using _Scripts.Runtime.Characters.Classes.Scripts;
+using _Scripts.Runtime.Characters.Scripts;
 using _Scripts.Runtime.Combat;
+using Unity.VisualScripting;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
@@ -9,11 +13,17 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     
         public event Action<AllyUnit> OnDeath;
         public event Action<AllyUnit> OnDefend;
+
+        private List<SuitData> _suits;
     
         //private CombatClass combatClass; 
         public AllyUnit(UnitDataSO unit) : base(unit)
         {
             SetFaction(Faction.Ally);
+            foreach (SuitBaseDataSO sb in ((PlayableCharacterUnitSO)unit).Suits)
+            {
+               _suits.Add(new SuitData(sb)); 
+            }
         }
     
         //probably do damage formula later either here or in a diff class 

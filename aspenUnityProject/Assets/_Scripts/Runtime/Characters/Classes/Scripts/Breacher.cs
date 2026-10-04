@@ -1,38 +1,38 @@
-using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
-using TMPro.EditorUtilities;
-using UnityEngine;
 
-public class Breacher : CombatClass
+namespace _Scripts.Runtime.Characters.Classes.Scripts
 {
-    public Breacher()
+    public class Breacher : CombatClass
     {
-        SeClassType(CombatClassType.Breacher);
-    }
+        public Breacher()
+        {
+            SeClassType(CombatClassType.Breacher);
+        }
 
-    public override void AddClassStatBuff(UnitDataSO stats)
-    {
-        base.AddClassStatBuff(stats);
-        // int def = stats.Defense;
-        // int res = stats.Resistance;
+        public override void AddClassStatBuff(UnitDataSO stats)
+        {
+            base.AddClassStatBuff(stats);
+            // int def = stats.Defense;
+            // int res = stats.Resistance;
 
-        // def += 2;
-        // res += 2;
+            // def += 2;
+            // res += 2;
 
-        // stats.SetDefense(def);
-        // stats.SetResistance(res);
-    }
+            // stats.SetDefense(def);
+            // stats.SetResistance(res);
+        }
 
-    public override void RemoveClassStatBuff(UnitDataSO stats)
-    {
-        base.RemoveClassStatBuff(stats);
-        // int def = stats.Defense;
-        // int resist = stats.Resistance;
+        public override void RemoveClassStatBuff(UnitDataSO stats)
+        {
+            base.RemoveClassStatBuff(stats);
+            // int def = stats.Defense;
+            // int resist = stats.Resistance;
 
-        // def -= 2;
-        // resist -= 2;
+            // def -= 2;
+            // resist -= 2;
 
-        // stats.SetDefense(def);
-        // stats.SetResistance(resist);
+            // stats.SetDefense(def);
+            // stats.SetResistance(resist);
+        }
     }
 }

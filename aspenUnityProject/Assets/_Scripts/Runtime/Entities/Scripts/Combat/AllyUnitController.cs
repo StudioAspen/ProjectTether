@@ -18,6 +18,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     add movement that is disabled on combat game state  
    */
 
+      //not sure why I have this. May be removed 
       public override void TakeDamage(int damage)
       {
          stats?.ChangeHealthRemaining(damage); 

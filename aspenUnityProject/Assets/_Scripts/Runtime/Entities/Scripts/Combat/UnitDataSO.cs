@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
 using UnityEngine;
 
@@ -140,6 +141,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
     public Dictionary<Stat, Tier> Aptitudes => new Dictionary<Stat, Tier>()
     {
       { Stat.HP, _health },
+      //TODO: remove energy 
       { Stat.EN, _energy },
       { Stat.STR, _strength },
       { Stat.DEF, _defense },

@@ -57,6 +57,11 @@ namespace _Scripts.Runtime.Managers
         private Vector3Int _currentTile { get; set; } = new Vector3Int(0, 0, 0);
         private CombatActions _receivedAction { get; set; }
         private int ActionSelection { get; set; }
+
+        /// <summary>
+        /// statuses associated with player actions (e.g., overclocking, attacking, defending too much, etc.)
+        /// </summary>
+        [SerializeField] private List<StatusSO> _actionStatuses;
         
         #endregion
 
@@ -170,30 +175,29 @@ namespace _Scripts.Runtime.Managers
             }
         }
 
-        //starts at tile 0 and spirals outwards to get the cube coords for every tile 
-        //coords are for determining proper tile selection when the user moves across the field 
-        //3r(r+1)+1=tiles formula for generic implementation if additional rings are added
-        //for reference, tile 18 should be (2,0,-2) 
+        
+        /// <summary>
+        ///Starts at tile 0 and spirals outwards to get the cube coords for every tile.
+        ///Coords are for determining proper tile selection when the user moves across the field 
+        /// </summary>
+        //For reference, tile 18 should be (2,0,-2) 
+        //3r(r+1)+1=tiles formula for generic implementation if additional rings are added.
         void GenerateCoords()
         {
             int tile = 0;
             Vector3Int currentPos = new Vector3Int(0, 0, 0);
-            //           Debug.Log($"tile: {tile}, {currentPos}");
             TileCubeCoords.Add(currentPos, tile);
             TileControllers[tile].tileCoordinate = currentPos;
             for (int ring = 1; ring <= 2; ring++)
             {
                 currentPos += CubeCoordDirections.NE.Vector();
                 tile++;
-//               Debug.Log($"tile: {tile}, {currentPos}");
                 TileCubeCoords.Add(currentPos, tile);
                 TileControllers[tile].tileCoordinate = currentPos;
                 for (int southEasts = ring - 1; southEasts > 0; southEasts--)
                 {
-//                   currentPos += directions[(int)CubeCoordDirections.SE];
                     currentPos += CubeCoordDirections.SE.Vector();
                     tile++;
-                    //                 Debug.Log($"tile: {tile}, {currentPos}");
                     TileCubeCoords.Add(currentPos, tile);
                     TileControllers[tile].tileCoordinate = currentPos;
                 }
@@ -203,9 +207,7 @@ namespace _Scripts.Runtime.Managers
                     {
                         currentPos += ((CubeCoordDirections)direction).Vector();
                         tile++;
-                        //                    Debug.Log($"tile: {tile}, {currentPos}");
                         TileCubeCoords.Add(currentPos, tile);
-                        //                   Debug.Log($"tileControllers size: {tileControllers.Length}");
                         TileControllers[tile].tileCoordinate = currentPos;
                     }
                 }

@@ -12,6 +12,9 @@ using _Scripts.Runtime.Tile_System.Scripts;
 
 namespace _Scripts.Runtime.Managers
 {
+    /// <summary>
+    /// the class for passing data from the overworld (and battle sim) into battle scene  
+    /// </summary>
     public class EncounterManager : Manager<EncounterManager>
     {
         //probably stupid way of implementing this 
@@ -34,6 +37,7 @@ namespace _Scripts.Runtime.Managers
         }
 
 
+        //useless 
         void HandleState(GameState gameState)
         {
             //switch statement here if it ever becomes useful
@@ -53,7 +57,10 @@ namespace _Scripts.Runtime.Managers
 
 
         //TODO: when we add tile effects, add tile data to generate methods
-        //for mvp primarily 
+        /// <summary>
+        /// used for the battle sim  
+        /// </summary>
+        /// <param name="tiles"></param>
         public void GenerateEncounter(List<BattlefieldTile> tiles)
         {
            encounter = new Encounter();
@@ -77,6 +84,10 @@ namespace _Scripts.Runtime.Managers
         }
 
         //TODO: finish this function when we get to the overworld or level selection  
+        /// <summary>
+        /// generates an encounter from a encounterSO. Used for the overworld
+        /// </summary>
+        /// <param name="encounterSo"></param>
         public void GenerateEncounter(EncounterSO encounterSo)
         {
            encounter = new Encounter();

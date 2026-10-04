@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     public abstract class Unit
     {
      //TODO: add buff feature (MAKE scriptable objects for buffs/debuffs) then store array in unit
+     //TODO: remove energy (it is part of suit)
 
         public Sprite Portrait { get; private set; }
         public string Name { get; set; }
@@ -41,7 +43,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 
 
 
-
 //   public event Action HasDied;
 
         //level will draw from save
@@ -57,10 +58,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             StatGrowths = unit.Aptitudes;
             Affinities = unit.Affinities;
 
-            //TODO: 100% add a function in Formulae for calculating all stats 
             //actual stat values 
             Health = Formulae.CalculateStat(Stat.HP, StatGrowths[Stat.HP], Level);
-            Energy = Formulae.CalculateStat(Stat.EN, StatGrowths[Stat.EN], Level);
+            
+            //part of suit now
+         //   Energy = Formulae.CalculateStat(Stat.EN, StatGrowths[Stat.EN], Level);
             Strength = Formulae.CalculateStat(Stat.STR, StatGrowths[Stat.STR], Level);
             Defense = Formulae.CalculateStat(Stat.DEF, StatGrowths[Stat.DEF], Level);
             Tech = Formulae.CalculateStat(Stat.TEC, StatGrowths[Stat.TEC], Level);
@@ -81,6 +83,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         protected void SetFaction(Faction value)
         {
             Faction = value;
+        }
+
+        public int[] GetStats()
+        {
+            return new int[] { Health, Strength, Defense, Tech, Resistance, Speed, Luck, Precision, Evasion };
         }
 
 

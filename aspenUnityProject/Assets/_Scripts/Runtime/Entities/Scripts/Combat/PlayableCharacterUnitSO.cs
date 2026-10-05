@@ -9,9 +9,13 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
   {
     public override Faction Faction => Faction.Ally;
 
-    [Tooltip("need one suit for each class")]
-    [SerializeField] private SuitBaseDataSO[] _suits; 
+    [Tooltip("need one suit for each class")] [SerializeField] 
+    private SuitBaseDataSO[] _suits; 
     public SuitBaseDataSO[] Suits => _suits;
+
+    [Tooltip("basically the starting class")] [SerializeField]
+    private SuitBaseDataSO _startingSuit;
+    public  SuitBaseDataSO StartingSuit => _startingSuit;
 
   }
 }

@@ -30,7 +30,8 @@ namespace _Scripts.Runtime.Managers
         //static because too lazy to fix initialization issues with .instance 
         public static event Action<bool> encountered; 
         
-        //probably useless 
+        //overworld context
+        
         void OnEnable()
         {
             GameManager.Instance.ChangedGameState += HandleState;
@@ -53,6 +54,17 @@ namespace _Scripts.Runtime.Managers
         public UnitDataSO[,] GetInitializerData()
         {
             return initializerData;
+        }
+
+        /// <summary>
+        /// to be called in the combatManager after combat ends.
+        /// Combat Manager will provide a list of allyUnits with updated states.
+        /// Will return the overworld 
+        /// </summary>
+        /// <param name="returnedUnits"></param>
+        public void ExitEncounter(List<AllyUnitController> returnedUnits)
+        {
+           //need overworld context data to return to
         }
 
 

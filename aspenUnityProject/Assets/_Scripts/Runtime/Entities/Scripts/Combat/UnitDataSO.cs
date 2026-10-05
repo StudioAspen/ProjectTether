@@ -241,8 +241,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
 
     [SerializeField] private CombatClassSO combatClass;
     
+    //TODO: REMOVE
     //note: enemies do not have classes, so move this to PlayableCharacterUnitSO
     public CombatClassSO CombatClass => combatClass;
-
   }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
 
 namespace _Scripts.Runtime.Characters.Scripts
@@ -9,7 +10,9 @@ namespace _Scripts.Runtime.Characters.Scripts
        public int EnergyCapacity { get; private set; }
        public int SkillsCapacity { get; private set; }
        public int AbilityCapacity { get; private set; }
-       public bool IsOverclocked { get; private set; }
+       public OverclockTiers OverclockLevel { get; private set; }
+
+       private SuitBaseDataSO _suitBaseData;
        
        
        //TODO:
@@ -27,9 +30,11 @@ namespace _Scripts.Runtime.Characters.Scripts
        /// <param name="suitBaseData"></param>
        public SuitData(SuitBaseDataSO suitBaseData)
        {
+           _suitBaseData = suitBaseData;
            EnergyCapacity =  suitBaseData.EnergyCapacity;
            SkillsCapacity = suitBaseData.SkillCapacity;
            AbilityCapacity = suitBaseData.AbilityCapacity;
+           OverclockLevel = OverclockTiers.Off;
            //At the start, the equipped skills will only be the innate skill at the center of the node tree
            //TODO:
            //add abilities + skills to dictionaries here
@@ -37,16 +42,21 @@ namespace _Scripts.Runtime.Characters.Scripts
 
        public void EquipAbility(Ability ability)
        {
-          EquippedAbilities.TryAdd(ability.Id, ability); 
-          if(EquippedAbilities.Count > AbilityCapacity)
-              IsOverclocked = true;
+          if (EquippedAbilities.Count > (AbilityCapacity + 3))
+               return;
+          EquippedAbilities.TryAdd(ability.Id, ability);
+          if (EquippedAbilities.Count > AbilityCapacity)
+              OverclockLevel = (OverclockTiers)(EquippedAbilities.Count - AbilityCapacity);
        }
 
        public void UnequipAbility(string abilityID)
        {
+         if (EquippedAbilities.Count < 1)
+               return;
          EquippedAbilities.Remove(abilityID);
-         if (EquippedAbilities.Count <= AbilityCapacity)
-             IsOverclocked = false; 
+         if(EquippedAbilities.Count >= AbilityCapacity)
+             OverclockLevel = (OverclockTiers)(EquippedAbilities.Count - AbilityCapacity);
+             
        }
 
        public void SetAbilityCapacity(int capacity)
@@ -58,10 +68,11 @@ namespace _Scripts.Runtime.Characters.Scripts
        {
            AbilityCapacity += amount;
        }
-       
-       
-           
-           
+
+       public CombatClassType GetClassType()
+       {
+           return (CombatClassType)_suitBaseData.ClassType;
+       } 
        //TODO:
        //method for equipping skills
        //method for removing skills

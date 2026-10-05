@@ -18,7 +18,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     add movement that is disabled on combat game state  
    */
 
-      //not sure why I have this. May be removed 
+      //not sure why I have this. May be removed along with other TakeDamage functions from controllers + abstract
       public override void TakeDamage(int damage)
       {
          stats?.ChangeHealthRemaining(damage); 
@@ -28,14 +28,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
       public override void TryMove(Vector3 position, Vector3Int coords)
       {
          SetTile(coords);
-         MoveInvoke(position);
-         HasMoved = true;
-      }
-
-      public override void MoveInvoke(Vector3 position)
-      {
          Move(position);
-         OnMove(this);
+         HasMoved = true;
       }
 
       //used by managers to move the unit without triggering events

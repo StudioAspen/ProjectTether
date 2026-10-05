@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
@@ -9,6 +10,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     {
      //TODO: add buff feature (MAKE scriptable objects for buffs/debuffs) then store array in unit
      //TODO: remove energy (it is part of suit)
+     
+
 
         public Sprite Portrait { get; private set; }
         public string Name { get; set; }
@@ -94,7 +97,10 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public abstract void ChangeHealthRemaining(int value);
         public abstract void ChangeEnergyRemaining(int value);
 
-        public abstract void Defend();
+        public void Defend()
+        {
+            IsBlocking = true;
+        }
         public abstract void EndDefend();
 
         public Element[] DefaultAttackTypes()

@@ -1,11 +1,14 @@
-public enum CombatClassType
+namespace _Scripts.Runtime.Characters.Classes.Scripts
 {
-  Diver, // Default Class
-  Breacher,
-  Pharmacist,
-  Duelist,
-  Sniper,
-  Hacker,
-  Mechanic,
-  Ghost
+  public enum CombatClassType
+  {
+    Diver, // Default Class
+    Breacher,
+    Pharmacist,
+    Duelist,
+    Sniper,
+    Hacker,
+    Mechanic,
+    Ghost
+  }
 }

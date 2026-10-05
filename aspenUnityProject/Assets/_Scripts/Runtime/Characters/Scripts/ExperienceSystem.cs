@@ -1,74 +1,76 @@
 using System;
-using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
-public class ExperienceSystem : MonoBehaviour, IInitializer
+namespace _Scripts.Runtime.Characters.Scripts
 {
-  [Header("Level")]
-  [Range(1, 99)]
-  [SerializeField] protected int _level;
-  public int Level => _level;
-  public int ExpToNextLevel { get; private set; }
-  public int TotalExpGained { get; private set; }
-
-
-  public event Action<int> OnLevelUp;
-
-  public void Intialize(UnitDataSO unitData)
+  public class ExperienceSystem : MonoBehaviour, IInitializer
   {
-    _level = unitData.Level;
+    [Header("Level")]
+    [Range(1, 99)]
+    [SerializeField] protected int _level;
+    public int Level => _level;
+    public int ExpToNextLevel { get; private set; }
+    public int TotalExpGained { get; private set; }
 
-    ExpToNextLevel = unitData.ExPtsToNextLevel;
-    TotalExpGained = unitData.TotalExPtsGained;
-  }
 
-  public void ResetSystem()
-  {
-    _level = 1;
-    CalcExpToNextLevel();
-    TotalExpGained = 0;
-  }
+    public event Action<int> OnLevelUp;
 
-  public void AddExperience(int expGained)
-  {
-    if(_level == 99)
+    public void Intialize(UnitDataSO unitData)
     {
-      ExpToNextLevel = 0;
-      return;
+      _level = unitData.Level;
+
+      ExpToNextLevel = unitData.ExPtsToNextLevel;
+      TotalExpGained = unitData.TotalExPtsGained;
     }
-    else if (expGained <= ExpToNextLevel)
-    {
-      TotalExpGained += expGained;
-      ExpToNextLevel -= expGained;
-    }
-    else if(expGained >= ExpToNextLevel)
-    {
-      expGained -= ExpToNextLevel;
-      TotalExpGained += ExpToNextLevel;
-      ExpToNextLevel = 0;
-      LevelUp(expGained);
-    }
-  }
 
-  public void LevelUp(int remainingExp = 0)
-  {
-    if(_level < 99)
+    public void ResetSystem()
     {
-      _level += 1;
+      _level = 1;
       CalcExpToNextLevel();
-      OnLevelUp?.Invoke(_level);
+      TotalExpGained = 0;
     }
 
-    if(remainingExp > 0 && _level < 99)
-      AddExperience(remainingExp);
-  }
+    public void AddExperience(int expGained)
+    {
+      if(_level == 99)
+      {
+        ExpToNextLevel = 0;
+        return;
+      }
+      else if (expGained <= ExpToNextLevel)
+      {
+        TotalExpGained += expGained;
+        ExpToNextLevel -= expGained;
+      }
+      else if(expGained >= ExpToNextLevel)
+      {
+        expGained -= ExpToNextLevel;
+        TotalExpGained += ExpToNextLevel;
+        ExpToNextLevel = 0;
+        LevelUp(expGained);
+      }
+    }
 
-  public void CalcExpToNextLevel()
-  {
-    if(_level == 99)
-      return;
+    public void LevelUp(int remainingExp = 0)
+    {
+      if(_level < 99)
+      {
+        _level += 1;
+        CalcExpToNextLevel();
+        OnLevelUp?.Invoke(_level);
+      }
 
-    // Calculations here
+      if(remainingExp > 0 && _level < 99)
+        AddExperience(remainingExp);
+    }
+
+    public void CalcExpToNextLevel()
+    {
+      if(_level == 99)
+        return;
+
+      // Calculations here
+    }
   }
 }

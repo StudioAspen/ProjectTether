@@ -471,7 +471,8 @@ namespace _Scripts.Runtime.Managers
             {
                 foreach (AllyUnitController auc in PlayerUnits)
                 {
-                   ((AllyUnit)auc.GetData()).Underclock();
+                    if(!((AllyUnit)auc.GetData()).CheckOverclock())
+                       ((AllyUnit)auc.GetData()).Underclock();
                 }
                 finishedBattle?.Invoke();
             }

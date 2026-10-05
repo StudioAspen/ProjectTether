@@ -43,6 +43,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public List<AbilitySO> Moves { get; protected set; }
 
         public CombatClassSO CombatClass { get; protected set; }
+        
+        public List<StatusSO> Statuses { get; protected set; }
 
 
 

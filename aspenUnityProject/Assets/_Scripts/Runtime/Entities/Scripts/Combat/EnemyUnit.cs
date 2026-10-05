@@ -11,6 +11,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
    
       //TODO: add skills here because enemies do not have classes
       public List<EnemyStateSO> behaviourStates { get; private set; }
+      
    
       public EnemyUnit(EnemyUnitSO unit) : base(unit)
       {

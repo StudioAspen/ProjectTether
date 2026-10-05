@@ -17,7 +17,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 
         public SuitData CurrentSuit { get; private set; }
         public Dictionary<CombatClassType, SuitData> SuitDictionary { get; private set; }
-    
+
+        public bool HasOverclocked { get; private set; } 
+        public int OverclockStack { get; private set; }
+        
+
         //private CombatClass combatClass; 
         public AllyUnit(UnitDataSO unit) : base(unit)
         {
@@ -31,8 +35,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
                //should throw exception/crash because there should never be two suits of the same combat class
                SuitDictionary.Add(suit.GetClassType(),suit);
             }
+            // waiting for pod combat dynamics 
             // CurrentSuit = SuitDictionary[(CombatClassType)((PlayableCharacterUnitSO)unit).StartingSuit.ClassType];
-            // OverclockLevel = CurrentSuit.OverclockLevel;
+            // OverclockLevel = SetOverclock(CurrentSuit.OverclockLevel);
             
         }
     
@@ -84,16 +89,32 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             CurrentSuit = SuitDictionary[classType];
         }
 
+        private void SetOverclock(OverclockTiers overclockLevel)
+        {
+            OverclockLevel = overclockLevel;
+            OverclockStack = (int)overclockLevel;
+            if(OverclockLevel != OverclockTiers.Off)
+                HasOverclocked = true;
+        }
+
         public void Overclock()
         {
             if(OverclockLevel != OverclockTiers.Extreme)
                 OverclockLevel = (OverclockTiers)((int)OverclockLevel + 1);
+            HasOverclocked = true;
         }
 
         public void Underclock()
         {
             if (OverclockLevel != OverclockTiers.Off)
                 OverclockLevel = (OverclockTiers)((int)OverclockLevel - 1);
+        }
+
+        public bool CheckOverclock()
+        {
+            if (OverclockLevel != OverclockTiers.Off)
+                HasOverclocked = true;
+            return HasOverclocked;
         }
 
     

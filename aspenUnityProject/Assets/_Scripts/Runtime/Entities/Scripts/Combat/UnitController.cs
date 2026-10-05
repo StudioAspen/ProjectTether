@@ -36,7 +36,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         { 
             TileCoords = tileCubeCoord;
         }
-        
 
         //should reset values that should be upon turn change  (e.g., hasMoved)
         public abstract void ResetValues();

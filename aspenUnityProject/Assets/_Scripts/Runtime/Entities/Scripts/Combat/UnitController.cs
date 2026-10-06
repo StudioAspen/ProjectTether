@@ -10,25 +10,21 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public bool HasMoved { get; protected set; }
         public Vector3Int TileCoords {get; private set;} 
         
-       
+        public event Action<UnitController> OnUnitMove; 
+        
         public abstract void Initialize(UnitDataSO baseStats);
         public abstract void TakeDamage(int damage);
 
-        /// <summary>
-        ///TryMove will change variables to determine other game logic
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="coords"></param>
+        //TryMove will change variables to determine other game logic
         public abstract void TryMove(Vector3 position, Vector3Int coords);
         
-        /// <summary>
-        ///pure move function that will not trigger anything. 
-        /// </summary>
-        /// <param name="position"></param>
+        //pure move function that will not trigger anything. 
         //Used mainly for initialization
         public abstract void Move(Vector3 position);
         
-       
+        //use if you want unit movement animation but don't want vars to be changed
+        public abstract void MoveInvoke(Vector3 position);
+        
         //I made this getter method really early on and don't feel like refactoring
         public abstract Unit GetData();
 
@@ -36,6 +32,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         { 
             TileCoords = tileCubeCoord;
         }
+        
+        public void OnMove(UnitController unitController) { OnUnitMove?.Invoke(unitController); }
 
         //should reset values that should be upon turn change  (e.g., hasMoved)
         public abstract void ResetValues();

@@ -12,9 +12,6 @@ using _Scripts.Runtime.Tile_System.Scripts;
 
 namespace _Scripts.Runtime.Managers
 {
-    /// <summary>
-    /// the class for passing data from the overworld (and battle sim) into battle scene  
-    /// </summary>
     public class EncounterManager : Manager<EncounterManager>
     {
         //probably stupid way of implementing this 
@@ -30,15 +27,13 @@ namespace _Scripts.Runtime.Managers
         //static because too lazy to fix initialization issues with .instance 
         public static event Action<bool> encountered; 
         
-        //overworld context
-        
+        //probably useless 
         void OnEnable()
         {
             GameManager.Instance.ChangedGameState += HandleState;
         }
 
 
-        //useless 
         void HandleState(GameState gameState)
         {
             //switch statement here if it ever becomes useful
@@ -56,23 +51,9 @@ namespace _Scripts.Runtime.Managers
             return initializerData;
         }
 
-        /// <summary>
-        /// to be called in the combatManager after combat ends.
-        /// Combat Manager will provide a list of allyUnits with updated states.
-        /// Will return the overworld 
-        /// </summary>
-        /// <param name="returnedUnits"></param>
-        public void ExitEncounter(List<AllyUnitController> returnedUnits)
-        {
-           //need overworld context data to return to
-        }
-
 
         //TODO: when we add tile effects, add tile data to generate methods
-        /// <summary>
-        /// used for the battle sim  
-        /// </summary>
-        /// <param name="tiles"></param>
+        //for mvp primarily 
         public void GenerateEncounter(List<BattlefieldTile> tiles)
         {
            encounter = new Encounter();
@@ -96,10 +77,6 @@ namespace _Scripts.Runtime.Managers
         }
 
         //TODO: finish this function when we get to the overworld or level selection  
-        /// <summary>
-        /// generates an encounter from a encounterSO. Used for the overworld
-        /// </summary>
-        /// <param name="encounterSo"></param>
         public void GenerateEncounter(EncounterSO encounterSo)
         {
            encounter = new Encounter();

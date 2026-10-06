@@ -99,8 +99,8 @@ namespace _Scripts.Runtime.UI {
             {
                 playerActionsContainer.SetActive(false);
             }
+            uiInputModule.enabled = playerActionsContainer.activeSelf; //painful bug if this is removed where enter is read by the ui input immediately
             int currMove = 0;
-            uiInputModule.enabled = playerActionsContainer.activeSelf; 
             foreach (Transform button in abilitiesPanel.transform)
             {
                 if(currMove > unitController.GetData().Moves.Count-1)

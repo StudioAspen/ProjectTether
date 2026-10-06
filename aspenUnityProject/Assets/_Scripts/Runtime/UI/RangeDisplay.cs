@@ -70,7 +70,6 @@ namespace _Scripts.Runtime.UI
             foreach (GameObject obj in activeObjects)
                 obj.SetActive(false);
             activeObjects.Clear();
-           Debug.Log(activeObjects.Count);
         }
 
     }

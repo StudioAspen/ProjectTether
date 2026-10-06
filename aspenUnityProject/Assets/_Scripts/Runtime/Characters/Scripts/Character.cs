@@ -1,39 +1,32 @@
-using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Entities.Scripts;
 using UnityEngine;
 
-/*
-namespace _Scripts.Runtime.Characters.Scripts
+[RequireComponent(typeof(ExperienceSystem), typeof(CombatClassSystem))]
+public class Character : Entity
 {
-  [RequireComponent(typeof(ExperienceSystem), typeof(CombatClassSystem))]
-  public class Character : Entity
+  protected ExperienceSystem _experienceSystem;
+  protected CombatClassSystem _combatClassSystem;
+
+  protected override void Awake()
   {
-    protected ExperienceSystem _experienceSystem;
-    protected CombatClassSystem _combatClassSystem;
-
-    protected override void Awake()
-    {
-      base.Awake();
+    base.Awake();
     
-      _experienceSystem ??= GetComponent<ExperienceSystem>();
-      _combatClassSystem ??= GetComponent<CombatClassSystem>();
+    _experienceSystem ??= GetComponent<ExperienceSystem>();
+    _combatClassSystem ??= GetComponent<CombatClassSystem>();
 
-      _experienceSystem.Intialize(UnitData);
-      _combatClassSystem.Intialize(UnitData);
-    }
+    _experienceSystem.Intialize(UnitData);
+    _combatClassSystem.Intialize(UnitData);
+  }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+  // Start is called once before the first execution of Update after the MonoBehaviour is created
+  void Start()
+  {
       
-    }
+  }
 
-    // Update is called once per frame
-    void Update()
-    {
+  // Update is called once per frame
+  void Update()
+  {
       
-    }
   }
 }
-
-*/

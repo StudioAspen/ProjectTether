@@ -2,7 +2,6 @@ using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
-/*
 namespace _Scripts.Runtime.Combat
 {
   //old code with a lot of changes necessary
@@ -21,5 +20,3 @@ namespace _Scripts.Runtime.Combat
     }
   }
 }
-
-*/

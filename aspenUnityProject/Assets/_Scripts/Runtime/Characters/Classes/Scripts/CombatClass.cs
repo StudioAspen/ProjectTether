@@ -1,15 +1,14 @@
+using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
+using UnityEngine;
 
-namespace _Scripts.Runtime.Characters.Classes.Scripts
+public abstract class CombatClass
 {
-    public abstract class CombatClass
-    {
-        CombatClassType _classType;
-        public CombatClassType ClassType => _classType;
+    CombatClassType _classType;
+    public CombatClassType ClassType => _classType;
 
-        public virtual void AddClassStatBuff(UnitDataSO stats) { }
-        public virtual void RemoveClassStatBuff(UnitDataSO stats) { }
+    public virtual void AddClassStatBuff(UnitDataSO stats) { }
+    public virtual void RemoveClassStatBuff(UnitDataSO stats) { }
 
-        protected void SeClassType(CombatClassType classType) => _classType = classType;
-    }
+    protected void SeClassType(CombatClassType classType) => _classType = classType;
 }

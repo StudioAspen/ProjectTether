@@ -27,8 +27,14 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public override void TryMove(Vector3 position, Vector3Int coords)
         {
             SetTile(coords);
-            Move(position);
+            MoveInvoke(position);
             HasMoved = true;
+        }
+
+        public override void MoveInvoke(Vector3 position)
+        {
+            Move(position);
+            OnMove(this);
         }
 
         public override void Move(Vector3 position)

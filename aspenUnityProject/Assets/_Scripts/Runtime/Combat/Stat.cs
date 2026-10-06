@@ -5,40 +5,42 @@ namespace _Scripts.Runtime.Combat
     /// <summary>
     /// Health
     /// </summary>
-    HP,
-    //TODO: remove EN when merged
-    EN, 
+    HP = 0,
+    /// <summary>
+    /// Energy
+    /// </summary>
+    EN = 1,
     /// <summary>
     /// Strength
     /// </summary>
-    STR,
+    STR = 2,
     /// <summary>
     /// Defense
     /// </summary>
-    DEF,
+    DEF = 3,
     /// <summary>
     /// Tech
     /// </summary>
-    TEC,
+    TEC = 4,
     /// <summary>
     /// Resistance
     /// </summary>
-    RES,
+    RES = 5,
     /// <summary>
     /// Speed
     /// </summary>
-    SPE,
+    SPE = 6,
     /// <summary>
     /// Luck
     /// </summary>
-    LCK,
+    LCK = 7,
     /// <summary>
     /// Precision
     /// </summary>
-    PRC, 
+    PRC = 8,
     /// <summary>
     /// Evasion
     /// </summary>
-    EVA,
+    EVA = 9,
   }
 }

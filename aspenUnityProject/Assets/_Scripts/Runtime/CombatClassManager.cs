@@ -2,6 +2,7 @@ using _Scripts.Runtime.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
+using _Scripts.Runtime.Characters.Classes.Scripts;
 using UnityEngine;
 
 //old code. 

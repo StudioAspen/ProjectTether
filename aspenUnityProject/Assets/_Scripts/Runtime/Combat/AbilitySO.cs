@@ -5,9 +5,14 @@ namespace _Scripts.Runtime.Combat
    [CreateAssetMenu(fileName = "Ability", menuName = "Scriptable Objects/Misc/Ability")]
    public class AbilitySO : ScriptableObject
    {
+      //e.g., fireball_0 or obliterate_0
+      [SerializeField] private string id;
+      public string Id => id;
+      
+      //name displayed in UI 
       [SerializeField] private string abilityName;
       public string Name => name;
-   
+      
       [SerializeField] private string description;
       public string Description => description;
 

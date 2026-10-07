@@ -7,6 +7,7 @@ namespace _Scripts.Runtime.Combat
        Move,
        Ability,
        Item,
-       View
+       View,
+       Overclock
     }
 }

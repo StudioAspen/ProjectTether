@@ -11,8 +11,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
    
       //TODO: add skills here because enemies do not have classes
       public List<EnemyStateSO> behaviourStates { get; private set; }
-      public event Action<EnemyUnit> OnDeath;
-      public event Action<EnemyUnit> OnDefend;
+      
    
       public EnemyUnit(EnemyUnitSO unit) : base(unit)
       {
@@ -22,16 +21,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 
       public override void ChangeHealthRemaining(int value)
       {
-         HealthRemaining -= value; 
-         if(HealthRemaining <= 0)
-            OnDeath?.Invoke(this);
+         HealthRemaining -= value;
+         if (HealthRemaining <= 0)
+            IsDead = true;
       }
 
-      public override void Defend()
-      {
-         IsBlocking = true;
-         OnDefend?.Invoke(this);
-      }
 
       public override void EndDefend()
       {

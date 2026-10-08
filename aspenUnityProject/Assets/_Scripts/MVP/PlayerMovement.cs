@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         actions = new InputSystem_Actions();
-        Debug.Log(actions.asset.name);
+       
     }
 
     void OnEnable()
@@ -18,16 +18,9 @@ public class PlayerMovement : MonoBehaviour
         actions.Player.Enable();
     }
 
-    void OnDisable()
-    {
-        actions.Player.Disable();    
-    }
-
-    // Update is called once per frame
     void Update()
     {
         Vector2 moveInput = actions.Player.Move.ReadValue<Vector2>();
-        Debug.Log(moveInput);
         Vector3 moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
         controller.Move(moveDirection * speed * Time.deltaTime);
     }

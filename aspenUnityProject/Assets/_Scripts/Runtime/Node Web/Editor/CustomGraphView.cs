@@ -22,7 +22,6 @@ namespace Slinky.NodeWeb
 public class CustomGraphView : GraphView
 {
     NodeWebGraphSO _activeNodeWebGraph;
-    string _tempChosenNodeType = "";
     bool _isPopulating = false;
 
     public CustomGraphView()
@@ -107,6 +106,24 @@ public class CustomGraphView : GraphView
                         }
                     }
 
+                    switch (deletedNode.DataReference)
+                    {
+                        case AbilityNodeSO abilityNode:
+                            AbilitySO ability = abilityNode.Ability;
+                            Undo.DestroyObjectImmediate(ability);
+                            break;
+
+                        case StatNodeSO statNode:
+                            StatSO stat = statNode.Stat;
+                            Undo.DestroyObjectImmediate(stat);
+                            break;
+
+                        case SkillNodeSO skillNode:
+                            SkillSO skill = skillNode.Skill;
+                            Undo.DestroyObjectImmediate(skill);
+                            break;
+                    }
+
                     Undo.DestroyObjectImmediate(deletedNode.DataReference);
                     EditorUtility.SetDirty(_activeNodeWebGraph);
                 }
@@ -141,8 +158,7 @@ public class CustomGraphView : GraphView
 
         foreach (BaseNodeSO nodeData in nodeWebGraphAssest.AllNodes)
         {
-            NodeView nodeView = new NodeView(nodeData, FindingNodeType(nodeData.name));
-            nodeView.RedrawUI();
+            NodeView nodeView = new NodeView(nodeData);
             this.AddElement(nodeView);
 
             visualNodeDict.Add(nodeData.GUID, nodeView);
@@ -169,7 +185,6 @@ public class CustomGraphView : GraphView
         this._isPopulating = false;
     }
 
-    string FindingNodeType(string name) => name.Split(',')[0];
     void BuildContextMenu(ContextualMenuPopulateEvent evt)
     {
         evt.menu.AppendAction("Create Ability Node", action => CreateNode<AbilityNodeSO>(action.eventInfo.localMousePosition));
@@ -193,18 +208,30 @@ public class CustomGraphView : GraphView
 
     void SaveNodeAsAsset<NodeType>(NodeType node, string guid) where NodeType : BaseNodeSO
     {
-        _tempChosenNodeType = typeof(NodeType).ToString().Substring(15);
+        string fileName = "";
+        string shortenGUID = guid.Substring(0, 5);
 
-        string fileName = $"{_tempChosenNodeType}_{guid.Substring(0, 5)}.asset";
-        Debug.Log(fileName);
+        switch (node)
+        {
+            case AbilityNodeSO abilityNode:
+                fileName = $"AbilityNode_{shortenGUID}.asset";
+                break;
+            case StatNodeSO statNode:
+                fileName = $"StatNode_{shortenGUID}.asset";
+                break;
+            case SkillNodeSO skillNode:
+                fileName = $"skillNode_{shortenGUID}.asset";
+                break;
+        }
+
         string filePath = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Nodes/{fileName}";
 
         // Saving to folder physically
         AssetDatabase.CreateAsset(node, filePath);
         _activeNodeWebGraph.AddNode(node);
-        CreateSOType(_tempChosenNodeType, node, guid);
+        CreateSOType(node, guid);
 
-        NodeView nodeView = new NodeView(node, _tempChosenNodeType);
+        NodeView nodeView = new NodeView(node);
         this.AddElement(nodeView);
 
         // Forces Unity to save files immediately
@@ -212,39 +239,34 @@ public class CustomGraphView : GraphView
         AssetDatabase.Refresh();
     }
 
-    void CreateSOType<NodeType>(string type, NodeType node, string guid) where NodeType : BaseNodeSO
+    void CreateSOType<NodeType>(NodeType node, string guid) where NodeType : BaseNodeSO
     {
-        // Dont know a better type for handling data
-        dynamic chosenType;
-
-        switch (type)
+        switch (node)
         {
-            case nameof(NodeTypes.AbilityNodeSO):
-                chosenType = ScriptableObject.CreateInstance<AbilitySO>();
-                AbilityNodeSO abilityNodeSO = node as AbilityNodeSO;
-                abilityNodeSO.SetAbilitySO(chosenType);
+            case AbilityNodeSO abilityNodeSO:
+                AbilitySO abilitySO = ScriptableObject.CreateInstance<AbilitySO>();
+                abilityNodeSO.SetAbilitySO(abilitySO);
 
                 string fileName = $"Ability_{guid}.asset";
                 string filePath = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Abilitys/{fileName}";
-                AssetDatabase.CreateAsset(chosenType, filePath);
+
+                AssetDatabase.CreateAsset(abilitySO, filePath);
                 break;
-            case nameof(NodeTypes.SkillNodeSO):
-                chosenType = ScriptableObject.CreateInstance<SkillSO>();
-                SkillNodeSO skillNodeSO = node as SkillNodeSO;
-                skillNodeSO.SetSkillSO(chosenType);
+            case SkillNodeSO skillNodeSO:
+                SkillSO skillSO = ScriptableObject.CreateInstance<SkillSO>();
+                skillNodeSO.SetSkillSO(skillSO);
 
                 string fileName2 = $"Skill_{guid}.asset";
                 string filePath2 = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Skills/{fileName2}";
-                AssetDatabase.CreateAsset(chosenType, filePath2);
+                AssetDatabase.CreateAsset(skillSO, filePath2);
                 break;
-            case nameof(NodeTypes.StatNodeSO):
-                chosenType = ScriptableObject.CreateInstance<StatSO>();
-                StatNodeSO statNodeSO = node as StatNodeSO;
-                statNodeSO.SetStatSO(chosenType);
+            case StatNodeSO statNodeSO:
+                StatSO statSO = ScriptableObject.CreateInstance<StatSO>();
+                statNodeSO.SetStatSO(statSO);
 
                 string fileName3 = $"Stat_{guid}.asset";
                 string filePath3 = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Stats/{fileName3}";
-                AssetDatabase.CreateAsset(chosenType, filePath3);
+                AssetDatabase.CreateAsset(statSO, filePath3);
                 break;
         }
 

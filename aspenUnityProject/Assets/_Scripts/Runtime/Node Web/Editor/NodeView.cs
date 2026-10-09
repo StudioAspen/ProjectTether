@@ -10,37 +10,21 @@ using UnityEngine.UIElements;
 public class NodeView : UnityEditor.Experimental.GraphView.Node
 {
     public BaseNodeSO DataReference;
-
-    // Dont know a better type for handling data
-    dynamic _seletedType;
     string _shortGUID;
 
 
     // Future Chnage: Rewrite the switch statement to check the type itself as looking at a string is inefficent
-    public NodeView(BaseNodeSO data, string type)
+    public NodeView(BaseNodeSO data)
     {
         _shortGUID = data.GUID.ToString().Substring(31);
 
         this.SetPosition(new Rect(data.EditorPosition.x, data.EditorPosition.y, 100, 150));
         this.DataReference = data;
-        this._seletedType = type;
 
+        // How the Ports look
         GeneratePorts();
-
-        // How the NodeView looks
-        switch (_seletedType)
-        {
-            case nameof(NodeTypes.AbilityNodeSO):
-                //case data is AbilityNodeSO (use this to rewrite some stuff)
-                AbilityNodeView();
-                break;
-            case nameof(NodeTypes.SkillNodeSO):
-                SkillNodeView();
-                break;
-            case nameof(NodeTypes.StatNodeSO):
-                StatNodeView();
-                break;
-        }
+        // How the NodeViews look
+        RedrawUI();
     }
 
     void GeneratePorts()
@@ -63,7 +47,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
         if (DataReference is AbilityNodeSO) AbilityNodeView();
         if (DataReference is SkillNodeSO) SkillNodeView();
-        if (DataReference as StatNodeSO) StatNodeView();
+        if (DataReference is StatNodeSO) StatNodeView();
     }
 
     void AbilityNodeView()
@@ -156,9 +140,9 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
     void CreateUnlockToggle<NodeType>(NodeType node, Color unlockColor, Color lockColor) where NodeType : BaseNodeSO
     {
-        Toggle unlockedToogle = new Toggle("Is Unlocked") { value = node.IsUnlocked };
+        Toggle unlockedToogle = new Toggle("Is Unlocked") { value = false };
 
-        this.style.backgroundColor = node.IsUnlocked ? unlockColor : lockColor;
+        this.style.backgroundColor = lockColor;
 
         unlockedToogle.RegisterValueChangedCallback(evt =>
         {

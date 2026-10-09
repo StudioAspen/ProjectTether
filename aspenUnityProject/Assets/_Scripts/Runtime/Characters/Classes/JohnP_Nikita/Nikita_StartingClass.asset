@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf402000706b3fe42b429548fcf1d4fc, type: 3}
-  m_Name: Xavier_BaseClass
+  m_Name: Nikita_StartingClass
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Characters.Classes.Scripts.CombatClassSO
   defaultAttackElements: 
-  _className: 
+  _className: Nikita Starting Class
   _defaultAttackRange: 0
-  _classDescription: 
+  _classDescription: 'Summon things to fight/aid  Variable options, but tends to
+    be a slow ramp -> big-reward type class in battle  The majority of summons affect
+    and scale off of Technical (TEC): A unit''s magical power.'
   _overclockedStats: 

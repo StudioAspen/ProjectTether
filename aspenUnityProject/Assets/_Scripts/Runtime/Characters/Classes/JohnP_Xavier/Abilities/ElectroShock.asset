@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 279d2ab0528d3e4c19cd7682bdffa241, type: 3}
-  m_Name: Ability_ElectroShock
+  m_Name: ElectroShock
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Electro Shock
   description: Player throws an electrical grenade that shocks and stuns the enemy.
   damage: 0
   element: 
-  abilityType: 0
+  abilityType: 3
   range: 0
   aoe: 0
   hitsEnemies: 1

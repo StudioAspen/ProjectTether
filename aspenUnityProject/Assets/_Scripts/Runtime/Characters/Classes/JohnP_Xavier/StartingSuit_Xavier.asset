@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b491f7574ad0d953d8a602112012faeb, type: 3}
-  m_Name: Xavier_StartingSuit
+  m_Name: StartingSuit_Xavier
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Characters.Scripts.SuitBaseDataSO
   _classType: 0
-  _energyCapacity: 0
-  _skillCapacity: 0
-  _abilityCapacity: 0
+  _energyCapacity: 10
+  _skillCapacity: 1
+  _abilityCapacity: 1

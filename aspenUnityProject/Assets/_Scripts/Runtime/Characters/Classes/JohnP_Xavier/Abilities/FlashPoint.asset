@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 279d2ab0528d3e4c19cd7682bdffa241, type: 3}
-  m_Name: Ability_HandCannon
+  m_Name: FlashPoint
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: Hand Cannon
-  description: Player shoots an energy beam from a mechanized hand cannon created
-    by the player character.
+  abilityName: 
+  description: 
   damage: 0
   element: 
   abilityType: 0
   range: 0
   aoe: 0
-  hitsEnemies: 1
+  hitsEnemies: 0
   hitsAllies: 0
   canTargetEmptyTile: 0
   canMiss: 0

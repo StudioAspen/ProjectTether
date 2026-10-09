@@ -13,24 +13,24 @@ MonoBehaviour:
   m_Name: Xavier
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Entities.Scripts.Combat.PlayableCharacterUnitSO
   _portrait: {fileID: 0}
-  _name: 
+  _name: Xavier
   _model: {fileID: 0}
-  Level: 0
+  Level: 1
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
   RemainingHealth: 100
   RemainingEnergy: 100
-  _health: 0
-  _energy: 0
-  _strength: 0
-  _defense: 0
+  _health: 1
+  _energy: 4
+  _strength: 2
+  _defense: 3
   _tech: 0
-  _resistance: 0
-  _speed: 0
-  _luck: 0
-  _precision: 0
-  _evasion: 0
-  _blunt: 0
+  _resistance: 1
+  _speed: 2
+  _luck: 4
+  _precision: 4
+  _evasion: 4
+  _blunt: 2
   _slash: 0
   _pierce: 0
   _blast: 0
@@ -39,6 +39,6 @@ MonoBehaviour:
   _wind: 0
   _fire: 0
   moves: []
-  combatClass: {fileID: 0}
+  combatClass: {fileID: 11400000, guid: 1a85c8b1116c3cc4986606b36ac05a34, type: 2}
   _suits: []
-  _startingSuit: {fileID: 0}
+  _startingSuit: {fileID: 11400000, guid: 006bf2e9acda05e4eb35ad10cf558598, type: 2}

@@ -15,5 +15,6 @@ namespace Slinky.NodeWeb
 
         public void SetGUID(string id) { GUID = id; }
         public void SetEditorPosition(Vector2 editorPosition) { EditorPosition = editorPosition; }
+        public void SetIsUnlocked(bool isUnlocked) { IsUnlocked = isUnlocked; }
     }
 }

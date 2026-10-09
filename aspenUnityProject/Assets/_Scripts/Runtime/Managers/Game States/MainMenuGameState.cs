@@ -8,7 +8,7 @@ namespace _Scripts.Runtime.Managers.Game_States
         public MainMenuGameState(GameStateContext gameStateContext) : base(gameStateContext) { }
 
         //honestly not sure what's going to be here for the starting menu 
-        public override void Enter()
+        protected override void OnEnter()
         {
             Debug.Log("Main menu transitions are not ready, sorry!");
         }
@@ -17,7 +17,7 @@ namespace _Scripts.Runtime.Managers.Game_States
         {
         }
 
-        public override void Exit()
+        protected override void OnExit()
         {
             
         }

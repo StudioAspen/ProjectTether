@@ -10,15 +10,27 @@ namespace _Scripts.Runtime.Managers.Game_States
         {
             this.gameStateContext = gameStateContext;
         }
+
+        public void Enter()
+        {
+            gameStateContext.PreviousStates.Push(this);
+            OnEnter();
+        }
         
         //GameManager performs once upon entering state 
-        public abstract void Enter();
+        protected abstract void OnEnter();
         
         //actions that will be looped by GameManager while in state 
         //honestly probably not going to be used 
         public abstract void Update();
         
+        public void Exit()
+        {
+            gameStateContext.PreviousStates.Pop();
+            OnExit();
+        }
+        
         //GameManager performs once before exiting state 
-        public abstract void Exit(); 
+        protected abstract void OnExit(); 
     }
 }

@@ -1,4 +1,5 @@
 using _Scripts.Runtime.Combat.States.ContextData;
+using UnityEngine;
 
 namespace _Scripts.Runtime.Managers.Game_States
 {
@@ -8,16 +9,19 @@ namespace _Scripts.Runtime.Managers.Game_States
     {
        public OverworldGameState(GameStateContext gameStateContext) : base(gameStateContext) { }
 
-       public override void Enter()
+       protected override void OnEnter()
        {
-           gameStateContext.PreviousStates.Push(this);
+           Debug.Log("Entering Overworld Game State");
        }
-       public override void Update()
-       {}
 
-       public override void Exit()
+       public override void Update()
        {
-           gameStateContext.PreviousStates.Pop();
+           
+       }
+
+       protected override void OnExit()
+       {
+           
        }
     }
 }

@@ -7,13 +7,13 @@ namespace _Scripts.Runtime.Managers.Game_States
     {
         public OpenMenuGameState(GameStateContext gameStateContext) : base(gameStateContext) {}
 
-        public override void Enter()
+        protected override void OnEnter()
         {
             Time.timeScale = 0;
         }
         public override void Update() {}
 
-        public override void Exit()
+        protected override void OnExit()
         {
             //unpause
             Time.timeScale = 1;

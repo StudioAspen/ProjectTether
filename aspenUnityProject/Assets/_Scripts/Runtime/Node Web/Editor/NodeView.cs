@@ -1,6 +1,7 @@
 using _Scripts.Runtime.Combat;
 using Codice.CM.Client.Differences;
 using Slinky.NodeWeb;
+using Unity.VectorGraphics;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     dynamic _seletedType;
     string _shortGUID;
 
+
+    // Future Chnage: Rewrite the switch statement to check the type itself as looking at a string is inefficent
     public NodeView(BaseNodeSO data, string type)
     {
         _shortGUID = data.GUID.ToString().Substring(31);
@@ -58,8 +61,8 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
     public void RedrawUI()
     {
-        if (DataReference is AbilityNodeSO) AbilityNodeView(); 
-        if (DataReference is SkillNodeSO) SkillNodeView(); 
+        if (DataReference is AbilityNodeSO) AbilityNodeView();
+        if (DataReference is SkillNodeSO) SkillNodeView();
         if (DataReference as StatNodeSO) StatNodeView();
     }
 
@@ -68,38 +71,8 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         AbilityNodeSO abilityNode = DataReference as AbilityNodeSO;
         AbilitySO ability = abilityNode.Ability;
 
-        #region NameField
-        var nameField = new TextField("Name") { value = ability.Name };
-
-        nameField.RegisterValueChangedCallback(evt =>
-        {
-            ability.SetName(evt.newValue);
-            this.title = $"{evt.newValue}_{_shortGUID}";
-
-            EditorUtility.SetDirty(ability);
-            EditorUtility.SetDirty(abilityNode);
-        });
-
-        this.extensionContainer.Add(nameField);
-        #endregion
-
-        #region UnlockedToggle
-        var activatedToggle = new Toggle("Is Unlocked") { value = abilityNode.IsUnlocked };
-        Color isUnlockedColorCode = Color.red;
-        Color isLockedColorCode = Color.darkRed;
-
-        this.style.backgroundColor = abilityNode.IsUnlocked ? isUnlockedColorCode : isLockedColorCode;
-
-        activatedToggle.RegisterValueChangedCallback(evt =>
-        {
-            this.style.backgroundColor = evt.newValue ? isUnlockedColorCode : isLockedColorCode;
-
-            EditorUtility.SetDirty(ability);
-            EditorUtility.SetDirty(abilityNode);
-        });
-
-        this.extensionContainer.Add(activatedToggle);
-        #endregion
+        CreateNameTextField<AbilityNodeSO>(abilityNode);
+        CreateUnlockToggle<AbilityNodeSO>(node: abilityNode, unlockColor: Color.red, lockColor: Color.darkRed);
 
         this.RefreshExpandedState();
     }
@@ -109,40 +82,8 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         StatNodeSO statNode = DataReference as StatNodeSO;
         StatSO stat = statNode.Stat;
 
-        #region NameField
-        var nameField = new TextField("Name");
-        nameField.value = stat.Name;
-
-        nameField.RegisterValueChangedCallback(evt =>
-        {
-            stat.SetName(evt.newValue);
-            this.title = $"{evt.newValue}_{_shortGUID}";
-
-            EditorUtility.SetDirty(stat);
-            EditorUtility.SetDirty(statNode);
-        });
-
-        this.extensionContainer.Add(nameField);
-        #endregion
-
-
-        #region UnlockedToggle
-        var activatedToggle = new Toggle("Is Unlocked") { value = statNode.IsUnlocked };
-        Color isUnlockedColorCode = Color.lightGreen;
-        Color isLockedColorCode = Color.darkGreen;
-
-        this.style.backgroundColor = statNode.IsUnlocked ? isUnlockedColorCode : isLockedColorCode;
-
-        activatedToggle.RegisterValueChangedCallback(evt =>
-        {
-            this.style.backgroundColor = evt.newValue ? isUnlockedColorCode : isLockedColorCode;
-
-            EditorUtility.SetDirty(stat);
-            EditorUtility.SetDirty(statNode);
-        });
-
-        this.extensionContainer.Add(activatedToggle);
-        #endregion
+        CreateNameTextField<StatNodeSO>(statNode);
+        CreateUnlockToggle<StatNodeSO>(node: statNode, unlockColor: Color.lightGreen, lockColor: Color.darkGreen);
 
         this.RefreshExpandedState();
     }
@@ -152,43 +93,107 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         SkillNodeSO skillNode = DataReference as SkillNodeSO;
         SkillSO skill = skillNode.Skill;
 
-        #region NameField
-        var nameField = new TextField("Name");
-        nameField.value = skill.Name;
-
-        nameField.RegisterValueChangedCallback(evt =>
-        {
-            skill.SetName(evt.newValue);
-            this.title = $"{evt.newValue}_{_shortGUID}";
-
-            EditorUtility.SetDirty(skill);
-            EditorUtility.SetDirty(skillNode);
-        });
-
-        this.extensionContainer.Add(nameField);
-        #endregion
-
-        #region UnlockedToggle
-        var activatedToggle = new Toggle("Is Unlocked") { value = skillNode.IsUnlocked };
-        Color isUnlockedColorCode = Color.lightYellow;
-        Color isLockedColorCode = Color.yellow;
-
-        this.style.backgroundColor = skillNode.IsUnlocked ? isUnlockedColorCode : isLockedColorCode;
-
-        activatedToggle.RegisterValueChangedCallback(evt =>
-        {
-            this.style.backgroundColor = evt.newValue ? isUnlockedColorCode : isLockedColorCode;
-
-            EditorUtility.SetDirty(skill);
-            EditorUtility.SetDirty(skillNode);
-        });
-
-        this.extensionContainer.Add(activatedToggle);
-        #endregion
-
+        CreateNameTextField<SkillNodeSO>(skillNode);
+        CreateUnlockToggle<SkillNodeSO>(node: skillNode, unlockColor: Color.lightYellow, lockColor: Color.yellow);
 
         this.RefreshExpandedState();
     }
+
+    void CreateNameTextField<NodeType>(NodeType node) where NodeType : BaseNodeSO
+    {
+        TextField nameField = new TextField("Name");
+
+        switch (node)
+        {
+            case AbilityNodeSO abilityNode:
+                AbilitySO ability = abilityNode.Ability;
+
+                nameField.value = ability.Name;
+
+                nameField.RegisterValueChangedCallback(evt =>
+                {
+                    ability.SetName(evt.newValue);
+                    this.title = $"{evt.newValue}_{_shortGUID}";
+
+                    EditorUtility.SetDirty(ability);
+                    EditorUtility.SetDirty(abilityNode);
+                });
+                break;
+
+            case StatNodeSO statNode:
+                StatSO stat = statNode.Stat;
+
+                nameField.value = stat.Name;
+
+                nameField.RegisterValueChangedCallback(evt =>
+                {
+                    stat.SetName(evt.newValue);
+                    this.title = $"{evt.newValue}_{_shortGUID}";
+
+                    EditorUtility.SetDirty(stat);
+                    EditorUtility.SetDirty(statNode);
+                });
+                break;
+
+            case SkillNodeSO skillNode:
+                SkillSO skill = skillNode.Skill;
+
+                nameField.value = skill.Name;
+
+                nameField.RegisterValueChangedCallback(evt =>
+                {
+                    skill.SetName(evt.newValue);
+                    this.title = $"{evt.newValue}_{_shortGUID}";
+
+                    EditorUtility.SetDirty(skill);
+                    EditorUtility.SetDirty(skillNode);
+                });
+                break;
+        }
+
+        this.extensionContainer.Add(nameField);
+    }
+
+    void CreateUnlockToggle<NodeType>(NodeType node, Color unlockColor, Color lockColor) where NodeType : BaseNodeSO
+    {
+        Toggle unlockedToogle = new Toggle("Is Unlocked") { value = node.IsUnlocked };
+
+        this.style.backgroundColor = node.IsUnlocked ? unlockColor : lockColor;
+
+        unlockedToogle.RegisterValueChangedCallback(evt =>
+        {
+            this.style.backgroundColor = node.IsUnlocked ? unlockColor : lockColor;
+            DataReference.SetIsUnlocked(evt.newValue);
+
+            switch (node)
+            {
+                case AbilityNodeSO abilityNode:
+                    AbilitySO ability = abilityNode.Ability;
+
+                    EditorUtility.SetDirty(ability);
+                    EditorUtility.SetDirty(abilityNode);
+                    break;
+
+                case StatNodeSO statNode:
+                    StatSO stat = statNode.Stat;
+
+                    EditorUtility.SetDirty(stat);
+                    EditorUtility.SetDirty(statNode);
+
+                    break;
+
+                case SkillNodeSO skillNode:
+                    SkillSO skill = skillNode.Skill;
+
+                    EditorUtility.SetDirty(skill);
+                    EditorUtility.SetDirty(skillNode);
+                    break;
+            }
+        });
+
+        this.extensionContainer.Add(unlockedToogle);
+    }
+
 
     public override void SetPosition(Rect newPos)
     {

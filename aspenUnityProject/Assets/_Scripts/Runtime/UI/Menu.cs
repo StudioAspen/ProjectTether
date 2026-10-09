@@ -35,11 +35,10 @@ namespace _Scripts.Runtime.UI
         public CanvasGroup Group { get; private set; }
 
         public Menu PreviousPanel { get; private set; }
-        public static Stack<Menu> MenuStack = new();
         /// <summary>
         /// Globally accessible reference to the current active panel.
         /// </summary>
-        public static Menu CurrentActiveMenu => MenuStack.Count > 0 ? MenuStack.Peek() : null;
+        public static Menu CurrentActiveMenu { get; private set; }
         public static event Action<Menu> OnPanelChanged = delegate { };
 
         private void Awake()
@@ -102,20 +101,20 @@ namespace _Scripts.Runtime.UI
 
         private void OnDestroy()
         {
-            // Safely cleans up the CurrentActiveMenu static variable
+            // Safely cleans up the ActivePanel static variable
             if (CurrentActiveMenu == this)
             {
-                #if UNITY_EDITOR
-                if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode == false)
+#if UNITY_EDITOR
+                if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) 
                     return;
-                #endif
-                if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().isLoaded == false)
+#endif
+                if (!UnityEngine.SceneManagement.SceneManager.GetActiveScene().isLoaded)
                 {
-                    MenuStack.Clear();
+                    CurrentActiveMenu = null;
                     OnPanelChanged?.Invoke(null);
                     return;
                 }
-                Debug.LogWarning($"Active Menu {this} is being destroyed");
+                Debug.LogWarning($"Active UIScreen {this} is being destroyed");
                 Back();
             }
         }
@@ -145,9 +144,8 @@ namespace _Scripts.Runtime.UI
         {
             Group.interactable = true;
             gameObject.SetActive(true);
-            if (MenuStack.Count == 0 || MenuStack.Peek() != this)
-                MenuStack.Push(this);
-
+            CurrentActiveMenu = this;
+        
             ChangeCurrentSelectedObject(DefaultSelected);
 
             OnFocused?.Invoke();
@@ -169,16 +167,12 @@ namespace _Scripts.Runtime.UI
             Unfocus();
             if (PreviousPanel)
             {
-                if (MenuStack.Count > 0 && MenuStack.Peek() == this) 
-                    MenuStack.Pop();
-                if (MenuStack.Count == 0 || MenuStack.Peek() != PreviousPanel)
-                    MenuStack.Push(PreviousPanel);
+                CurrentActiveMenu = PreviousPanel;
                 SetPreviousPanel(null);
             }
             else
             {
-                if (MenuStack.Count > 0 && MenuStack.Peek() == this)
-                    MenuStack.Pop();
+                CurrentActiveMenu = null;
             }
             OnPanelChanged?.Invoke(null);
         }
@@ -191,8 +185,6 @@ namespace _Scripts.Runtime.UI
             if (PreviousPanel)
             {
                 Unfocus();
-                if (MenuStack.Count > 0 && MenuStack.Peek() == this)
-                    MenuStack.Pop();
                 PreviousPanel.Focus();
                 PreviousPanel = null;
             }
@@ -210,8 +202,7 @@ namespace _Scripts.Runtime.UI
             }
             else
             {
-                if (MenuStack.Count > 0 && MenuStack.Peek() == this)
-                    MenuStack.Pop();
+                CurrentActiveMenu = null;
                 OnPanelChanged?.Invoke(null);
             }
         }
@@ -222,7 +213,6 @@ namespace _Scripts.Runtime.UI
         /// </summary>
         public void GoBackTo(Menu panel)
         {
-            MenuStack.Clear();
             FocusPanel(panel);
             SetPreviousPanel(null);
         }

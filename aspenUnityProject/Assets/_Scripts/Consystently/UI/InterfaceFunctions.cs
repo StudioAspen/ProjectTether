@@ -10,7 +10,7 @@ namespace _Scripts.Consystently.UI
   {
    // public void PauseGame() => GameManager.Instance?.PauseGame();
 
-    public void QuitApplication() => GameManager.Instance?.QuitApplication();
+    public void QuitApplication() => GameManager.QuitApplication();
 
     public void OpenMenu(GameMenu gameMenu) => MenuManager.Instance?.OpenMenu(gameMenu);
 

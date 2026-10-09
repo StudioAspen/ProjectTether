@@ -9,7 +9,6 @@ using _Scripts.Runtime.Managers.Game_States;
 
 namespace _Scripts.Runtime.Managers
 {
-
   public class GameManager : Manager<GameManager>
   {
     public event Action<GameState> ChangedGameState;
@@ -29,7 +28,7 @@ namespace _Scripts.Runtime.Managers
       gameStates.Add(new MainMenuGameState(new GameStateContext(_previousGameStates)));
       gameStates.Add(new CombatGameState(new GameStateContext(_previousGameStates)));
       gameStates.Add(new OpenMenuGameState(new GameStateContext(_previousGameStates)));
-     ChangeGameState(gameStates[0]);
+      ChangeGameState(gameStates[0]);
     }
     
     void OnEnable()
@@ -106,7 +105,7 @@ namespace _Scripts.Runtime.Managers
     }
 
 
-    public void QuitApplication ()
+    public static void QuitApplication ()
     {
       #if UNITY_EDITOR
         EditorApplication.isPlaying = false;

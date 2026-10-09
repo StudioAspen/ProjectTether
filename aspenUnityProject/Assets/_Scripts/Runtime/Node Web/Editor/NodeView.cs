@@ -1,0 +1,213 @@
+using _Scripts.Runtime.Combat;
+using Codice.CM.Client.Differences;
+using Slinky.NodeWeb;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class NodeView : UnityEditor.Experimental.GraphView.Node
+{
+    public BaseNodeSO DataReference;
+
+    // Dont know a better type for handling data
+    dynamic _seletedType;
+    string _shortGUID;
+
+    public NodeView(BaseNodeSO data, string type)
+    {
+        _shortGUID = data.GUID.ToString().Substring(31);
+
+        this.SetPosition(new Rect(data.EditorPosition.x, data.EditorPosition.y, 100, 150));
+        this.DataReference = data;
+        this._seletedType = type;
+
+        GeneratePorts();
+
+        // How the NodeView looks
+        switch (_seletedType)
+        {
+            case nameof(NodeTypes.AbilityNodeSO):
+                //case data is AbilityNodeSO (use this to rewrite some stuff)
+                AbilityNodeView();
+                break;
+            case nameof(NodeTypes.SkillNodeSO):
+                SkillNodeView();
+                break;
+            case nameof(NodeTypes.StatNodeSO):
+                StatNodeView();
+                break;
+        }
+    }
+
+    void GeneratePorts()
+    {
+        // Output Port Logic
+        Port outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+        outputPort.portName = "Unlocks";
+        this.outputContainer.Add(outputPort);
+
+        // Input Port Logic
+        Port inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
+        inputPort.portName = "Requires";
+        this.inputContainer.Add(inputPort);
+
+        this.RefreshExpandedState();
+        this.RefreshPorts();
+    }
+
+    public void RedrawUI()
+    {
+        if (DataReference is AbilityNodeSO) AbilityNodeView(); 
+        if (DataReference is SkillNodeSO) SkillNodeView(); 
+        if (DataReference as StatNodeSO) StatNodeView();
+    }
+
+    void AbilityNodeView()
+    {
+        AbilityNodeSO abilityNode = DataReference as AbilityNodeSO;
+        AbilitySO ability = abilityNode.Ability;
+
+        #region NameField
+        var nameField = new TextField("Name") { value = ability.Name };
+
+        nameField.RegisterValueChangedCallback(evt =>
+        {
+            ability.SetName(evt.newValue);
+            this.title = $"{evt.newValue}_{_shortGUID}";
+
+            EditorUtility.SetDirty(ability);
+            EditorUtility.SetDirty(abilityNode);
+        });
+
+        this.extensionContainer.Add(nameField);
+        #endregion
+
+        #region UnlockedToggle
+        var activatedToggle = new Toggle("Is Unlocked") { value = abilityNode.IsUnlocked };
+        Color isUnlockedColorCode = Color.red;
+        Color isLockedColorCode = Color.darkRed;
+
+        this.style.backgroundColor = abilityNode.IsUnlocked ? isUnlockedColorCode : isLockedColorCode;
+
+        activatedToggle.RegisterValueChangedCallback(evt =>
+        {
+            this.style.backgroundColor = evt.newValue ? isUnlockedColorCode : isLockedColorCode;
+
+            EditorUtility.SetDirty(ability);
+            EditorUtility.SetDirty(abilityNode);
+        });
+
+        this.extensionContainer.Add(activatedToggle);
+        #endregion
+
+        this.RefreshExpandedState();
+    }
+
+    void StatNodeView()
+    {
+        StatNodeSO statNode = DataReference as StatNodeSO;
+        StatSO stat = statNode.Stat;
+
+        #region NameField
+        var nameField = new TextField("Name");
+        nameField.value = stat.Name;
+
+        nameField.RegisterValueChangedCallback(evt =>
+        {
+            stat.SetName(evt.newValue);
+            this.title = $"{evt.newValue}_{_shortGUID}";
+
+            EditorUtility.SetDirty(stat);
+            EditorUtility.SetDirty(statNode);
+        });
+
+        this.extensionContainer.Add(nameField);
+        #endregion
+
+
+        #region UnlockedToggle
+        var activatedToggle = new Toggle("Is Unlocked") { value = statNode.IsUnlocked };
+        Color isUnlockedColorCode = Color.lightGreen;
+        Color isLockedColorCode = Color.darkGreen;
+
+        this.style.backgroundColor = statNode.IsUnlocked ? isUnlockedColorCode : isLockedColorCode;
+
+        activatedToggle.RegisterValueChangedCallback(evt =>
+        {
+            this.style.backgroundColor = evt.newValue ? isUnlockedColorCode : isLockedColorCode;
+
+            EditorUtility.SetDirty(stat);
+            EditorUtility.SetDirty(statNode);
+        });
+
+        this.extensionContainer.Add(activatedToggle);
+        #endregion
+
+        this.RefreshExpandedState();
+    }
+
+    void SkillNodeView()
+    {
+        SkillNodeSO skillNode = DataReference as SkillNodeSO;
+        SkillSO skill = skillNode.Skill;
+
+        #region NameField
+        var nameField = new TextField("Name");
+        nameField.value = skill.Name;
+
+        nameField.RegisterValueChangedCallback(evt =>
+        {
+            skill.SetName(evt.newValue);
+            this.title = $"{evt.newValue}_{_shortGUID}";
+
+            EditorUtility.SetDirty(skill);
+            EditorUtility.SetDirty(skillNode);
+        });
+
+        this.extensionContainer.Add(nameField);
+        #endregion
+
+        #region UnlockedToggle
+        var activatedToggle = new Toggle("Is Unlocked") { value = skillNode.IsUnlocked };
+        Color isUnlockedColorCode = Color.lightYellow;
+        Color isLockedColorCode = Color.yellow;
+
+        this.style.backgroundColor = skillNode.IsUnlocked ? isUnlockedColorCode : isLockedColorCode;
+
+        activatedToggle.RegisterValueChangedCallback(evt =>
+        {
+            this.style.backgroundColor = evt.newValue ? isUnlockedColorCode : isLockedColorCode;
+
+            EditorUtility.SetDirty(skill);
+            EditorUtility.SetDirty(skillNode);
+        });
+
+        this.extensionContainer.Add(activatedToggle);
+        #endregion
+
+
+        this.RefreshExpandedState();
+    }
+
+    public override void SetPosition(Rect newPos)
+    {
+        base.SetPosition(newPos);
+
+        if (this.DataReference != null)
+        {
+            this.DataReference.SetEditorPosition(new Vector2(newPos.xMin, newPos.yMin));
+            EditorUtility.SetDirty(this.DataReference);
+        }
+    }
+
+    public override void OnSelected()
+    {
+        base.OnSelected();
+
+        if (this.DataReference != null)
+        {
+            Selection.activeObject = this.DataReference;
+        }
+    }
+}

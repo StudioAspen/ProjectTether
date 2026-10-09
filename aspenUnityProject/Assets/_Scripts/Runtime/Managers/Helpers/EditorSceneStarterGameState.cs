@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Managers
+namespace _Scripts.Runtime.Managers.Helpers
 {
     /// <summary>
     /// So that we can start in any scene and our game manager knows what state to use

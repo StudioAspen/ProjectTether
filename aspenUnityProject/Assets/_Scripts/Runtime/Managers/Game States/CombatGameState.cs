@@ -1,13 +1,10 @@
-using _Scripts.Runtime.Combat.States.ContextData;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Managers.Game_States
 {
     public class CombatGameState : GameState
     {
-       public CombatGameState (GameStateContext gameStateContext) : base(gameStateContext) { }
-       
-       protected override void OnEnter()
+       public override void Enter()
        {
            Debug.Log("combat game state entered");
            UnityEngine.SceneManagement.SceneManager.LoadScene("battleScene");

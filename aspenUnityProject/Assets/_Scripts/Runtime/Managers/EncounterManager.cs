@@ -34,12 +34,12 @@ namespace _Scripts.Runtime.Managers
         
         void OnEnable()
         {
-            GameManager.Instance.ChangedGameState += HandleState;
+            GameManager.Instance.OnGameStateChanged += HandleState;
         }
 
 
         //useless 
-        void HandleState(GameState gameState)
+        void HandleState(GameManager.State state)
         {
             //switch statement here if it ever becomes useful
         }

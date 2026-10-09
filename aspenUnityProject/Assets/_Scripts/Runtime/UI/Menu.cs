@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Managers;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -15,12 +16,15 @@ namespace _Scripts.Runtime.UI
     [DisallowMultipleComponent]
     public class Menu : MonoBehaviour
     {
+        [field: SerializeField, ReadOnly] public CanvasGroup Group { get; private set; }
+        
         /// <summary>
         /// Whether this panel will block inputs on the previous screen. Doesn't replace the previous panel.
         /// Think of popup UI.
         /// </summary>
         [field: SerializeField] public bool IsAdditive { get; private set; } = false;
-        [field: SerializeField] public bool StopGameplayInputs { get; private set; } = true;
+        
+        [field: SerializeField, InfoBox("Not implemented yet", EInfoBoxType.Warning)] public bool StopGameplayInputs { get; private set; } = true;
         public static Selectable TargetSelectedObject { get; private set; }
         /// <summary>
         /// The first object to select when opening this panel.
@@ -32,8 +36,6 @@ namespace _Scripts.Runtime.UI
         [field: SerializeField] public UnityEvent OnFocused { get; private set; } = new();
         [field: SerializeField] public UnityEvent OnUnfocused { get; private set; } = new();
         
-        public CanvasGroup Group { get; private set; }
-
         public Menu PreviousPanel { get; private set; }
         /// <summary>
         /// Globally accessible reference to the current active panel.
@@ -41,7 +43,7 @@ namespace _Scripts.Runtime.UI
         public static Menu CurrentActiveMenu { get; private set; }
         public static event Action<Menu> OnPanelChanged = delegate { };
 
-        private void Awake()
+        private void OnValidate()
         {
             Group = GetComponent<CanvasGroup>();
         }

@@ -383,6 +383,29 @@ namespace NaughtyAttributes.Editor
                 {
                     EditorGUILayout.TextField(label, value.ToString());
                 }
+                else if (value is IEnumerable enumerable)
+                {
+                    EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+                    int index = 0;
+                    foreach (object item in enumerable)
+                    {
+                        if (item == null)
+                        {
+                            EditorGUILayout.LabelField($"Element {index}", "(null)");
+                        }
+                        else if (!Field_Layout(item, $"Element {index}"))
+                        {
+                            isDrawn = false;
+                            break;
+                        }
+                        index++;
+                    }
+
+                    if (index == 0)
+                    {
+                        EditorGUILayout.LabelField("(empty)");
+                    }
+                }
                 else
                 {
                     isDrawn = false;

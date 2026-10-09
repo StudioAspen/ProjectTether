@@ -1261,7 +1261,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             ""id"": ""f2a1b333-0b01-4f6a-b217-abaf3e3006b8"",
             ""actions"": [
                 {
-                    ""name"": ""OpenMenu"",
+                    ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""e7d0f4b4-62cf-4303-8233-f0718e02c4bf"",
                     ""expectedControlType"": """",
@@ -1274,11 +1274,22 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""33bd17c9-c1ec-465f-a566-ec0d80235a61"",
-                    ""path"": ""<Keyboard>/f1"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""OpenMenu"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""380f8451-3067-483d-9ca9-ec944483c3d4"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1378,7 +1389,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_TileSelect_Exit = m_TileSelect.FindAction("Exit", throwIfNotFound: true);
         // Global
         m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
-        m_Global_OpenMenu = m_Global.FindAction("OpenMenu", throwIfNotFound: true);
+        m_Global_Pause = m_Global.FindAction("Pause", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1959,7 +1970,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     // Global
     private readonly InputActionMap m_Global;
     private List<IGlobalActions> m_GlobalActionsCallbackInterfaces = new List<IGlobalActions>();
-    private readonly InputAction m_Global_OpenMenu;
+    private readonly InputAction m_Global_Pause;
     /// <summary>
     /// Provides access to input actions defined in input action map "Global".
     /// </summary>
@@ -1972,9 +1983,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public GlobalActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Global/OpenMenu".
+        /// Provides access to the underlying input action "Global/Pause".
         /// </summary>
-        public InputAction @OpenMenu => m_Wrapper.m_Global_OpenMenu;
+        public InputAction @Pause => m_Wrapper.m_Global_Pause;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -2001,9 +2012,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_GlobalActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_GlobalActionsCallbackInterfaces.Add(instance);
-            @OpenMenu.started += instance.OnOpenMenu;
-            @OpenMenu.performed += instance.OnOpenMenu;
-            @OpenMenu.canceled += instance.OnOpenMenu;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         /// <summary>
@@ -2015,9 +2026,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="GlobalActions" />
         private void UnregisterCallbacks(IGlobalActions instance)
         {
-            @OpenMenu.started -= instance.OnOpenMenu;
-            @OpenMenu.performed -= instance.OnOpenMenu;
-            @OpenMenu.canceled -= instance.OnOpenMenu;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         /// <summary>
@@ -2302,11 +2313,11 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     public interface IGlobalActions
     {
         /// <summary>
-        /// Method invoked when associated input action "OpenMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnOpenMenu(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }

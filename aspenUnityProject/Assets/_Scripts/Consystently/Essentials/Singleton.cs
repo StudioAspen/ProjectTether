@@ -19,9 +19,7 @@ namespace _Scripts.Consystently.Essentials
     private void HandleSingleton()
     {
       Instance ??= this as T;
-      if (Instance == this)
-        DontDestroyOnLoad(gameObject);
-      else
+      if (Instance != this)
         Destroy(gameObject);
     }
 

@@ -44,3 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7fa3446400b428e9f2e2da968520b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  <CurrentGameState>k__BackingField: 0
+  <MainMenuScene>k__BackingField:
+    asset: {fileID: 102900000, guid: 8fdef1b55f0dc4e4b912d36434c7d0c1, type: 3}
+    guid: 8fdef1b55f0dc4e4b912d36434c7d0c1
+  <OverworldScene>k__BackingField:
+    asset: {fileID: 102900000, guid: 87f9b0c3d1add544aba4d6514002b689, type: 3}
+    guid: 87f9b0c3d1add544aba4d6514002b689
+  <BattleScene>k__BackingField:
+    asset: {fileID: 102900000, guid: ec2ff38a236ca1d41b49776a7377bbd3, type: 3}
+    guid: ec2ff38a236ca1d41b49776a7377bbd3

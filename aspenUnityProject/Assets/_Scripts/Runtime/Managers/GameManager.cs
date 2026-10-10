@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
 using _Scripts.Runtime.Combat.States;
 using _Scripts.Runtime.Managers.Game_States;
+using Eflatun.SceneReference;
 using NaughtyAttributes;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace _Scripts.Runtime.Managers
 {
@@ -28,6 +30,11 @@ namespace _Scripts.Runtime.Managers
         
         [ShowNonSerializedField]
         private readonly Stack<State> _previousGameStates = new Stack<State>();
+        
+        [field: Header("Scenes")]
+        [field: SerializeField] public SceneReference MainMenuScene { get; private set; }
+        [field: SerializeField] public SceneReference OverworldScene { get; private set; }
+        [field: SerializeField] public SceneReference BattleScene { get; private set; }
 
         public bool DesignerMode { get; private set; }
         
@@ -117,6 +124,30 @@ namespace _Scripts.Runtime.Managers
                 return;
             
             ChangeGameState(State.Pause);
+        }
+
+        public void GotoMainMenu()
+        {
+            if (CurrentGameState == State.MainMenu)
+                return;
+
+            ChangeGameState(State.MainMenu);
+        }
+
+        public void StartGame()
+        {
+            if (CurrentGameState != State.MainMenu)
+                return;
+            
+            ChangeGameState(State.Overworld);
+        }
+
+        public static void ChangeScene(string sceneName)
+        {
+            if (sceneName == SceneManager.GetActiveScene().name)
+                return;
+            
+            SceneManager.LoadScene(sceneName);
         }
         
         public static void QuitApplication()

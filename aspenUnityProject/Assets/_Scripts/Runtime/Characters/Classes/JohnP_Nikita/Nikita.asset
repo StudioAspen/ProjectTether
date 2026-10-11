@@ -20,12 +20,12 @@ MonoBehaviour:
   TotalExPtsGained: 0
   RemainingHealth: 100
   RemainingEnergy: 100
-  _health: 2
-  _energy: 1
+  _health: 3
+  _energy: 4
   _strength: 1
   _defense: 2
-  _tech: 4
-  _resistance: 3
+  _tech: 2
+  _resistance: 1
   _speed: 0
   _luck: 4
   _precision: 4

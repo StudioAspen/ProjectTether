@@ -19,3 +19,13 @@ MonoBehaviour:
     be a slow ramp -> big-reward type class in battle  The majority of summons affect
     and scale off of Technical (TEC): A unit''s magical power.'
   _overclockedStats: 
+  _health: 2
+  _energy: 1
+  _strength: 1
+  _defense: 2
+  _tech: 4
+  _resistance: 3
+  _speed: 0
+  _luck: 4
+  _precision: 4
+  _evasion: 4

@@ -22,10 +22,10 @@ MonoBehaviour:
   RemainingEnergy: 100
   _health: 1
   _energy: 4
-  _strength: 2
-  _defense: 3
+  _strength: 3
+  _defense: 1
   _tech: 0
-  _resistance: 1
+  _resistance: 2
   _speed: 2
   _luck: 4
   _precision: 4

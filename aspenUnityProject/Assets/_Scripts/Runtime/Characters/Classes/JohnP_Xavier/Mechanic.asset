@@ -20,3 +20,13 @@ MonoBehaviour:
     majority of summons affect and scale off of Technical (TEC): A unit''s magical
     power)'
   _overclockedStats: 
+  _health: 1
+  _energy: 4
+  _strength: 2
+  _defense: 3
+  _tech: 0
+  _resistance: 1
+  _speed: 2
+  _luck: 4
+  _precision: 4
+  _evasion: 4

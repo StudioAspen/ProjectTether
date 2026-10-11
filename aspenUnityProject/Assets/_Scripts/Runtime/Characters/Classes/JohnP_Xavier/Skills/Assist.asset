@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
   m_Name: Assist
   m_EditorClassIdentifier: Assembly-CSharp::Skill
-  name: 
-  function: 
+  name: Assist
+  function: Double attacks
   triggerCondition: 
-  explanation: 
+  explanation: Robotic companion helps with attacks along with player.

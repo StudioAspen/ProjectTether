@@ -75,9 +75,39 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             //new event action here for end defend animation
         }
 
-        //TODO: 
-        //redesign current xp system into pure c# class before finishing this method
-        //leveling up will modify every stat, and stat gain will be dependent on tier
+        public override void AddStatus(StatusSO status)
+        {
+            if(Statuses.TryGetValue(status.StatusId, out Status value))
+            {
+                value.CountUp(status.Duration);
+            }else
+            {
+                Statuses.Add(status.StatusId, new Status(status));
+                foreach (StatMultiplier sm in status.GetStatMultiplier(CurrentSuit.GetClassType()))
+                    MultiplyEStat(sm.stat, sm.multiplier);            
+            } 
+        }
+
+        public override void TriggerStatuses()
+        {
+            List<string> toDelete = new List<string>();                                          
+            foreach(var status in Statuses.Values)                                               
+            {                                                                                    
+                HealthRemaining -= status.StatusData.DamageTakenPerTurn;                         
+                if (status.StatusData.IsStun)                                                    
+                    Stunned = true;                                                              
+                status.CountDown(1);                                                             
+                if (status.Duration == 0)                                                        
+                {                                                                                
+                    toDelete.Add(status.StatusData.StatusId);
+                    foreach (StatMultiplier sm in status.StatusData.GetStatMultiplier(CurrentSuit.GetClassType()))
+                       RevertEStat(sm.stat,sm.multiplier); 
+                }                                                                                
+            }                                                                                    
+            foreach (var delete in toDelete)                                                     
+                Statuses.Remove(delete);                                                         
+        }
+
         private void LevelUp()
         {
             Level++;

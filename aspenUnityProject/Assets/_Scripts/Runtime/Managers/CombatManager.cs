@@ -94,7 +94,7 @@ namespace _Scripts.Runtime.Managers
             SortTiles(tilesParent.GetComponentsInChildren<TileController>());
             GenerateCoords();
             CreateObjects(); 
-            TurnOrder.Sort((a,b) => b.GetData().Speed.CompareTo(a.GetData().Speed));
+            TurnOrder.Sort((a,b) => b.GetData().GetBaseStat(Stat.SPE).CompareTo(a.GetData().GetBaseStat(Stat.SPE)));
             rangeDisplay.Initialize(TileControllers);
             
             _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
@@ -130,7 +130,6 @@ namespace _Scripts.Runtime.Managers
             } 
         }
         
-        #region setupRelatedStuff
 
 
         void CreateObjects()
@@ -208,25 +207,7 @@ namespace _Scripts.Runtime.Managers
                 }
             }
         } 
-
-        //debug tool
-        void ValidateData()
-        {
-            for (int tile = 0; tile < encounter.TotalTiles(); tile++)
-            {
-                if (encounter.UnitCountAtTile(tile) < 1) 
-                    continue; 
-                for (int unit = 0; unit < encounter.MaxUnitsPerTile(); unit++)
-                {
-                    if (unit > encounter.UnitCountAtTile(tile) - 1)
-                        break;
-                    Debug.Log($"{TileControllers[tile].GetUnitAt(unit).GetData().Name}:  {TileControllers[tile].GetUnitAt(unit).GetData().Speed}");
-                    
-                }
-            }
-        }
-        #endregion
-        
+       
         //dead are kept because lazy deletion. Also, there may or may not be a revive feature, so their order being kept is good.
         //I am also not sure if deletion is better because deletion would require searching and result in the entire list shifting. 
         //TODO: turn system needs to match gcc. Currently only sorts by unit speed and has the fastest unit go first

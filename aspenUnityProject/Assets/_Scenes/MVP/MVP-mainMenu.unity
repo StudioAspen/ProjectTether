@@ -8777,6 +8777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7fa3446400b428e9f2e2da968520b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  <CurrentGameState>k__BackingField: 0
 --- !u!4 &508386505
 Transform:
   m_ObjectHideFlags: 0

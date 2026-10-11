@@ -3,18 +3,23 @@ namespace _Scripts.Runtime.Combat
     //need this class to count down status durations 
     public class Status
     {
-        public StatusSO StatusData;
-        public int duration;
+        public StatusSO StatusData { get; set; }
+        public int Duration { get; private set; }
         
         public Status(StatusSO statusData)
         {
             StatusData = statusData;
-            duration = statusData.Duration;
+            Duration = statusData.Duration;
         }
 
-        public void CountDown()
+        public void CountDown(int val)
         {
-            duration--;
+            Duration-=val;
+        }
+
+        public void CountUp(int val)
+        {
+            Duration+=val;
         }
     }
 }

@@ -1,0 +1,183 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce907491f3f8ba6aeae035b49768d9cd, type: 3}
+  m_Name: StatusSO
+  m_EditorClassIdentifier: Assembly-CSharp::StatusSO
+  _statusId: overclock
+  _statusName: Overclock
+  _statusDescription: overclock
+  _damageTakenMultiplier: 1
+  _damageTakenPerTurn: 0
+  _duration: 1
+  _isStun: 0
+  _statsModified:
+  - classType: 0
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  - classType: 1
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  - classType: 2
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  - classType: 3
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  - classType: 4
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  - classType: 5
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  - classType: 6
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  - classType: 7
+    statsModified:
+    - multiplier: 1
+      stat: 0
+    - multiplier: 1.5
+      stat: 2
+    - multiplier: 1
+      stat: 3
+    - multiplier: 1.5
+      stat: 4
+    - multiplier: 1
+      stat: 5
+    - multiplier: 1
+      stat: 6
+    - multiplier: 1
+      stat: 7
+    - multiplier: 1
+      stat: 8
+    - multiplier: 1
+      stat: 9
+  _GenericStatsModified: []

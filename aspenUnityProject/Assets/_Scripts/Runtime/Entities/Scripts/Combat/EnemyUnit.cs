@@ -26,10 +26,43 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             IsDead = true;
       }
 
-
       public override void EndDefend()
       {
          IsBlocking = false;
+      }
+
+      public override void AddStatus(StatusSO status)
+      {
+         if(Statuses.TryGetValue(status.StatusId, out Status value))
+         {
+            value.CountUp(status.Duration);
+         }else
+         {
+            Statuses.Add(status.StatusId, new Status(status));   
+            foreach(StatMultiplier sm in status.GenericStatsModified)     
+               MultiplyEStat(sm.stat,sm.multiplier);
+         } 
+      }
+
+      public override void TriggerStatuses()
+      {
+         List<string> toDelete = new List<string>();                                          
+         foreach(var status in Statuses.Values)                                               
+         {                                                                                    
+            HealthRemaining -= status.StatusData.DamageTakenPerTurn;                         
+            if (status.StatusData.IsStun)                                                    
+               Stunned = true;                                                              
+            status.CountDown(1);                                                             
+            if (status.Duration == 0)
+            {
+               toDelete.Add(status.StatusData.StatusId);                                    
+               foreach (StatMultiplier sm in status.StatusData.GenericStatsModified)
+                  RevertEStat(sm.stat,sm.multiplier);
+            }                                                                                
+                                                                                          
+         }                                                                                    
+         foreach (var delete in toDelete)                                                     
+            Statuses.Remove(delete);                                                          
       }
 
       //can modify depending on difficulty desired 

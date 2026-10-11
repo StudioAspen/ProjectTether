@@ -44,7 +44,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public override void ResetValues()
         {
             HasMoved = false;
-            stats.EndDefend();
+            stats.ResetValues();
         }
 
  

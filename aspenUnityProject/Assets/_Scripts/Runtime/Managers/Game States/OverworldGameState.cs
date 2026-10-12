@@ -8,7 +8,7 @@ namespace _Scripts.Runtime.Managers.Game_States
     {
        public override void Enter()
        {
-           Debug.Log("Entering Overworld Game State");
+           GameManager.ChangeScene(GameManager.Instance.OverworldScene.Name);
        }
 
        public override void Update()

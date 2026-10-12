@@ -476,8 +476,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.UI.Menu
   <Group>k__BackingField: {fileID: 7384106573944622390}
   <IsAdditive>k__BackingField: 1
-  <StopGameplayInputs>k__BackingField: 1
-  <DefaultSelected>k__BackingField: {fileID: 0}
+  <DefaultSelected>k__BackingField: {fileID: 981370693497004497}
   <OnFocused>k__BackingField:
     m_PersistentCalls:
       m_Calls: []

@@ -17,6 +17,14 @@ namespace _Scripts.Runtime.Combat
         public float multiplier;
         public Stat stat;
     }
+    
+    //no clue what to call this 
+    [System.Serializable]
+    public struct StatusPoint
+    {
+        public int turnToAdd;
+        public StatusSO statusToAdd;
+    }
 
     [CreateAssetMenu(fileName = "StatusSO", menuName = "Scriptable Objects/Misc/StatusSO")]
     public class StatusSO : ScriptableObject
@@ -66,10 +74,15 @@ namespace _Scripts.Runtime.Combat
             return null;
         }
         
+        //overclock -> burnout + stunned 
+        [Tooltip("For statuses that cause other statuses. turnToAdd is used by Status class (irl example: cold -> frostbite")] [SerializeField]
+        private List<StatusPoint> _statusTimeline;
+        public List<StatusPoint> StatusTimeline => _statusTimeline;
 
-        
-    
-        
-    
+
+
+
+
+
     }
 }

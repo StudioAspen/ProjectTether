@@ -13,7 +13,10 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public TileController GetTileController(Vector3Int to);
         public void SelectTile(InputAction.CallbackContext context);
         public void MoveTileSelector(CubeCoordDirections directions);
-        public Vector3Int GetSelectedTile(); 
+        public Vector3Int GetSelectedTile();
+
+        public void CheckDead(UnitController receiver);
+        public void RemoveDead();
         
         public void RedoSelection();
         public UnitController GetCurrentUnit();

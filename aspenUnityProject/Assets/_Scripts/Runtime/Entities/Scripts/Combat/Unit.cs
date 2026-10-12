@@ -12,6 +12,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
      //TODO: add buff feature (MAKE scriptable objects for buffs/debuffs) then store array in unit
      //TODO: remove energy (it is part of suit)
      
+     //TODO: probably need something that lets you set the data with another unit class to pass data from ow for ally
 
 
         public Sprite Portrait { get; private set; }
@@ -49,6 +50,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public bool IsDead { get; protected set; }
         public List<AbilitySO> Moves { get; protected set; }
 
+        //TODO: remove and change shit later 
         public CombatClassSO CombatClass { get; protected set; }
         
         public Dictionary<string, Status> Statuses { get; protected set; }
@@ -154,6 +156,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         {
             return stats[stat].EffectiveStat;
         }
+        
+        public void SetDead(bool value) { IsDead = value;}
 
         public void RevertEStat(Stat stat, float multiplier)
         {

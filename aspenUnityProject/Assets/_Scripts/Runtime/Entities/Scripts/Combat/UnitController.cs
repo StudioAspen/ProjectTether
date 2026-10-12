@@ -5,6 +5,14 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
     public abstract class UnitController : MonoBehaviour
     {
+       
+        private Renderer _renderer;
+
+        void Start()
+        {
+           _renderer = GetComponent<Renderer>(); 
+        }
+        
         //makes more sense to me to have movement-related data in the UnitController 
         //because the controller has access to the actual in-game positions 
         public bool HasMoved { get; protected set; }
@@ -35,6 +43,16 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public void SetTile(Vector3Int tileCubeCoord)
         { 
             TileCoords = tileCubeCoord;
+        }
+
+        public void Hide()
+        {
+           _renderer.enabled = false; 
+        }
+
+        public void Show()
+        {
+           _renderer.enabled = true;
         }
 
         //should reset values that should be upon turn change  (e.g., hasMoved)

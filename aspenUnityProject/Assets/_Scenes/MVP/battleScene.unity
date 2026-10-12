@@ -4748,7 +4748,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Consystently.Essentials.CombatManager
   tilesParent: {fileID: 9200985}
   rangeDisplay: {fileID: 2031595975}
-  _actionStatuses: []
+  _actionStatuses:
+  - {fileID: 11400000, guid: 4e873cfb895c1e755b37c4e94fffa4c2, type: 2}
+  - {fileID: 11400000, guid: 644bf32430abd5160a75263b56137ef9, type: 2}
+  - {fileID: 11400000, guid: cc848e950ade17b1f8540b81b0106237, type: 2}
 --- !u!1001 &1754529254
 PrefabInstance:
   m_ObjectHideFlags: 0

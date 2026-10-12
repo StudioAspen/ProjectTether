@@ -5,6 +5,7 @@ namespace _Scripts.Runtime.Combat
     {
         public StatusSO StatusData { get; set; }
         public int Duration { get; private set; }
+        public int TurnsPassed {get; private set;}
         
         public Status(StatusSO statusData)
         {
@@ -15,6 +16,7 @@ namespace _Scripts.Runtime.Combat
         public void CountDown(int val)
         {
             Duration-=val;
+            TurnsPassed+=val;
         }
 
         public void CountUp(int val)

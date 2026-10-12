@@ -36,6 +36,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
          if(Statuses.TryGetValue(status.StatusId, out Status value))
          {
             value.CountUp(status.Duration);
+            if (status.HasStackableEffects)
+            {
+               foreach(StatMultiplier sm in status.GenericStatsModified)     
+                  MultiplyEStat(sm.stat,sm.multiplier);              
+            }
          }else
          {
             Statuses.Add(status.StatusId, new Status(status));   

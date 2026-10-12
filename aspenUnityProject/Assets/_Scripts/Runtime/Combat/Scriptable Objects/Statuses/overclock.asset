@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce907491f3f8ba6aeae035b49768d9cd, type: 3}
-  m_Name: StatusSO
+  m_Name: overclock
   m_EditorClassIdentifier: Assembly-CSharp::StatusSO
   _statusId: overclock
   _statusName: Overclock

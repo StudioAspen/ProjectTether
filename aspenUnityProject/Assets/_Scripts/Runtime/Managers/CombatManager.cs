@@ -20,6 +20,7 @@ namespace _Scripts.Runtime.Managers
     to send the data over to CombatManager. CombatManager will exist
     in the battle scene only.
     */
+    //TODO: break this down 
     public class CombatManager : MonoBehaviour, ICombatFunctionProvider
     {
         private const float ArbitraryOffset = 10;
@@ -33,14 +34,18 @@ namespace _Scripts.Runtime.Managers
         private InputSystem_Actions Input { get; set; }
         private TileController[] TileControllers { get; }= new TileController[TileNum];
 
+        /// <summary>
+        /// Vector3Int -> TileControllers index (index is equal to desired count order of tiles)
+        /// </summary>
         private Dictionary<Vector3Int, int> TileCubeCoords { get; }= new Dictionary<Vector3Int, int>();
         
         //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
         private List<UnitController> TurnOrder { get; }= new List<UnitController>();
         private List<UnitController> DeadUnits {get; }= new List<UnitController>();
         private int _deadEnemies;
+        private int _deadAllies;
+        private List<UnitController> _deadUnitsThisTurn = new List<UnitController>();
         
-        //TODO: add an enum for this if we ever have more than just enemy/ally turns?
         private readonly BattlePhase[] _phases = new BattlePhase[2];
         private BattlePhase _currentPhase;  
         [SerializeField] private RangeDisplay rangeDisplay; 
@@ -59,16 +64,19 @@ namespace _Scripts.Runtime.Managers
         private CombatActions _receivedAction { get; set; }
         private int ActionSelection { get; set; }
 
+        //no clue how to connect the Overclock status differently 
         /// <summary>
         /// statuses associated with player actions (e.g., overclocking, attacking, defending too much, etc.)
         /// </summary>
-        [SerializeField] private List<StatusSO> _actionStatuses;
+        [SerializeField] private List<StatusSO> _actionStatuses = new List<StatusSO>();
+
+        private Dictionary<string, StatusSO> _actionStatusDic = new Dictionary<string, StatusSO>();
         
         #endregion
 
         //TODO: sub to each unit themselves 
         //TODO: figure out what to do when a unit dies 
-        public static event Action<Unit[]> unitsDead;
+        public static event Action<List<UnitController>> unitsDead;
         //animation/tile update handled per unit at the instant they move. 
         public static event Action<UnitController> unitMoved;
         //we may want sounds when the cursor moves around 
@@ -78,7 +86,10 @@ namespace _Scripts.Runtime.Managers
         public static event Action<UnitController> examinedUnit;
         public static event Action exitedExamine;
         
-        public static event Action finishedBattle; 
+        /// <summary>
+        /// true = win, false = lose
+        /// </summary>
+        public static event Action<bool> finishedBattle; 
         
 
         private void Awake()
@@ -102,6 +113,8 @@ namespace _Scripts.Runtime.Managers
             CombatUI.PlayerAction += HandleAction;
             CombatUI.PlayerSelectiveAction += HandleAction;
             CombatUI.ToggledManualEnemy += ToggleManualEnemy;
+            foreach (StatusSO status in _actionStatuses)
+                _actionStatusDic.Add(status.StatusId, status);
             ChangeTurn(); 
         }
 
@@ -160,6 +173,7 @@ namespace _Scripts.Runtime.Managers
                         Debug.Log("neutral units not yet implemented");
 //                    Debug.Log($"{tile}: {unit}, {tileControllers[tile].UnitCount()}");
                     TileControllers[tile].GetUnitAt(unit).Initialize(initializerData[tile,unit]);
+                    //TODO: add a unit method (prob abstract) here later to override the data with data from ow if there is ow data
                     TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
                     TurnOrder.Add(TileControllers[tile].GetUnitAt(unit));
                     TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
@@ -256,6 +270,7 @@ namespace _Scripts.Runtime.Managers
         */
         /// <summary>
         /// Handles actions that do not require a separate ui panel. Connected to CombatUI.
+        /// Actions that require tile selection lead to SelectTile
         /// </summary>
         /// <param name="action"></param>
         private void HandleAction(CombatActions action)
@@ -363,8 +378,13 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
-            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers) 
-                CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);  
+            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
+            {
+                CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);
+                CheckDead(enemy);
+            }
+
+            RemoveDead();
             rangeDisplay.HideRange();
             FinishSelection();
         }
@@ -376,8 +396,11 @@ namespace _Scripts.Runtime.Managers
             rangeDisplay.HideRange();           
             //epicenter hit 
             foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
-                CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
-            
+            {
+                CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
+                CheckDead(enemy);
+            }
+
             //hit the area surrounding the epicenter
             if (ability.AOE > 0)
             {
@@ -389,13 +412,18 @@ namespace _Scripts.Runtime.Managers
                         affectedTile += direction.Vector();
                         if (TileCubeCoords.TryGetValue(affectedTile, out _))
                         {
-                            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
-                                CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
+                            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]]
+                                         .UnitControllers)
+                            {
+                                CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
+                                CheckDead(enemy);
+                            }
                         }
                         else
                             break;
                     }
                 }
+                RemoveDead();
             }
             FinishSelection();
         }
@@ -408,9 +436,17 @@ namespace _Scripts.Runtime.Managers
             RedoSelection();
         }
 
+        /// <summary>
+        /// adds the actual overclock status to the player unit
+        /// </summary>
+        /// <param name="unit"></param>
         private void Overclock(UnitController unit)
         {
-            ((AllyUnit)unit.GetData()).Overclock();
+            AllyUnit au = (AllyUnit)unit.GetData();
+            au.AddStatus(_actionStatusDic["overclock"]);
+            au.Overclock();
+            if(au.OverclockLevel == OverclockTiers.Extreme)
+                au.AddStatus(_actionStatusDic["burnout_0"]);
             Debug.Log("overclocking");
             RedoSelection();
         }
@@ -446,8 +482,45 @@ namespace _Scripts.Runtime.Managers
             examinedUnit?.Invoke(unitController);
         }
 
-        public void CheckCombatOver()
+        /// <summary>
+        /// Must be used in every attack function after the damage calculations
+        /// </summary>
+        /// <param name="unit"></param>
+        public void CheckDead(UnitController unit)
         {
+            _deadUnitsThisTurn.Clear();
+            Unit u = unit.GetData();
+            if (u.HealthRemaining < 0)
+            {
+                u.SetDead(true);
+                if (u.Faction == Faction.Ally)
+                    _deadAllies++;
+                else
+                    _deadEnemies++;  //neutral units do not exist, apparently
+                DeadUnits.Add(unit);
+                _deadUnitsThisTurn.Add(unit);
+                Debug.Log(u.Name);
+            }
+            unitsDead?.Invoke(_deadUnitsThisTurn);
+            CheckCombatOver();
+        }
+
+        /// <summary>
+        /// should be called checkdead() after the for loop 
+        /// </summary>
+        public void RemoveDead()
+        {
+         //  foreach(UnitController u in _deadUnitsThisTurn)  
+          //     TileControllers[TileCubeCoords[u.TileCoords]].RemoveUnit(u);
+        }
+
+        private void CheckCombatOver()
+        {
+            if (_deadAllies > PlayerUnits.Count)
+            {
+               finishedBattle?.Invoke(false);
+               return;
+            }
             if (_deadEnemies >= _totalEnemies)
             {
                 foreach (AllyUnitController auc in PlayerUnits)
@@ -455,7 +528,7 @@ namespace _Scripts.Runtime.Managers
                     if(!((AllyUnit)auc.GetData()).CheckOverclock())
                        ((AllyUnit)auc.GetData()).Underclock();
                 }
-                finishedBattle?.Invoke();
+                finishedBattle?.Invoke(true);
             }
         }
 

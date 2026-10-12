@@ -53,8 +53,8 @@ namespace _Scripts.Runtime
         Debug.Log($"{defender.name} was blocking!");
       }
       Debug.Log(damage);
-      foreach (Element element in attackElements)
-        damage *= defenderStats.Affinities[element].Multiplier();
+//      foreach (Element element in attackElements)
+       // damage *= defenderStats.Affinities[element].Multiplier();
       defenderStats.ChangeHealthRemaining(Mathf.CeilToInt(damage));
       Debug.Log(damage);
       Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 

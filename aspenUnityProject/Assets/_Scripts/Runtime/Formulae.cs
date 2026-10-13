@@ -12,7 +12,7 @@ namespace _Scripts.Runtime
         case Stat.HP:
           return FourDigitStat(tier, unitLevel);
       
-        case Stat.EN:
+//        case Stat.EN:
         case Stat.STR:
         case Stat.DEF:
         case Stat.TEC:

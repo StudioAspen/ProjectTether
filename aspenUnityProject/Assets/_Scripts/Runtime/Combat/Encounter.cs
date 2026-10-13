@@ -2,9 +2,11 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
 {
-    //for creating new encounters within the game.
-    //because unitPositions starts at index 0, there may be off-by-one errors. 
-    //If they persist, initiate values of unitPositions as -1.
+    /// <summary>
+    ///for creating new encounters within the game.
+    ///because unitPositions starts at index 0, there may be off-by-one errors. 
+    ///If they persist, initiate values of unitPositions as -1.
+    /// </summary>
     //TODO: get rid of magic numbers 
     public class Encounter
     {
@@ -80,6 +82,9 @@ namespace _Scripts.Runtime.Combat
             return unitPositions[tile];
         }
 
+        /// <summary>
+        /// debugging function 
+        /// </summary>
         public void Validate()
         {
             for (int i = 0; i < 19; i++)

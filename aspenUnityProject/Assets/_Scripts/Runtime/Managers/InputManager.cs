@@ -52,15 +52,13 @@ namespace _Scripts.Runtime.Managers
                 return;
 
             Actions.Global.Enable();
-            Actions.Global.OpenMenu.performed += OpenMenu_Performed;
         }
 
         private void OnDisable()
         {
             if (Actions == null)
                 return;
-
-            Actions.Global.OpenMenu.performed -= OpenMenu_Performed;
+            
             Actions.Global.Disable();
         }
 
@@ -69,11 +67,6 @@ namespace _Scripts.Runtime.Managers
             _playerInput.onControlsChanged -= PlayerInput_OnControlsChanged;
             Actions?.Dispose();
             base.OnDestroy();
-        }
-
-        private void OpenMenu_Performed(InputAction.CallbackContext context)
-        {
-            GameManager.Instance?.ToggleMenu();
         }
 
         /// <summary>

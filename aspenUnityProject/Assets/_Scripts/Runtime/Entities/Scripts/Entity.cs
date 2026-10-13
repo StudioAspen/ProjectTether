@@ -1,7 +1,7 @@
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
-
+/*
 namespace _Scripts.Runtime.Entities.Scripts
 {
   //old code. Delete if there is no use in the future
@@ -25,3 +25,5 @@ namespace _Scripts.Runtime.Entities.Scripts
 
   }
 }
+
+*/

@@ -10,6 +10,7 @@ namespace _Scripts.Runtime
   public static class CombatFormulas
   {
     //TODO: create a separate function for healing?
+    //TODO: split the damage formulas for enemy and ally? Allies can overclock. We will probably put overclock stat buff here
     public static void Damage(UnitController attacker, Element[] attackElements, UnitController defender)
     {
       Unit attackerStats = attacker.GetData();

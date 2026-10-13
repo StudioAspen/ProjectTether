@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using _Scripts.Consystently.UI;
 using _Scripts.Runtime.Combat;
+using UnityEngine.Rendering;
 
 /*
  * 
@@ -112,6 +113,7 @@ public class BattleSimManager : Manager<BattleSimManager>
   public void StartBattle()
   {
     Debug.Log("Start Battle Code");
+    Debug.Log(EncounterManager.Instance);
     EncounterManager.Instance.GenerateEncounter(BattlefieldMap.Instance.Tiles);
     submitted?.Invoke(true);
   }

@@ -48,15 +48,15 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private bool canMiss;
       public bool CanMiss => canMiss;
 
-      //not useful in MVP. This is for when we decide to have attacks affect tiles.
-      //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 
-      /*
-   [SerializeField] private TileSO tileEffect;
-   public TileSO TileEffect => tileEffect;
-   */
+        //not useful in MVP. This is for when we decide to have attacks affect tiles.
+        //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 
+        /*
+     [SerializeField] private TileSO tileEffect;
+     public TileSO TileEffect => tileEffect;
+     */
 
-      //we can add specific unique ranges later by having an array of cube coordinate directions
+        //we can add specific unique ranges later by having an array of cube coordinate directions
 
-
-   }
+        public void SetName(string name) => abilityName = name;
+    }
 }

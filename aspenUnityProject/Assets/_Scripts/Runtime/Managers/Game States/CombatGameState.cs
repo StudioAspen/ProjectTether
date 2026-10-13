@@ -6,9 +6,9 @@ namespace _Scripts.Runtime.Managers.Game_States
     {
        public override void Enter()
        {
-           Debug.Log("combat game state entered");
-           UnityEngine.SceneManagement.SceneManager.LoadScene("battleScene");
+           GameManager.ChangeScene(GameManager.Instance.BattleScene.Name);
        }
+       
        public override void Update()
        {
            

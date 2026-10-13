@@ -7,7 +7,7 @@ using UnityEngine;
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
 
-    public abstract class Unit
+    public abstract class Unit : IComparable<Unit>
     {
      //TODO: add buff feature (MAKE scriptable objects for buffs/debuffs) then store array in unit
      //TODO: remove energy (it is part of suit)
@@ -41,7 +41,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public int Evasion { get; protected set; }
         */
 
-        public Dictionary<Stat, UnitStat> stats;
+        public Dictionary<Stat, UnitStat> Stats { get; protected set; }
 
         public int HealthRemaining { get; protected set; }
         public int EnergyRemaining { get; protected set; }
@@ -57,6 +57,14 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         
         public List<int> tempStats = new List<int>(); 
         public bool Stunned { get; protected set; }
+        
+        //easiest to just have them here whatever man 
+        /// <summary>
+        /// part of turn system. 
+        /// </summary>
+        public int Initiative { get; private set; }
+
+        public float InitModifier { get; private set; } = 1.0f;
 
 
 //   public event Action HasDied;
@@ -89,11 +97,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Precision = Formulae.CalculateStat(Stat.PRC, StatGrowths[Stat.PRC], Level);
             */
 
-            stats =  new Dictionary<Stat, UnitStat>();
+            Stats =  new Dictionary<Stat, UnitStat>();
             foreach (Stat stat in Enum.GetValues(typeof(Stat)))
             {
                 //should crash if there are two same stats
-                stats.Add(stat, new UnitStat(Formulae.CalculateStat(stat, StatGrowths[stat], Level)));
+                Stats.Add(stat, new UnitStat(Formulae.CalculateStat(stat, StatGrowths[stat], Level)));
             }
 
             HealthRemaining = Health;
@@ -149,12 +157,12 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 
         public int GetBaseStat(Stat stat)
         {
-            return stats[stat].BaseStat;
+            return Stats[stat].BaseStat;
         }
         
         public int GetEStat(Stat stat)
         {
-            return stats[stat].EffectiveStat;
+            return Stats[stat].EffectiveStat;
         }
         
         public void SetDead(bool value) { IsDead = value;}
@@ -163,17 +171,17 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         {
             if (multiplier == 0)
             {
-                stats[stat].SetEffectiveStat(0);
+                Stats[stat].SetEffectiveStat(0);
             }
             else
             {
-                stats[stat].SetEffectiveStat((int)(stats[stat].EffectiveStat * 1.0f/multiplier));
+                Stats[stat].SetEffectiveStat((int)(Stats[stat].EffectiveStat * 1.0f/multiplier));
             }
         }
 
         public void MultiplyEStat(Stat stat, float multiplier)
         {
-            stats[stat].SetEffectiveStat((int)(stats[stat].EffectiveStat * multiplier));    
+            Stats[stat].SetEffectiveStat((int)(Stats[stat].EffectiveStat * multiplier));    
         }
 
         /// <summary>
@@ -183,6 +191,30 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         {
             Stunned = false;
             EndDefend();
+        }
+
+        public void SetInit(int init)
+        {
+            Initiative = init;
+        }
+
+        public void SetInitMod(float mod)
+        {
+            InitModifier = mod;
+        }
+
+        public void DecInitMod()
+        {
+            InitModifier -= 0.1f;
+            if(InitModifier < 0.1f)
+                InitModifier = 0.1f;
+        }
+        
+
+        public int CompareTo(Unit other)
+        {
+            if (other is null) return 1;
+            return Level.CompareTo(other.Level);
         }
 
     }

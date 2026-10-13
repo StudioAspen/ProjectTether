@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
-    public abstract class UnitController : MonoBehaviour
+    public abstract class UnitController : MonoBehaviour, IComparable<UnitController>
     {
        
         private Renderer _renderer;
@@ -57,5 +57,13 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 
         //should reset values that should be upon turn change  (e.g., hasMoved)
         public abstract void ResetValues();
+
+        public int CompareTo(UnitController other)
+        {
+            if (other is null) return 1;
+            return GetData().CompareTo(other.GetData()); 
+        }
+        
+        
     }
 }

@@ -92,7 +92,7 @@ namespace _Scripts.Runtime.Combat.Mechanics
         }
 
         /// <summary>
-        /// removes unit from _cappedUnits and sets their initiative to zero. Used by CombatManager
+        /// removes unit from _cappedUnits and sets their initiative to zero or higher if they defended. Used by CombatManager
         /// after it selects a unit from a tie 
         /// </summary>
         /// <returns></returns>
@@ -114,7 +114,10 @@ namespace _Scripts.Runtime.Combat.Mechanics
             if (_cappedUnits.Remove(unit) && !_arbitrationSet.Add(unit))
             {
                 unit.GetData().DecInitMod();
-                unit.GetData().SetInit(0);
+                if (unit.GetData().IsBlocking) 
+                    unit.GetData().SetInit(unit.GetData().InitiativeAfterDefending);
+                else
+                    unit.GetData().SetInit(0);
             }
         }
 

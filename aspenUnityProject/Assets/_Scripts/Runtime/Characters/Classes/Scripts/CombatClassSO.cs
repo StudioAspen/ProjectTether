@@ -27,7 +27,7 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
         
 
         [Tooltip("stats raised by overclock. 0=hp, 1=en, 2=str, 3=def, 4=tec, 5=res, 6=spe, 7=luck, 8=prc, 9=eva")]
-        RBS-Overclock
+        // RBS-Overclock
         [SerializeField] private float[] _overclockedModifier;
         public float[] OverclockedStats => _overclockedModifier; 
    

@@ -6,6 +6,7 @@ using _Scripts.Runtime.Combat.States.CombatManagerStates;
 using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
+using _Scripts.Runtime.Persistent_Data;
 using _Scripts.Runtime.Tile_System.Scripts;
 using _Scripts.Runtime.UI;
 using UnityEngine;
@@ -25,7 +26,6 @@ namespace _Scripts.Runtime.Managers
     {
         private const float ArbitraryOffset = 10;
         private const int TileNum = 19;
-        private UnitDataSO[,] initializerData;
 
         private bool toggledManualEnemy;
         
@@ -101,8 +101,7 @@ namespace _Scripts.Runtime.Managers
         //must occur after OnEnable bc other classes will subscribe OnEnable
         void Start()
         {
-            encounter = EncounterManager.Instance.GetEncounter();
-            initializerData = EncounterManager.Instance.GetInitializerData();
+            encounter = PersistentData.CurrentEncounterData;
             SortTiles(tilesParent.GetComponentsInChildren<TileController>());
             GenerateCoords();
             CreateObjects(); 
@@ -147,6 +146,12 @@ namespace _Scripts.Runtime.Managers
 
         void CreateObjects()
         {
+            if (encounter == null)
+            {
+                Debug.LogWarning($"CombatManager: Encounter is null, can't create objects");
+                return;
+            }
+            
             for (int tile = 0; tile < encounter.TotalTiles(); tile++)
             {
                 if (encounter.UnitCountAtTile(tile) < 1) 
@@ -158,13 +163,13 @@ namespace _Scripts.Runtime.Managers
                     GameObject newTempObject = Instantiate(encounter[tile,unit], TileControllers[tile].Position(), Quaternion.Euler(-90f,0,0));
                     //set up controllers after object instantiation so objects don't override each other's data
                     //the newly cloned object does not share the same reference as the original prefab, so there is no overriding
-                    if (initializerData[tile, unit].Faction == Faction.Ally)
+                    if (encounter.InitializerData[tile, unit].Faction == Faction.Ally)
                     {
                         TileControllers[tile].AddUnit(newTempObject.GetComponent<AllyUnitController>());
                         _totalAllies++;
                         PlayerUnits.Add((AllyUnitController)TileControllers[tile].PeekUnit());
                     }
-                    else if (initializerData[tile, unit].Faction == Faction.Enemy)
+                    else if (encounter.InitializerData[tile, unit].Faction == Faction.Enemy)
                     {
                         TileControllers[tile].AddUnit(newTempObject.GetComponent<EnemyUnitController>());
                         _totalEnemies++;
@@ -172,7 +177,7 @@ namespace _Scripts.Runtime.Managers
                     else 
                         Debug.Log("neutral units not yet implemented");
 //                    Debug.Log($"{tile}: {unit}, {tileControllers[tile].UnitCount()}");
-                    TileControllers[tile].GetUnitAt(unit).Initialize(initializerData[tile,unit]);
+                    TileControllers[tile].GetUnitAt(unit).Initialize(encounter.InitializerData[tile,unit]);
                     //TODO: add a unit method (prob abstract) here later to override the data with data from ow if there is ow data
                     TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
                     TurnOrder.Add(TileControllers[tile].GetUnitAt(unit));

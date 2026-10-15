@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
@@ -47,6 +48,14 @@ namespace _Scripts.Runtime.Combat
             
                 battleField[i].Validate();
             }
+        }
+        
+        // TODO: Convert our SO into runtime Encounter
+        public Encounter GenerateEncounter()
+        {
+            Debug.LogWarning($"EncounterSO({name}) -> Runtime Encounter has not been implemented yet");
+
+            return null;
         }
     }
 }

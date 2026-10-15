@@ -26,7 +26,7 @@ namespace _Scripts.Runtime.Managers.Helpers
             if (gameObject.scene.path != _editorStartingScenePath)
                 return;
 
-            Debug.LogWarning($"Editor scene started, automatically changing game state state to {_startingState}");
+            Debug.LogWarning($"Editor scene {_editorStartingScenePath} started, automatically changing game state state to {_startingState}");
             GameManager.Instance.ChangeGameState(_startingState);
 #endif
         }

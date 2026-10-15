@@ -27,9 +27,6 @@ namespace _Scripts.Runtime.UI {
         [SerializeField] private GameObject manualEnemyButton;
         [SerializeField] private Button firstButton; 
         [SerializeField] private GameObject cursor;
-
-        [SerializeField] private InputSystemUIInputModule uiInputModule;
-        private InputAction cancelSubmenu;
         
         private Button[] abilityButtons;
 
@@ -41,8 +38,6 @@ namespace _Scripts.Runtime.UI {
         private void Awake()
         {
             _designerMode = GameManager.Instance.DesignerMode;
-            if (uiInputModule != null)
-                cancelSubmenu = uiInputModule.cancel.action; 
         }
 
 
@@ -53,7 +48,9 @@ namespace _Scripts.Runtime.UI {
             cursor.SetActive(false); 
             manualEnemyButton.SetActive(_designerMode);
             CombatManager.battlePhaseChanged += HandleUserActions;
-            cancelSubmenu.performed += OnCloseSubmenu;
+
+            InputManager.Instance.Actions.UI.Cancel.performed += OnCloseSubmenu;
+            
             CombatManager.examinedTile += ExamineTile;
             CombatManager.exitedExamine += ExitExamine;
             CombatManager.examinedUnit += ExamineUnit;
@@ -75,6 +72,9 @@ namespace _Scripts.Runtime.UI {
         void OnDisable()
         {
             CombatManager.battlePhaseChanged -= HandleUserActions;
+            
+            InputManager.Instance.Actions.UI.Cancel.performed -= OnCloseSubmenu;
+            
             CombatManager.examinedTile -= ExamineTile;
             CombatManager.exitedExamine -= ExitExamine;
             if (abilityButtons == null)
@@ -100,7 +100,12 @@ namespace _Scripts.Runtime.UI {
                 playerActionsContainer.SetActive(false);
             }
             int currMove = 0;
-            uiInputModule.enabled = playerActionsContainer.activeSelf; 
+            
+            if(playerActionsContainer.activeSelf)
+                InputManager.Instance.Actions.UI.Enable();
+            else
+                InputManager.Instance.Actions.UI.Disable();
+            
             foreach (Transform button in abilitiesPanel.transform)
             {
                 if(currMove > unitController.GetData().Moves.Count-1)
@@ -118,7 +123,9 @@ namespace _Scripts.Runtime.UI {
         private void TrySelection()
         {
             playerActionsContainer.SetActive(false);
-            uiInputModule.enabled = false;
+            
+            InputManager.Instance.Actions.UI.Disable();
+            
             cursor.SetActive(true);
         }
 

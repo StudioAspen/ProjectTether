@@ -65,7 +65,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public int Initiative { get; private set; }
 
         public float InitModifier { get; private set; } = 1.0f;
-
+        
+        public int InitiativeAfterDefending = 30;
 
 //   public event Action HasDied;
 

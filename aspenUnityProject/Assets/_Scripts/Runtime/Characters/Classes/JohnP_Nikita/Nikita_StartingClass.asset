@@ -15,10 +15,11 @@ MonoBehaviour:
   defaultAttackElements: 
   _className: Nikita Starting Class
   _defaultAttackRange: 0
-  _classDescription: 'Summon things to fight/aid  Variable options, but tends to
-    be a slow ramp -> big-reward type class in battle  The majority of summons affect
-    and scale off of Technical (TEC): A unit''s magical power.'
+  _classDescription: 
+  effects: []
+  explanations: []
   _overclockedStats: 
+  _overclockedStatsPercent: []
   _health: 2
   _energy: 1
   _strength: 1
@@ -29,3 +30,11 @@ MonoBehaviour:
   _luck: 4
   _precision: 4
   _evasion: 4
+  _blunt: 0
+  _slash: 0
+  _pierce: 1
+  _blast: 2
+  _water: 0
+  _earth: 1
+  _wind: 0
+  _fire: 2

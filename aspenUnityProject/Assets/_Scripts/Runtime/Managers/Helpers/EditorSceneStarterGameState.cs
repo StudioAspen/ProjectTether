@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Scripts.Runtime.Managers.Helpers
 {
@@ -9,11 +10,25 @@ namespace _Scripts.Runtime.Managers.Helpers
     {
         [SerializeField] private GameManager.State _startingState;
 
-        private void Awake()
+#if UNITY_EDITOR
+        private static string _editorStartingScenePath;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void Initialize()
         {
-            #if UNITY_EDITOR
-                GameManager.Instance.ChangeGameState(_startingState);
-            #endif
+            _editorStartingScenePath = SceneManager.GetActiveScene().path;
+        }
+#endif
+
+        private void Start()
+        {
+#if UNITY_EDITOR
+            if (gameObject.scene.path != _editorStartingScenePath)
+                return;
+
+            Debug.LogWarning($"Editor scene started, automatically changing game state state to {_startingState}");
+            GameManager.Instance.ChangeGameState(_startingState);
+#endif
         }
     }
 }

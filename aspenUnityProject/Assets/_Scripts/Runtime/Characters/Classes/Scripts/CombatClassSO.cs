@@ -42,6 +42,11 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
         [SerializeField] private float[] _overclockedStatsPercent;
         public float[] OverclockedStatsPercent => _overclockedStatsPercent;
 
+        // RBS-Overclock
+        [SerializeField] private float[] _overclockedModifier;
+        public float[] OverclockedStats => _overclockedModifier; 
+   
+        
         [Header("Class Aptitudes", order = 5)]
         [Space(10)]
         [Tooltip("HP: Total amount of damage a unit can sustain before falling in battle.")]

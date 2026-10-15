@@ -17,9 +17,6 @@ namespace _Scripts.Runtime.Managers
     /// </summary>
     public class EncounterManager : Manager<EncounterManager>
     {
-        //probably stupid way of implementing this 
-        private UnitDataSO[,] initializerData = new UnitDataSO[19,4];
-        
         //NOT useful yet. Will be useful when we decide to add tile effects 
         private TileSO[] tileInitializerData = new TileSO[19];
         
@@ -48,12 +45,6 @@ namespace _Scripts.Runtime.Managers
         public Encounter GetEncounter()
         {
             return encounter;
-        }
-
-
-        public UnitDataSO[,] GetInitializerData()
-        {
-            return initializerData;
         }
 
         /// <summary>
@@ -87,7 +78,7 @@ namespace _Scripts.Runtime.Managers
                {
                    UnitSim sim = filledSlots[unit].Piece?.Sim;
                    encounter.AddUnit(tile, (sim?.Data.Model));
-                   initializerData[tile, unit] = (sim?.Data);
+                   encounter.InitializerData[tile, unit] = (sim?.Data);
 //                   Debug.Log($"tile:{tile} | unit:{unit}");
 //                  Debug.Log(FilledSlots[unit].Piece.Sim.Data.Model);
                }

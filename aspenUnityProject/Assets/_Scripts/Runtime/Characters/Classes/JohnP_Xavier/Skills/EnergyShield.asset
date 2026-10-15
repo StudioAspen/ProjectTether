@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EnergyShield
   m_EditorClassIdentifier: Assembly-CSharp::Skill
   name: Energy Shield
-  function: Blocks Incoming Attacks
-  triggerCondition: 
+  effect: Blocks incoming attacks.
+  triggerCondition: n/a
   explanation: The player generates an energy shield made from their inventions to
-    block any attack
+    block any attack.

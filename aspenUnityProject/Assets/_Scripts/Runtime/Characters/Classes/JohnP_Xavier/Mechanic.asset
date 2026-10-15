@@ -15,18 +15,39 @@ MonoBehaviour:
   defaultAttackElements: 
   _className: Mechanic
   _defaultAttackRange: 0
-  _classDescription: 'Xavier''s Base Class (Summon things to fight/aid  Variable
-    options, but tends to be a slow ramp -> big-reward type class in battle  The
-    majority of summons affect and scale off of Technical (TEC): A unit''s magical
-    power)'
-  _overclockedStats: 
-  _health: 1
+  _classDescription: "Xavier's Base Class: \n- Summon things to fight/aid. \n- Variable
+    options, but tends to be a slow ramp -> big-reward type class in battle.\n- The
+    majority of summons affect and scale off of Technical (TEC): A unit's magical
+    power."
+  effects:
+  - 'Offensive: Gain 50% TECH stat boost. RECONSTRUCT all bots that RUPTURE this
+    turn.'
+  - 'Defensive: Gain 30% RESISTANCE. Double the defense a microbot provides.'
+  explanations:
+  - 'Offensive: Riffing on the other two ideas, allows the mechanic to go big without
+    being too punished. Really like this one (no bias).'
+  - 'Defensive: Using defend already can recall all bots, so they can either spend
+    their turn distributing bots to allies then use this or can defend, in doing
+    so recalling their bots to prepare for an incoming attack.'
+  _overclockedStats: 0400000005000000
+  _overclockedStatsPercent:
+  - 0.5
+  - 0.3
+  _health: 2
   _energy: 4
   _strength: 2
   _defense: 3
   _tech: 0
   _resistance: 1
-  _speed: 2
+  _speed: 1
   _luck: 4
   _precision: 4
   _evasion: 4
+  _blunt: 1
+  _slash: 0
+  _pierce: 2
+  _blast: 2
+  _water: 0
+  _earth: 0
+  _wind: 0
+  _fire: 0

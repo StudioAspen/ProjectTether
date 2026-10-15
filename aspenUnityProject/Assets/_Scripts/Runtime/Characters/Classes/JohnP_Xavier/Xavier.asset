@@ -30,7 +30,7 @@ MonoBehaviour:
   _luck: 4
   _precision: 4
   _evasion: 4
-  _blunt: 2
+  _blunt: 0
   _slash: 0
   _pierce: 0
   _blast: 0

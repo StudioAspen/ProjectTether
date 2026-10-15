@@ -16,8 +16,13 @@ MonoBehaviour:
   _className: Nikita Starting Class
   _defaultAttackRange: 0
   _classDescription: 
-  effects: []
-  explanations: []
+  effects:
+  - While Overclocked, Nikita's attacks are guaranteed to hit multiple times, with
+    the number of hits increasing by Overclock tier.
+  explanations:
+  - Higher Overclock tiers allow her to land more hits per attack, increasing her
+    damage potential while complementing her fast paced, aggressive fighting style.
+    Think of the Pokemon item Loaded Dice on steroids.
   _overclockedStats: 
   _overclockedStatsPercent: []
   _health: 2

@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
   m_Name: Xavier_ClassInnate
   m_EditorClassIdentifier: Assembly-CSharp::Skill
-  name: 
-  effect: 
-  triggerCondition: 
-  explanation: 
+  name: Analyze, Assess, Attack
+  effect: 'Function: Use Mirco-bots to enhance your abilities and defense.'
+  triggerCondition: Automatically in tune with abilities and relating skills.
+  explanation: "A player starts with 2 Microbots.\r\n\r\nMicrobot properties:\r\n\r\nThe
+    following effects are increased depending on the amount of microbots attached.\r\n\r\nOn
+    Ally/Host: Increases the attached\u2019s defense.\r\nOn Enemy: Increases the
+    amount of damage taken. By the host and its allies.\r\nAbilities will often use
+    the following keywords:\r\n\r\nRecall: Sends any microbots on recon back to the
+    host.\r\nRecon: Attaches a number of drones to target tile.\r\nReconstruct: Creates
+    a number microbots to be used later [Created drones start on the host].\r\nRupture:
+    Destroy a number of microbots.\r\nAltered basic actions:\r\n\u201CAttack\u201D
+    will evenly distribute all recalled microbots to enemies within the tile.\r\n\u201CDefend\u201D
+    will now also recall all bots on recon."

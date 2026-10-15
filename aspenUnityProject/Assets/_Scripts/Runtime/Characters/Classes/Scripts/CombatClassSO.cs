@@ -44,7 +44,7 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
 
         // RBS-Overclock
         [SerializeField] private float[] _overclockedModifier;
-        public float[] OverclockedStats => _overclockedModifier; 
+        public float[] OverclockedModifier => _overclockedModifier; 
    
         
         [Header("Class Aptitudes", order = 5)]

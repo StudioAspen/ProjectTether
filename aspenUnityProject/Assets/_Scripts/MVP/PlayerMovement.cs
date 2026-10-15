@@ -3,10 +3,13 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 5; //  Controls how fast the player moves:
+    public float gravity = -9.81f;
+    private float verticalVelocity;
 
     Transform mainCamera;
     private InputSystem_Actions actions;
     CharacterController controller;
+    
 
     void Awake()
     {
@@ -21,6 +24,12 @@ public class PlayerMovement : MonoBehaviour
     {
         // Turns on the player's input actions:
         actions.Player.Enable();
+    }
+
+   void OnDisable()
+    {
+        
+            actions.Player.Disable();
     }
 
     void Update()
@@ -41,8 +50,22 @@ public class PlayerMovement : MonoBehaviour
         // Uses the camera's direction to decide where the player moves:
         Vector3 moveDirection = cameraDirection  * moveInput.x + cameraForward * moveInput.y;
 
+        //
+        moveDirection = Vector3.ClampMagnitude(moveDirection,1);
+
+
+
+        if(controller.isGrounded && verticalVelocity < 0)
+        {
+            verticalVelocity = -2;
+        }
+        verticalVelocity += gravity * Time.deltaTime;
+
         // Moves the player using the CharacterController:
-        controller.Move(moveDirection * speed * Time.deltaTime);
+        Vector3 velocity = moveDirection * speed;
+        velocity.y = verticalVelocity;
+
+        controller.Move(velocity * Time.deltaTime);
         
     }
     

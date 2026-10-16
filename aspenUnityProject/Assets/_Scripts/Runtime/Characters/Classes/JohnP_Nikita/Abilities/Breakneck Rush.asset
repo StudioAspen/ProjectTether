@@ -14,16 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Breakneck Rush
-  description: '- Effect: Nikita rushes in a straight line toward an enemy, striking
-    them upon reaching an adjacent tile. If the attack hits, she gains a temporary
-    Speed boost.
+  description: '**Effect:** The character rushes in a straight line toward an enemy,
+    striking them upon reaching an adjacent tile. Damage increases with each tile
+    traveled. On a successful hit, the character gains a temporary +5 Speed boost.
 
-    - Explanation: Nikita uses her athletic ability to close distances
-    and pressure opponents. This ability provides mobility and damage in one action,
-    making it useful for reaching enemies across the battlefield.'
+
+    **Explanation:**
+    The character closes the distance to an enemy while turning movement into offensive
+    pressure. Traveling farther increases the damage potential, rewarding players
+    who position themselves carefully before committing to the attack.'
   damage: 0
   element: 00000000
-  _chanceToHit: 0.45
+  _chanceToHit: 0.95
   _macCost: 2
   _energyCost: 12
   abilityType: 1

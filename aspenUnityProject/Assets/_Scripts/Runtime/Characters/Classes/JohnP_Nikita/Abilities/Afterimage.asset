@@ -10,20 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 279d2ab0528d3e4c19cd7682bdffa241, type: 3}
-  m_Name: Evasive Guardian
+  m_Name: Afterimage
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: Evasive Guardian
-  description: '- Effect: Nikita gains +5 Defense for her next turn after successfully
-    dodging an attack.
+  abilityName: Afterimage
+  description: '**Effect:** The character enters an evasive stance, gaining a temporary
+    40% Dodge bonus until their next turn. If an enemy attack misses because of this
+    bonus, the character regenerates a +35 Energy points.
 
-    - Explanation: Nikita converts successful evasion into
-    Defense.'
+
+    **Explanation:**
+    The character focuses on avoiding damage and creating opportunities to act again.
+    Successful evasion restores Energy, rewarding players who anticipate enemy attacks
+    and maintain their momentum.
+
+'
   damage: 0
   element: 
-  _chanceToHit: 0
-  _macCost: 1
-  _energyCost: 5
+  _chanceToHit: 1
+  _macCost: 2
+  _energyCost: 10
   abilityType: 1
   range: 0
   aoe: 0

@@ -18,13 +18,14 @@ MonoBehaviour:
     accumulated stacks from Critical Momentum, those bonuses improve her chance of
     landing a critical hit and the resulting critical damage.
 
+
     - Explanation:
     Nikita converts the critical potential she has built up into a powerful attack.
     This gives players a reason to balance weaker, reliable attacks against a more
     expensive strike with greater damage potential.'
   damage: 0
   element: 00000000
-  _chanceToHit: 0.8
+  _chanceToHit: 1
   _macCost: 3
   _energyCost: 20
   abilityType: 1

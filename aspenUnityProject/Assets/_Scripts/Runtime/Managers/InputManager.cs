@@ -51,7 +51,7 @@ namespace _Scripts.Runtime.Managers
             if (Actions == null)
                 return;
 
-            Actions.Global.Enable();
+            Actions.Enable();
         }
 
         private void OnDisable()
@@ -59,7 +59,7 @@ namespace _Scripts.Runtime.Managers
             if (Actions == null)
                 return;
             
-            Actions.Global.Disable();
+            Actions.Disable();
         }
 
         protected override void OnDestroy()

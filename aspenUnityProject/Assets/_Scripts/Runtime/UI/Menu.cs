@@ -24,7 +24,7 @@ namespace _Scripts.Runtime.UI
         /// </summary>
         [field: SerializeField] public bool IsAdditive { get; private set; } = false;
         
-        [field: SerializeField, InfoBox("Not implemented yet", EInfoBoxType.Warning)] public bool StopGameplayInputs { get; private set; } = true;
+        // [field: SerializeField, InfoBox("Not implemented yet", EInfoBoxType.Warning)] public bool StopGameplayInputs { get; private set; } = true;
         public static Selectable TargetSelectedObject { get; private set; }
         /// <summary>
         /// The first object to select when opening this panel.

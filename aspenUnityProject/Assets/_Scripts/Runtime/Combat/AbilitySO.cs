@@ -38,7 +38,7 @@ namespace _Scripts.Runtime.Combat
       //ring-based range. 0=same tile only 1 = one ring around self, etc. 
       [Range(0, 3)] [SerializeField] private int range;
       public int Range => range;
-  
+    
       //area of effect. 0 = only 1 tile affected. 1 = 1 entire ring of tiles surrounding the tile selected affected, etc. 3 is effectively global
       [Range(0,3)] [SerializeField] private int aoe;
       public int AOE => aoe;

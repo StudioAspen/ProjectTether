@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: High Stakes
-  description: '- Effect: Nikita sacrifices some of her Defense to increase her Strength
-    and Critical Damage for 1 turn.
+  description: '**Effect:** The character sacrifices some of their Defense to increase
+    her Strength and Critical Damage.
 
-    - Explanation: Nikita risks her own safety
-    for a greater offensive payoff. This ability supports her glass-cannon play style...I
-    also believe this will have fun synergies to play with.'
+
+    **Explanation:** The character risks
+    their own safety for a greater offensive payoff. I also believe this will have
+    fun synergies to play with. '
   damage: 0
   element: 
   _chanceToHit: 1

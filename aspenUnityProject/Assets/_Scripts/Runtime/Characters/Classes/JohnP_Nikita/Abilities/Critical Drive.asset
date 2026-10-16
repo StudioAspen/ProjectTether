@@ -14,17 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Critical Drive
-  description: '- Effect: Nikita performs a powerful, focused strike. If she has
-    accumulated stacks from Critical Momentum, those bonuses improve her chance of
-    landing a critical hit and the resulting critical damage.
+  description: '**Effect:** The character performs a powerful, focused strike. If
+    you accumulated stacks from Critical Momentum, those bonuses improve the character''s
+    chance of landing a critical hit and the resulting critical damage.
 
-    - Explanation:
-    Nikita converts the critical potential she has built up into a powerful attack.
-    This gives players a reason to balance weaker, reliable attacks against a more
-    expensive strike with greater damage potential.'
+
+    **Explanation:**
+    The Character converts the critical potential they had built up into a powerful
+    attack. This gives players a reason to balance weaker, reliable attacks against
+    a more expensive strike with greater damage potential.'
   damage: 0
   element: 00000000
-  _chanceToHit: 0.8
+  _chanceToHit: 1
   _macCost: 3
   _energyCost: 20
   abilityType: 1

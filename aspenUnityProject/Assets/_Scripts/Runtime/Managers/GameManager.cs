@@ -46,7 +46,10 @@ namespace _Scripts.Runtime.Managers
             _gameStates[State.Combat] = new CombatGameState();
             _gameStates[State.Pause] = new PauseGameState();
             _gameStates[State.Overworld] = new OverworldGameState();
-            
+        }
+
+        private void Start()
+        {
             ChangeGameState(State.MainMenu);
         }
 

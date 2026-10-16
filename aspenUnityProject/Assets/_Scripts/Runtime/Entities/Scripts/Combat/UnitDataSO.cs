@@ -11,6 +11,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
 
     public Sprite Portrait => _portrait;
 
+    [SerializeField] protected string _id;
+    public string Id => _id;
+
     [Space(5)] [SerializeField] protected string _name;
 
     public string Name => _name;

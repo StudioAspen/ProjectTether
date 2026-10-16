@@ -1,3 +1,4 @@
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
@@ -12,7 +13,9 @@ namespace _Scripts.Runtime.Combat
     {
         //19 tiles, max 4 units per tile
         private GameObject[,] tiles = new GameObject[19, 4];
-        
+
+        public UnitDataSO[,] InitializerData = new UnitDataSO[19, 4];
+
         //represents the positions within the tile - the indices cap at 3
         //used for determining the ordering of units when adding them to the tile
         private int[] unitPositions = new int[19];

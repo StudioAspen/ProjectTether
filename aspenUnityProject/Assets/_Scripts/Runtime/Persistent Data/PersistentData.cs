@@ -5,14 +5,14 @@ namespace _Scripts.Runtime.Persistent_Data
 {
     public static class PersistentData
     {
-        public static Encounter CurrentEncounterData { get; private set; } = new();
+        public static EncounterSO CurrentEncounterData { get; private set; } = new();
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
-            CurrentEncounterData = new();
+            CurrentEncounterData = null;
         }
         
-        public static void SetCurrentEncounterData(Encounter encounterData) => CurrentEncounterData = encounterData;
+        public static void SetCurrentEncounterData(EncounterSO encounterData) => CurrentEncounterData = encounterData;
     }
 }

@@ -101,7 +101,7 @@ namespace _Scripts.Runtime.Managers
         //must occur after OnEnable bc other classes will subscribe OnEnable
         void Start()
         {
-            encounter = PersistentData.CurrentEncounterData;
+            encounter = null;
             SortTiles(tilesParent.GetComponentsInChildren<TileController>());
             GenerateCoords();
             CreateObjects(); 

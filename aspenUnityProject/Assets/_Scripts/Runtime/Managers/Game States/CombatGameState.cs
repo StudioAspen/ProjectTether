@@ -8,6 +8,7 @@ namespace _Scripts.Runtime.Managers.Game_States
        {
            InputManager.Instance.Actions.Player.Disable();
            InputManager.Instance.Actions.UI.Enable();
+           InputManager.Instance.Actions.TileSelect.Enable();
 
            InputManager.Instance.LockCursor(false);
            
@@ -21,7 +22,7 @@ namespace _Scripts.Runtime.Managers.Game_States
 
        protected override void OnExit()
        {
-           
+           InputManager.Instance.Actions.TileSelect.Disable();
        }
     }
 }

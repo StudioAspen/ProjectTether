@@ -5,14 +5,17 @@ namespace _Scripts.Runtime.Persistent_Data
 {
     public static class PersistentData
     {
-        public static Encounter CurrentEncounterData { get; private set; } = new();
+        public static EncounterSO CurrentEncounterData { get; private set; }
+        public static bool IsDesignerMode { get; private set; }
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
-            CurrentEncounterData = new();
+            CurrentEncounterData = null;
+            IsDesignerMode = false;
         }
         
-        public static void SetCurrentEncounterData(Encounter encounterData) => CurrentEncounterData = encounterData;
+        public static void SetCurrentEncounterData(EncounterSO encounterData) => CurrentEncounterData = encounterData;
+        public static void SetDesignerMode(bool isDesignerMode) => IsDesignerMode = isDesignerMode;
     }
 }

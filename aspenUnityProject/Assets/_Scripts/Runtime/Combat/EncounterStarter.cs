@@ -18,9 +18,7 @@ namespace _Scripts.Runtime.Combat
                 return;
             }
             
-            Encounter encounter = _encounterData.GenerateEncounter();
-            
-            PersistentData.SetCurrentEncounterData(encounter);
+            PersistentData.SetCurrentEncounterData(_encounterData);
             GameManager.Instance.ChangeGameState(GameManager.State.Combat);
         }
     }

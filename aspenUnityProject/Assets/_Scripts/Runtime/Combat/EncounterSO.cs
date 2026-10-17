@@ -21,17 +21,22 @@ namespace _Scripts.Runtime.Combat
             public List<UnitDataSO> Units = new();
         }
         
-        [field: SerializeField] public List<UnitListWrapper> Data { get; private set; } = new List<UnitListWrapper>();
+        [field: SerializeField] public List<UnitListWrapper> Tiles { get; private set; } = new List<UnitListWrapper>();
         
         private void OnValidate()
         {
-            while (Data.Count < TILE_COUNT)
-                Data.Add(new UnitListWrapper());
-            
-            if (Data.Count > TILE_COUNT)
-                Data = Data.GetRange(0, TILE_COUNT);
+            Validate();
+        }
 
-            foreach (UnitListWrapper listWrapper in Data)
+        public void Validate()
+        {
+            while (Tiles.Count < TILE_COUNT)
+                Tiles.Add(new UnitListWrapper());
+            
+            if (Tiles.Count > TILE_COUNT)
+                Tiles = Tiles.GetRange(0, TILE_COUNT);
+
+            foreach (UnitListWrapper listWrapper in Tiles)
             {
                 // Truncate the list if more than TILE_MAX_UNITS
                 if (listWrapper.Units.Count > TILE_MAX_UNITS)
@@ -42,7 +47,7 @@ namespace _Scripts.Runtime.Combat
         [Button("Clean Null Units")]
         public void CleanNullUnits()
         {
-            foreach (UnitListWrapper listWrapper in Data)
+            foreach (UnitListWrapper listWrapper in Tiles)
             {
                 // Remove null units starting from the end
                 for (int i = listWrapper.Units.Count - 1; i >= 0; i--)
@@ -56,12 +61,40 @@ namespace _Scripts.Runtime.Combat
         /// <summary>
         /// Creates a runtime instance of this encounter with the same units, but can be modified
         /// </summary>
-        /// <returns></returns>
         public EncounterSO CreateRuntimeCopy()
         {
             EncounterSO copy = ScriptableObject.CreateInstance<EncounterSO>();
-            copy.Data = new List<UnitListWrapper>(Data);
+            copy.Tiles = new List<UnitListWrapper>(Tiles);
             return copy;
+        }
+        
+        /// <summary>
+        /// Creates a runtime instance of an encounter with empty data
+        /// </summary>
+        public static EncounterSO CreateEmptyRuntimeInstance()
+        {
+            EncounterSO instance = ScriptableObject.CreateInstance<EncounterSO>();
+            instance.Validate();
+            return instance;
+        }
+        
+        /// <summary>
+        /// Creates a Encounter data runtime instance from battle sim configuration
+        /// </summary>
+        public static EncounterSO CreateRuntimeInstanceFromBattleSim(List<BattlefieldTile> tiles)
+        {
+            EncounterSO encounterData = CreateEmptyRuntimeInstance();
+           
+            for (int tileIndex = 0; tileIndex < tiles.Count; tileIndex++)
+            {
+                if (tiles[tileIndex].FilledSlots.Count < 1)
+                    continue;
+
+                foreach (UnitPieceSlot unitSlot in tiles[tileIndex].FilledSlots)
+                    encounterData.TryAddUnit(tileIndex, unitSlot.Piece.Sim.Data);
+            }
+
+            return encounterData;
         }
 
         public bool TryAddUnit(int tileIndex, UnitDataSO unitData)
@@ -78,13 +111,13 @@ namespace _Scripts.Runtime.Combat
                 return false;
             }
 
-            if (Data[tileIndex].Units.Count >= TILE_MAX_UNITS)
+            if (Tiles[tileIndex].Units.Count >= TILE_MAX_UNITS)
             {
                 Debug.LogWarning($"Can't add unit to full tile at tileIndex {tileIndex}");
                 return false;
             }
             
-            Data[tileIndex].Units.Add(unitData);
+            Tiles[tileIndex].Units.Add(unitData);
             return true;
         }
 
@@ -102,13 +135,13 @@ namespace _Scripts.Runtime.Combat
                 return false;
             }
 
-            if (!Data[tileIndex].Units.Contains(unitData))
+            if (!Tiles[tileIndex].Units.Contains(unitData))
             {
                 Debug.LogWarning($"Can't remove nonexistent unit {unitData.name} at tileIndex {tileIndex}");
                 return false;
             }
             
-            Data[tileIndex].Units.Remove(unitData);
+            Tiles[tileIndex].Units.Remove(unitData);
             return true;
         }
     }

@@ -35,8 +35,6 @@ namespace _Scripts.Runtime.Managers
         [field: SerializeField] public SceneReference MainMenuScene { get; private set; }
         [field: SerializeField] public SceneReference OverworldScene { get; private set; }
         [field: SerializeField] public SceneReference BattleScene { get; private set; }
-
-        public bool DesignerMode { get; private set; }
         
         protected override void Awake()
         {
@@ -56,18 +54,12 @@ namespace _Scripts.Runtime.Managers
         void OnEnable()
         {
             InputManager.Instance.Actions.Global.Pause.performed += Input_OnPause;
-            
-            EncounterManager.encountered += EnterCombat;
-            BattleSimManager.submitted += EnterCombat;
         }
 
         //don't know if this matters with a singleton but who knows 
         void OnDisable()
         {
             InputManager.Instance.Actions.Global.Pause.performed -= Input_OnPause;
-            
-            EncounterManager.encountered -= EnterCombat; 
-            BattleSimManager.submitted -= EnterCombat; 
         }
         
         void Update()
@@ -103,13 +95,6 @@ namespace _Scripts.Runtime.Managers
             _gameStates[CurrentGameState]?.Enter(); 
             
             OnGameStateChanged?.Invoke(CurrentGameState);
-        }
-
-        //probably add an enum or something for the states later
-        void EnterCombat(bool isBattleSim)
-        {
-            ChangeGameState(State.Combat);
-            DesignerMode = isBattleSim;
         }
 
         private void Input_OnPause(InputAction.CallbackContext context)

@@ -26,12 +26,13 @@ namespace _Scripts.Runtime.Managers
     {
         private const float ArbitraryOffset = 10;
         private const int TileNum = 19;
+        
+        private InputSystem_Actions _input;
+        private EncounterSO _currentEncounter;
 
         private bool toggledManualEnemy;
         
-        private Encounter encounter; 
         [SerializeField] private Transform tilesParent;
-        private InputSystem_Actions Input { get; set; }
         private TileController[] TileControllers { get; }= new TileController[TileNum];
 
         /// <summary>
@@ -92,24 +93,23 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         public static event Action<bool> finishedBattle; 
         
-
         private void Awake()
         {
-            Input = InputManager.Instance.Actions;
+            _input = InputManager.Instance.Actions;
+            _currentEncounter = PersistentData.CurrentEncounterData;
         }
 
         //must occur after OnEnable bc other classes will subscribe OnEnable
-        void Start()
+        private void Start()
         {
-            encounter = null;
             SortTiles(tilesParent.GetComponentsInChildren<TileController>());
             GenerateCoords();
             CreateObjects(); 
             
             rangeDisplay.Initialize(TileControllers);
             
-            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
-            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
+            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
+            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
             CombatUI.PlayerAction += HandleAction;
             CombatUI.PlayerSelectiveAction += HandleAction;
             CombatUI.ToggledManualEnemy += ToggleManualEnemy;
@@ -117,17 +117,17 @@ namespace _Scripts.Runtime.Managers
                 _actionStatusDic.Add(status.StatusId, status);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             CombatUI.PlayerAction -= HandleAction;
             CombatUI.PlayerSelectiveAction -= HandleAction;
-            Input.TileSelect.Disable();
+            _input.TileSelect.Disable();
             TurnOrder.Clear();
             PlayerUnits.Clear();
         }
 
         //TODO: allow player to choose between allies when they have tied initiative?
-        void Update()
+        private void Update()
         {
             if (TurnOrder.UpdateInitiatives() && !_currentlyInTurn)
                 ChangeTurn();
@@ -142,49 +142,54 @@ namespace _Scripts.Runtime.Managers
             } 
         }
         
-
-
-        void CreateObjects()
+        private void CreateObjects()
         {
-            if (encounter == null)
+            if (_currentEncounter == null)
             {
                 Debug.LogWarning($"CombatManager: Encounter is null, can't create objects");
                 return;
             }
             
-            for (int tile = 0; tile < encounter.TotalTiles(); tile++)
+            for (int tileIndex = 0; tileIndex < _currentEncounter.Tiles.Count; tileIndex++)
             {
-                if (encounter.UnitCountAtTile(tile) < 1) 
-                    continue; 
-                for (int unit = 0; unit < encounter.MaxUnitsPerTile(); unit++)
+                if (_currentEncounter.Tiles[tileIndex].Units.Count == 0) 
+                    continue;
+
+                TileController tileController = TileControllers[tileIndex];
+                
+                foreach (UnitDataSO unitData in _currentEncounter.Tiles[tileIndex].Units)
                 {
-                    if (unit > encounter.UnitCountAtTile(tile) - 1)
-                        break;
-                    GameObject newTempObject = Instantiate(encounter[tile,unit], TileControllers[tile].Position(), Quaternion.Euler(-90f,0,0));
-                    //set up controllers after object instantiation so objects don't override each other's data
-                    //the newly cloned object does not share the same reference as the original prefab, so there is no overriding
-                    if (encounter.InitializerData[tile, unit].Faction == Faction.Ally)
+                    if (unitData.Model == null)
                     {
-                        TileControllers[tile].AddUnit(newTempObject.GetComponent<AllyUnitController>());
-                        _totalAllies++;
-                        PlayerUnits.Add((AllyUnitController)TileControllers[tile].PeekUnit());
+                        Debug.LogWarning($"UnitData {unitData.name} is missing model prefab");
+                        continue;
                     }
-                    else if (encounter.InitializerData[tile, unit].Faction == Faction.Enemy)
+                    
+                    UnitController unitController = Instantiate(unitData.Model, TileControllers[tileIndex].Position(), Quaternion.Euler(-90f,0,0)).GetComponent<UnitController>();
+                    if (unitData.Faction == Faction.Ally)
                     {
-                        TileControllers[tile].AddUnit(newTempObject.GetComponent<EnemyUnitController>());
+                        tileController.AddUnit(unitController);
+                        PlayerUnits.Add(unitController as AllyUnitController);
+                        
+                        _totalAllies++;
+                    }
+                    else if (unitData.Faction == Faction.Enemy)
+                    {
+                        tileController.AddUnit(unitController);
+                        
                         _totalEnemies++;
                     }
-                    else 
-                        Debug.Log("neutral units not yet implemented");
-//                    Debug.Log($"{tile}: {unit}, {tileControllers[tile].UnitCount()}");
-                    TileControllers[tile].GetUnitAt(unit).Initialize(encounter.InitializerData[tile,unit]);
-                    //TODO: add a unit method (prob abstract) here later to override the data with data from ow if there is ow data
-                    TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
-                    TurnOrder.Add(TileControllers[tile].GetUnitAt(unit));
-                    TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
-                    Debug.Log(TileControllers[tile].UnitControllers[unit].GetData().Name);
+                    else
+                    {
+                        Debug.Log($"Neutral units not yet implemented");
+                    }
+                    
+                    unitController.Initialize(unitData);
+                    unitController.SetTile(tileController.tileCoordinate);
+                    TurnOrder.Add(unitController);
                 }
-                TileControllers[tile].RepositionUnits(ArbitraryOffset);
+                
+                tileController.RepositionUnits(ArbitraryOffset);
             }
         }
 

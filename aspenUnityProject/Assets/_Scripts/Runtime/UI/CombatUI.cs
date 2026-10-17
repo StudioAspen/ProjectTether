@@ -4,6 +4,7 @@ using _Scripts.Runtime.Combat.States.CombatManagerStates;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Managers;
+using _Scripts.Runtime.Persistent_Data;
 using _Scripts.Runtime.Tile_System.Scripts;
 using TMPro;
 using UnityEngine;
@@ -37,9 +38,8 @@ namespace _Scripts.Runtime.UI {
 
         private void Awake()
         {
-            _designerMode = GameManager.Instance.DesignerMode;
+            _designerMode = PersistentData.IsDesignerMode;
         }
-
 
         void OnEnable()
         {

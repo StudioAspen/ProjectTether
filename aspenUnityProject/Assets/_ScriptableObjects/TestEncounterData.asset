@@ -12,41 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc74228e44674d649feffd3909e476e6, type: 3}
   m_Name: TestEncounterData
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.EncounterSO
-  <Data>k__BackingField:
-    _serializedList:
-    - Key: 1
-      Value: []
-    - Key: 2
-      Value: []
-    - Key: 3
-      Value: []
-    - Key: 4
-      Value: []
-    - Key: 5
-      Value: []
-    - Key: 6
-      Value: []
-    - Key: 7
-      Value: []
-    - Key: 8
-      Value: []
-    - Key: 9
-      Value: []
-    - Key: 10
-      Value: []
-    - Key: 11
-      Value: []
-    - Key: 12
-      Value: []
-    - Key: 13
-      Value: []
-    - Key: 14
-      Value: []
-    - Key: 15
-      Value: []
-    - Key: 16
-      Value: []
-    - Key: 17
-      Value: []
-    - Key: 18
-      Value: []
+  <Tiles>k__BackingField:
+  - Units:
+    - {fileID: 11400000, guid: 97b085f22f7ed431da5b68640b52fbbd, type: 2}
+    - {fileID: 11400000, guid: eeb24e9af0d794225b67dfa2b0aad5f8, type: 2}
+  - Units:
+    - {fileID: 11400000, guid: dd6afaf7779e0b84498280ad840254d0, type: 2}
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []

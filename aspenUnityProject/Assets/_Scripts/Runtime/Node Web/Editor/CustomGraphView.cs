@@ -141,9 +141,18 @@ public class CustomGraphView : GraphView
 
     public void PopulateView(NodeWebGraphSO nodeWebGraphAssest)
     {
+        if (nodeWebGraphAssest == null)
+        {
+            Debug.Log("No active Node Web Graph");
+            return;
+        }
+
+        Debug.Log($"Loaded a new node web: {nodeWebGraphAssest}");
+
         this._activeNodeWebGraph = nodeWebGraphAssest;
         this._isPopulating = true;
-        //this.DeleteElements(graphElements.ToList());
+        this.DeleteElements(graphElements.ToList());
+
         // Deleting Elements
         var elements = graphElements.ToList();
         foreach (var element in elements)
@@ -251,6 +260,7 @@ public class CustomGraphView : GraphView
                 string filePath = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Abilitys/{fileName}";
 
                 AssetDatabase.CreateAsset(abilitySO, filePath);
+                AssetDatabase.SaveAssets();
                 break;
             case SkillNodeSO skillNodeSO:
                 SkillSO skillSO = ScriptableObject.CreateInstance<SkillSO>();
@@ -259,6 +269,7 @@ public class CustomGraphView : GraphView
                 string fileName2 = $"Skill_{guid}.asset";
                 string filePath2 = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Skills/{fileName2}";
                 AssetDatabase.CreateAsset(skillSO, filePath2);
+                AssetDatabase.SaveAssets();
                 break;
             case StatNodeSO statNodeSO:
                 StatSO statSO = ScriptableObject.CreateInstance<StatSO>();
@@ -267,6 +278,7 @@ public class CustomGraphView : GraphView
                 string fileName3 = $"Stat_{guid}.asset";
                 string filePath3 = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Stats/{fileName3}";
                 AssetDatabase.CreateAsset(statSO, filePath3);
+                AssetDatabase.SaveAssets();
                 break;
         }
 

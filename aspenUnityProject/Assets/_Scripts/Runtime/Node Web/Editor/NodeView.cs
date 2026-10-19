@@ -1,5 +1,4 @@
 using _Scripts.Runtime.Combat;
-using Codice.CM.Client.Differences;
 using Slinky.NodeWeb;
 using Unity.VectorGraphics;
 using UnityEditor;
@@ -68,6 +67,14 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
         CreateNameTextField<StatNodeSO>(statNode);
         CreateUnlockToggle<StatNodeSO>(node: statNode, unlockColor: Color.lightGreen, lockColor: Color.darkGreen);
+
+        CreateIntegerSlider("Health", Stat.HP, stat);
+        CreateIntegerSlider("Strength", Stat.STR, stat);
+        CreateIntegerSlider("Tech", Stat.TEC, stat);
+        CreateIntegerSlider("Defense", Stat.DEF, stat);
+        CreateIntegerSlider("Resistance", Stat.RES, stat);
+        CreateIntegerSlider("Speed", Stat.SPE, stat);
+        CreateIntegerSlider("Luck", Stat.LCK, stat);
 
         this.RefreshExpandedState();
     }
@@ -178,6 +185,45 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         this.extensionContainer.Add(unlockedToogle);
     }
 
+    void CreateIntegerSlider(string name, Stat stat, StatSO statSO)
+    {
+        SliderInt intSlider = new SliderInt(name, 0, 10, SliderDirection.Horizontal);
+        intSlider.showInputField = true;
+
+        intSlider.RegisterValueChangedCallback(evt =>
+        {
+            int val = evt.newValue;
+
+            switch (stat)
+            {
+                case Stat.HP:
+                    statSO.SetHealth(val);
+                    break;
+                case Stat.STR:
+                    statSO.SetStrength(val);
+                    break;
+                case Stat.TEC:
+                    statSO.SetTech(val);
+                    break;
+                case Stat.DEF:
+                    statSO.SetDefense(val);
+                    break;
+                case Stat.RES:
+                    statSO.SetResistance(val);
+                    break;
+                case Stat.SPE:
+                    statSO.SetSpeed(val);
+                    break;
+                case Stat.LCK:
+                    statSO.SetLuck(val);
+                    break;
+            }
+
+            EditorUtility.SetDirty(statSO);
+        });
+
+        this.extensionContainer.Add(intSlider);
+    }
 
     public override void SetPosition(Rect newPos)
     {

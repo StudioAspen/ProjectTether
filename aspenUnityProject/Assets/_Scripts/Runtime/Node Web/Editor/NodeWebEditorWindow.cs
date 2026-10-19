@@ -7,8 +7,7 @@ using Slinky.NodeWeb;
 public class NodeWebEditorWindow : EditorWindow
 {
     CustomGraphView _treeCanvas;
-    [field: SerializeField] public static bool IsNodeWebGraphActive { get; private set; }
-    [field: SerializeField] public static NodeWebGraphSO CurrentNodeWebGraph { get; private set; }
+    NodeWebGraphSO _currentNodeWebGraph = null;
 
     [MenuItem("Window/Node Web Editor")]
     static void OpenWindow()
@@ -27,9 +26,9 @@ public class NodeWebEditorWindow : EditorWindow
 
         nodeWebGraphSelector.RegisterValueChangedCallback(evt =>
         {
-            Debug.Log($"Loaded a new node web: {evt.newValue}");
-            
-            _treeCanvas.PopulateView(evt.newValue as NodeWebGraphSO);
+            _currentNodeWebGraph = evt.newValue as NodeWebGraphSO ?? null;
+            _treeCanvas.PopulateView(_currentNodeWebGraph);
+
         });
 
         _treeCanvas = new CustomGraphView();

@@ -165,7 +165,7 @@ namespace _Scripts.Runtime.Managers
                         continue;
                     }
                     
-                    UnitController unitController = Instantiate(unitData.Model, TileControllers[tileIndex].Position(), Quaternion.Euler(-90f,0,0)).GetComponent<UnitController>();
+                    UnitController unitController = Instantiate(unitData.Model, TileControllers[tileIndex].Position(), Quaternion.Euler(-90f,0,0));
                     if (unitData.Faction == Faction.Ally)
                     {
                         tileController.AddUnit(unitController);

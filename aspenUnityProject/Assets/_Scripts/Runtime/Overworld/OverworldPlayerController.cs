@@ -1,8 +1,11 @@
+using System;
 using _Scripts.Runtime.Managers;
+using _Scripts.Runtime.Persistent_Data;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Overworld
 {
+    [RequireComponent(typeof(CharacterController))]
     public class OverworldPlayerController : MonoBehaviour
     {
         [SerializeField] private float _speed = 5f; // Controls how fast the player moves:
@@ -12,6 +15,8 @@ namespace _Scripts.Runtime.Overworld
     
         private Transform _mainCamera;
         private CharacterController _controller;
+
+        private Vector2 _moveInput;
     
         void Awake()
         {
@@ -20,11 +25,28 @@ namespace _Scripts.Runtime.Overworld
             _mainCamera = Camera.main.transform;
         }
 
+        private void Start()
+        {
+            transform.position = GameSession.PlayerData.OverworldPosition;
+        }
+
         void Update()
         {
+            ReadInput();
+            ApplyMovement();
+            
+            // Update our session position
+            GameSession.PlayerData.OverworldPosition = transform.position;
+        }
+
+        private void ReadInput()
+        {
             // Player's movement input is read:
-            Vector2 moveInput = InputManager.Instance.Actions.Player.Move.ReadValue<Vector2>();
+            _moveInput = InputManager.Instance.Actions.Player.Move.ReadValue<Vector2>();
+        }
         
+        private void ApplyMovement()
+        {
             // Gets the camera's forward direction and keeps movement on the ground:
             Vector3 cameraForward = _mainCamera.forward;
             cameraForward.y = 0;
@@ -36,7 +58,7 @@ namespace _Scripts.Runtime.Overworld
             cameraDirection.Normalize();
 
             // Uses the camera's direction to decide where the player moves:
-            Vector3 moveDirection = cameraDirection  * moveInput.x + cameraForward * moveInput.y;
+            Vector3 moveDirection = cameraDirection  * _moveInput.x + cameraForward * _moveInput.y;
             moveDirection = Vector3.ClampMagnitude(moveDirection,1);
 
             if(_controller.isGrounded && _verticalVelocity < 0)

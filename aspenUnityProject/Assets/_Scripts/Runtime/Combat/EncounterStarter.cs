@@ -18,7 +18,7 @@ namespace _Scripts.Runtime.Combat
                 return;
             }
             
-            PersistentData.SetCurrentEncounterData(_encounterData);
+            GameSession.SetCurrentEncounterData(_encounterData);
             GameManager.Instance.ChangeGameState(GameManager.State.Combat);
         }
     }

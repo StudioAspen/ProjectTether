@@ -111,8 +111,8 @@ public class BattleSimManager : Manager<BattleSimManager>
 
   public void StartBattle()
   {
-    PersistentData.SetCurrentEncounterData(EncounterSO.CreateRuntimeInstanceFromBattleSim(BattlefieldMap.Instance.Tiles));
-    PersistentData.SetDesignerMode(true);
+    GameSession.SetCurrentEncounterData(EncounterSO.CreateRuntimeInstanceFromBattleSim(BattlefieldMap.Instance.Tiles));
+    GameSession.SetDesignerMode(true);
     GameManager.Instance.ChangeGameState(GameManager.State.Combat);
   }
 }

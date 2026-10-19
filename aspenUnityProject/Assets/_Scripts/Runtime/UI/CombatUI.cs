@@ -38,7 +38,7 @@ namespace _Scripts.Runtime.UI {
 
         private void Awake()
         {
-            _designerMode = PersistentData.IsDesignerMode;
+            _designerMode = GameSession.IsDesignerMode;
         }
 
         void OnEnable()

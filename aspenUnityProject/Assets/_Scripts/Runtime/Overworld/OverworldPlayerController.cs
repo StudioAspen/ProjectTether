@@ -23,20 +23,20 @@ namespace _Scripts.Runtime.Overworld
             // Grabs the components and camera reference this script needs:
             _controller = GetComponent<CharacterController>();
             _mainCamera = Camera.main.transform;
-        }
-
-        private void Start()
-        {
-            transform.position = GameSession.PlayerData.OverworldPosition;
+            
+            transform.position = GameSession.Instance.PlayerData.OverworldPosition;
         }
 
         void Update()
         {
             ReadInput();
             ApplyMovement();
-            
-            // Update our session position
-            GameSession.PlayerData.OverworldPosition = transform.position;
+        }
+
+        private void OnDestroy()
+        {
+            GameSession.Instance.PlayerData.OverworldPosition = transform.position;
+            GameSession.Instance.Save();
         }
 
         private void ReadInput()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace _Scripts.Runtime.Persistent_Data
 {
@@ -6,5 +7,6 @@ namespace _Scripts.Runtime.Persistent_Data
     public class PlayerData
     {
         public Vector3 OverworldPosition = Vector3.zero;
+        public List<string> DefeatedOverworldEnemyIds = new List<string>();
     }
 }

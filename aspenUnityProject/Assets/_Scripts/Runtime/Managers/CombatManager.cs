@@ -96,7 +96,7 @@ namespace _Scripts.Runtime.Managers
         private void Awake()
         {
             _input = InputManager.Instance.Actions;
-            _currentEncounter = GameSession.CurrentEncounterData;
+            _currentEncounter = GameSession.Instance.CurrentEncounterData;
         }
 
         //must occur after OnEnable bc other classes will subscribe OnEnable

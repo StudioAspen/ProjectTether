@@ -1,5 +1,6 @@
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Persistent_Data;
+using _Scripts.Runtime.Entities.Scripts.Overworld;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace _Scripts.Runtime.Combat
                 return;
             }
             
-            GameSession.SetCurrentEncounterData(_encounterData);
+            GameSession.Instance.SetCurrentEncounterData(_encounterData);
             GameManager.Instance.ChangeGameState(GameManager.State.Combat);
         }
     }

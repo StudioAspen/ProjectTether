@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Husky_Suit
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Characters.Scripts.SuitBaseDataSO
   _classType: 0
-  _energyCapacity: 0
-  _skillCapacity: 0
-  _abilityCapacity: 0
+  _energyCapacity: 10
+  _skillCapacity: 1
+  _abilityCapacity: 1

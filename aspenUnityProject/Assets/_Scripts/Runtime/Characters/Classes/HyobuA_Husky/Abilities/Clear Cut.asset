@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Clear Cut
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: 
-  description: 
-  damage: 0
+  abilityName: Clear Cut
+  description: An Ability that has Both Slash + Water affinities.
+  damage: 50
   element: 
-  _chanceToHit: 0
-  _macCost: 0
-  _energyCost: 0
-  abilityType: 0
-  range: 0
+  _chanceToHit: 0.9
+  _macCost: 2
+  _energyCost: 7
+  abilityType: 1
+  range: 1
   aoe: 0
-  hitsEnemies: 0
+  hitsEnemies: 1
   hitsAllies: 0
-  canTargetEmptyTile: 0
-  canMiss: 0
+  canTargetEmptyTile: 1
+  canMiss: 1

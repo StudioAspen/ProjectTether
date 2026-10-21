@@ -13,17 +13,26 @@ MonoBehaviour:
   m_Name: Pierce Pointer
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: 
-  description: 
-  damage: 0
+  abilityName: Pierce Pointer
+  description: 'Does pierce damage
+
+    Damage (if applicable): low pierce damage
+    (40 Base Power)
+
+    A pierce ability that attacks 2 tiles from the user. One
+    tile from the left and the other at the right while the user is between the two.
+
+    Range/Targeting:
+    two tiles from left and right from the user'
+  damage: 40
   element: 
-  _chanceToHit: 0
-  _macCost: 0
-  _energyCost: 0
-  abilityType: 0
-  range: 0
+  _chanceToHit: 1
+  _macCost: 3
+  _energyCost: 9
+  abilityType: 1
+  range: 2
   aoe: 0
-  hitsEnemies: 0
+  hitsEnemies: 1
   hitsAllies: 0
-  canTargetEmptyTile: 0
+  canTargetEmptyTile: 1
   canMiss: 0

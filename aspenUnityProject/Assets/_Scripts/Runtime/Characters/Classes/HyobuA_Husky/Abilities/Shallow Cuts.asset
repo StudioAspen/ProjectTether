@@ -13,17 +13,26 @@ MonoBehaviour:
   m_Name: Shallow Cuts
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: 
-  description: 
-  damage: 0
+  abilityName: Shallow Cuts
+  description: 'Slash Damage + Slightly increases the more you use it multiple times
+    in a row
+
+    Damage (if applicable): Base power = 1.0 (around 40 base Power)
+
+    This
+    Ability slowly increases power the more the player keeps selecting it. The Power
+    gets increased by .5. For example: Since the Base Power is 1.0 and the player
+    uses Trimming the first time, when the player selects the ability again the power
+    will become 1.5.'
+  damage: 40
   element: 
-  _chanceToHit: 0
-  _macCost: 0
-  _energyCost: 0
-  abilityType: 0
-  range: 0
+  _chanceToHit: 0.8
+  _macCost: 3
+  _energyCost: 5
+  abilityType: 1
+  range: 3
   aoe: 0
-  hitsEnemies: 0
+  hitsEnemies: 1
   hitsAllies: 0
-  canTargetEmptyTile: 0
-  canMiss: 0
+  canTargetEmptyTile: 1
+  canMiss: 1

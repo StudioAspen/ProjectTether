@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
   m_Name: Streetwise_Gambit
   m_EditorClassIdentifier: Assembly-CSharp::Skill
-  name: 
-  effect: 
-  triggerCondition: 
-  explanation: 
+  name: Streetwise Gambit
+  effect: Buffs ATK
+  triggerCondition: When the character successfully defeats an enemy with no damage
+  explanation: "When a character defeats an enemy and hasn't taken damage before
+    the skill triggers, it rewards the character with an ATK buff. Think of this
+    as Moxie from Pok\xE9mon, but you need to plan out how you're going to trigger
+    it."

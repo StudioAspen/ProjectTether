@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Dark Edge
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: 
-  description: 
-  damage: 0
+  abilityName: Dark Edge
+  description: 'Effect: Deals Slash Damage and applies Damp status effect when attacked.'
+  damage: 40
   element: 
-  _chanceToHit: 0
-  _macCost: 0
-  _energyCost: 0
-  abilityType: 0
-  range: 0
+  _chanceToHit: 1
+  _macCost: 1
+  _energyCost: 5
+  abilityType: 1
+  range: 1
   aoe: 0
-  hitsEnemies: 0
+  hitsEnemies: 1
   hitsAllies: 0
-  canTargetEmptyTile: 0
+  canTargetEmptyTile: 1
   canMiss: 0

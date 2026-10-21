@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
   m_Name: Wide_Coverage
   m_EditorClassIdentifier: Assembly-CSharp::Skill
-  name: 
-  effect: 
-  triggerCondition: 
-  explanation: 
+  name: Wide Coverage
+  effect: Basic attacks now splash 50% of their damage onto the 2 adjacent tiles
+    closest to the player. Basic attacks also regenerate 50% more energy.
+  triggerCondition: When a basic attack is made.
+  explanation: Makes basic attacks and counters more useful.

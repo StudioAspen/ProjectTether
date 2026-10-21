@@ -12,7 +12,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
   m_Name: Husky_InnateSkill
   m_EditorClassIdentifier: Assembly-CSharp::Skill
-  name: 
-  effect: 
-  triggerCondition: 
-  explanation: 
+  name: "B\u014Dgyu H\xE9 Assault"
+  effect: "Automatically switches between Attack (Assault) and Defense (B\u014Dgyu)
+    stances through a player's damage dealing and defend actions."
+  triggerCondition: A player using basic attack/damage dealing abilities or defend
+    as actions.
+  explanation: 'Attack Stance: In the attack stance, basic attacks and damage dealing
+    abilities apply a debuff named Hunt (Max of 2 stacks, stacks remain until consumed).
+
+    
+
+    Defense
+    Stance: In the defense stance, after receiving a direct attack from an enemy
+    within melee range, automatically counterattack that tile.
+
+
+    The character
+    starts combat in the attack stance.
+
+    
+
+    Choosing defend immediately
+    enters the defense stance, granting defense effects (refer to Basic Actions)
+    and counterattacking the tile the attacking enemy is on.
+
+    
+
+    Only one
+    counter between each duelist turn. Counters cannot trigger other counters, switch
+    stances, generate energy, count as a turn, or apply Hunt.
+
+    
+
+    The defense
+    stance remains until using a basic attack or damage dealing ability, returning
+    to the attack stance and applying Hunt while doing so.
+
+    
+
+    In attack
+    stance, basic attacks and damage dealing abilities apply Hunt to all enemies
+    on the targeted tile, max of one per duelist turn.
+
+    
+
+    Enemies with
+    Hunt stacks receive 5% more damage per stack, max of 10%.
+
+    
+
+    Attacking
+    a tile where at least one enemy already has 2 Hunt stacks using a basic attack,
+    ability, or counter re-uses that move against the whole tile once and removes
+    all Hunt stacks from enemies who had 2. Enemies below 2 however gain a stack
+    from the original attack, potentially setting up another re-use next turn, unless
+    it was a counter. The repeated move does not apply or trigger Hunt and only one
+    repeated move can happen per original attack, regardless of how many enemies
+    on the tile had 2 Hunt stacks.
+
+    
+
+    Non-damaging abilities, items, and
+    movement do not switch stances. Both stances have access to all equipped abilities.'

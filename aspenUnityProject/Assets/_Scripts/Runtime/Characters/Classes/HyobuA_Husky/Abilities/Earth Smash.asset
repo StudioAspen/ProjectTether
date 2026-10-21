@@ -13,17 +13,18 @@ MonoBehaviour:
   m_Name: Earth Smash
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: 
-  description: 
+  abilityName: Earth Smash
+  description: "Deals Earth + Blunt Damage \nDamage (if applicable): low blunt damage
+    (45 base power)"
   damage: 0
   element: 
-  _chanceToHit: 0
-  _macCost: 0
-  _energyCost: 0
-  abilityType: 0
-  range: 0
+  _chanceToHit: 0.9
+  _macCost: 2
+  _energyCost: 5
+  abilityType: 1
+  range: 1
   aoe: 0
-  hitsEnemies: 0
+  hitsEnemies: 1
   hitsAllies: 0
-  canTargetEmptyTile: 0
-  canMiss: 0
+  canTargetEmptyTile: 1
+  canMiss: 1

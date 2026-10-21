@@ -15,27 +15,48 @@ MonoBehaviour:
   defaultAttackElements: 
   _className: 
   _defaultAttackRange: 0
-  _classDescription: 
-  effects: []
-  explanations: []
+  _classDescription: 'Description: A close range physical fighter who switches between
+    attacking and defensive stances, depending on whether they want to keep up the
+    assault or prepare for incoming hits while still having the opportunity to dish
+    out damage.'
+  effects:
+  - 'Gain a strength percentage boost per enemy currently applied with Hunt, Tier
+    1 (Moderate): 20%, Tier 2 (High): 40%, Tier 3 (Extreme): 60%.'
+  - 'Defending Overclock
+
+    Effect:Gain a starting 50% chance, increasing with
+    25% per tier to fully negate oncoming damage, and empowering the next counter
+    by the chance percentage if an attack was successfully negated.(Essentially a
+    parry.)'
+  explanations:
+  - "Pretty self explanatory, if there\u2019s 3 enemies let\u2019s say currently
+    with the Hunt debuff, then at a moderate overclock tier, duelist would get a
+    60% strength buff (was thinking about doing individual stacks at first, but I
+    feel just counting the enemies would be smoother.) This would encourage spreading
+    hunt as much as possible, and set up a massive attack buff with the other effects
+    in mind."
+  - "Explanation:Example, after overclocking once and doing defend as an action,
+    there would be a 50% chance when getting hit to fully negate that damage, and
+    increase the incoming counter percent based damage by 50%. Otherwise, if an attack
+    wasn\u2019t negated, counter would still apply normally."
   _overclockedStats: 
   _overclockedStatsPercent: []
   _overclockedModifier: []
-  _health: 0
-  _energy: 0
+  _health: 1
+  _energy: 4
   _strength: 0
-  _defense: 0
-  _tech: 0
-  _resistance: 0
-  _speed: 0
-  _luck: 0
-  _precision: 0
-  _evasion: 0
-  _blunt: 0
+  _defense: 1
+  _tech: 2
+  _resistance: 3
+  _speed: 2
+  _luck: 4
+  _precision: 4
+  _evasion: 4
+  _blunt: 2
   _slash: 0
   _pierce: 0
-  _blast: 0
+  _blast: 1
   _water: 0
-  _earth: 0
+  _earth: 2
   _wind: 0
-  _fire: 0
+  _fire: 1

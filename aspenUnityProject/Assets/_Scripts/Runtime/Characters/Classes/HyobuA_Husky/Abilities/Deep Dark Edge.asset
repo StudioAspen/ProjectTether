@@ -13,17 +13,25 @@ MonoBehaviour:
   m_Name: Deep Dark Edge
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  abilityName: 
-  description: 
-  damage: 0
+  abilityName: Deep Dark Edge
+  description: 'Effect: low Slash Damage + Attack Down
+
+    Damage (if applicable):
+    low slash damage (50 base power)
+
+    Range/Targetting: Single tile next to the
+    user
+
+    A Slash ability that can lower enemy Attack.'
+  damage: 50
   element: 
-  _chanceToHit: 0
-  _macCost: 0
-  _energyCost: 0
-  abilityType: 0
+  _chanceToHit: 1
+  _macCost: 2
+  _energyCost: 5
+  abilityType: 3
   range: 0
   aoe: 0
-  hitsEnemies: 0
+  hitsEnemies: 1
   hitsAllies: 0
-  canTargetEmptyTile: 0
+  canTargetEmptyTile: 1
   canMiss: 0

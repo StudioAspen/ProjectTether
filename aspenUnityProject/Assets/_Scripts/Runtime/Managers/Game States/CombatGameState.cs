@@ -1,26 +1,28 @@
-using _Scripts.Runtime.Combat.States.ContextData;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Managers.Game_States
 {
     public class CombatGameState : GameState
     {
-       public CombatGameState (GameStateContext gameStateContext) : base(gameStateContext) { }
-       
        public override void Enter()
        {
-           Debug.Log("combat game state entered");
-           gameStateContext.PreviousStates.Push(this);
-           UnityEngine.SceneManagement.SceneManager.LoadScene("battleScene");
+           InputManager.Instance.Actions.Player.Disable();
+           InputManager.Instance.Actions.UI.Enable();
+           InputManager.Instance.Actions.TileSelect.Enable();
+
+           InputManager.Instance.LockCursor(false);
+           
+           GameManager.ChangeScene(GameManager.Instance.BattleScene.Name);
        }
+       
        public override void Update()
        {
            
        }
 
-       public override void Exit()
+       protected override void OnExit()
        {
-           gameStateContext.PreviousStates.Pop();
+           InputManager.Instance.Actions.TileSelect.Disable();
        }
     }
 }

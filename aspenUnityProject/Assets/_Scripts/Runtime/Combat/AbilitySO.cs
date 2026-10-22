@@ -13,7 +13,7 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private string abilityName;
       public string Name => name;
       
-      [SerializeField] private string description;
+      [SerializeField][TextArea(3,10)] private string description;
       public string Description => description;
 
       //make negative for healing moves 
@@ -22,14 +22,23 @@ namespace _Scripts.Runtime.Combat
 
       [SerializeField] private Element[] element; 
       public Element[] Element => element;
-  
+
+
+      [SerializeField] private float _chanceToHit;
+      public float ChanceToHit => _chanceToHit;
+
+      [SerializeField] private float _macCost;
+      public float MACCost => _macCost;
+
+      [SerializeField] private float _energyCost;
+      public float EnergyCost => _energyCost;
       [SerializeField] private AbilityType abilityType;
       public AbilityType AbilityType => abilityType;
 
       //ring-based range. 0=same tile only 1 = one ring around self, etc. 
       [Range(0, 3)] [SerializeField] private int range;
       public int Range => range;
-  
+    
       //area of effect. 0 = only 1 tile affected. 1 = 1 entire ring of tiles surrounding the tile selected affected, etc. 3 is effectively global
       [Range(0,3)] [SerializeField] private int aoe;
       public int AOE => aoe;
@@ -48,15 +57,15 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private bool canMiss;
       public bool CanMiss => canMiss;
 
-      //not useful in MVP. This is for when we decide to have attacks affect tiles.
-      //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 
-      /*
-   [SerializeField] private TileSO tileEffect;
-   public TileSO TileEffect => tileEffect;
-   */
+        //not useful in MVP. This is for when we decide to have attacks affect tiles.
+        //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 
+        /*
+     [SerializeField] private TileSO tileEffect;
+     public TileSO TileEffect => tileEffect;
+     */
 
-      //we can add specific unique ranges later by having an array of cube coordinate directions
+        //we can add specific unique ranges later by having an array of cube coordinate directions
 
-
-   }
+        public void SetName(string name) => abilityName = name;
+    }
 }

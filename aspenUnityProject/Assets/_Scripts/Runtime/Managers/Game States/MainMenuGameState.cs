@@ -1,26 +1,29 @@
-using _Scripts.Runtime.Combat.States.ContextData;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Scripts.Runtime.Managers.Game_States
 {
     public class MainMenuGameState : GameState
     {
-        public MainMenuGameState(GameStateContext gameStateContext) : base(gameStateContext) { }
-
         //honestly not sure what's going to be here for the starting menu 
         public override void Enter()
         {
-            Debug.Log("Main menu transitions are not ready, sorry!");
+            InputManager.Instance.Actions.Player.Disable();
+            InputManager.Instance.Actions.UI.Enable();
+            
+            InputManager.Instance.LockCursor(false);
+            
+            GameManager.ChangeScene(GameManager.Instance.MainMenuScene.Name);
         }
 
         public override void Update()
         {
+            
         }
 
-        public override void Exit()
+        protected override void OnExit()
         {
             
         }
-        
     }
 }

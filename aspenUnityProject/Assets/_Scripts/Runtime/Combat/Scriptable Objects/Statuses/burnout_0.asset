@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce907491f3f8ba6aeae035b49768d9cd, type: 3}
+  m_Name: burnout_0
+  m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.StatusSO
+  _statusId: burnout_0
+  _statusName: Burnout
+  _statusDescription: '[same as burnout 1]'
+  _damageTakenMultiplier: 1
+  _damageTakenPerTurn: 1
+  _duration: 1
+  _isStun: 0
+  hasStackableEffects: 0
+  _statsModified: []
+  _GenericStatsModified: []
+  _statusTimeline:
+  - turnToAdd: 1
+    statusToAdd: {fileID: 11400000, guid: cc848e950ade17b1f8540b81b0106237, type: 2}

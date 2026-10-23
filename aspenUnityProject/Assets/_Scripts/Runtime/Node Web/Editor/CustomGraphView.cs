@@ -73,7 +73,8 @@ public class CustomGraphView : GraphView
                 parentView.DataReference.UnlockIDs.Add(childView.DataReference.GUID);
                 childView.DataReference.PrerequisitesIDs.Add(parentView.DataReference.GUID);
 
-                Debug.Log($"Parent Node Children: {childView.DataReference.UnlockIDs.Count}");
+                // This checks to see if a recenetly attached node to the skill node preresquites is active
+                if (childView.DataReference is SkillNodeSO skillNode) skillNode.SetSkillNodeActive();
             }
         }
 
@@ -90,12 +91,14 @@ public class CustomGraphView : GraphView
                     parentView.DataReference.UnlockIDs.Remove(childView.DataReference.GUID);
                     childView.DataReference.PrerequisitesIDs.Remove(parentView.DataReference.GUID);
 
-                    Debug.Log($"Parent Node Children: {childView.DataReference.UnlockIDs.Count}");
+                    // This checks to see if all the remaing preresquite nodes to the skill node preresquites is active
+                    if (childView.DataReference is SkillNodeSO skillNode) skillNode.SetSkillNodeActive();
                 }
 
                 if (ele is NodeView deletedNode)
                 {
                     _activeNodeWebGraph.AllNodes.Remove(deletedNode.DataReference);
+                    _activeNodeWebGraph.AllNodesDict.Remove(deletedNode.DataReference.GUID);
 
                     foreach (BaseNodeSO remainingNode in _activeNodeWebGraph.AllNodes)
                     {
@@ -143,7 +146,7 @@ public class CustomGraphView : GraphView
     {
         if (nodeWebGraphAssest == null)
         {
-            Debug.Log("No active Node Web Graph");
+            Debug.LogWarning("No active Node Web Graph");
             return;
         }
 
@@ -235,9 +238,13 @@ public class CustomGraphView : GraphView
 
         string filePath = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Nodes/{fileName}";
 
+        // Setting Info 2
+        _activeNodeWebGraph.AddNode(node);
+        _activeNodeWebGraph.AllNodesDict.Add(node.GUID, node);
+        node.SetCurrentNodeWebGraphLocation(_activeNodeWebGraph);
+
         // Saving to folder physically
         AssetDatabase.CreateAsset(node, filePath);
-        _activeNodeWebGraph.AddNode(node);
         CreateSOType(node, guid);
 
         NodeView nodeView = new NodeView(node);

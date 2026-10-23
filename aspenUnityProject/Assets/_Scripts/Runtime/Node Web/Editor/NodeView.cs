@@ -139,7 +139,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                     EditorUtility.SetDirty(skill);
                     EditorUtility.SetDirty(skillNode);
                 });
-                break;
+                break;  
         }
 
         this.extensionContainer.Add(nameField);
@@ -147,14 +147,21 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
     void CreateUnlockToggle<NodeType>(NodeType node, Color unlockColor, Color lockColor) where NodeType : BaseNodeSO
     {
+        if (DataReference is SkillNodeSO)
+        {
+            this.style.backgroundColor = lockColor;
+            return;
+        }
+
         Toggle unlockedToogle = new Toggle("Is Unlocked") { value = false };
+
 
         this.style.backgroundColor = lockColor;
 
         unlockedToogle.RegisterValueChangedCallback(evt =>
         {
-            this.style.backgroundColor = node.IsUnlocked ? unlockColor : lockColor;
             DataReference.SetIsUnlocked(evt.newValue);
+            this.style.backgroundColor = node.IsUnlocked ? unlockColor : lockColor;
 
             switch (node)
             {
@@ -173,13 +180,28 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
                     break;
 
-                case SkillNodeSO skillNode:
-                    SkillSO skill = skillNode.Skill;
+                //case SkillNodeSO skillNode:
+                //    SkillSO skill = skillNode.Skill;
 
-                    EditorUtility.SetDirty(skill);
-                    EditorUtility.SetDirty(skillNode);
-                    break;
+                //    EditorUtility.SetDirty(skill);
+                //    EditorUtility.SetDirty(skillNode);
+                //    break;
             }
+
+            // Check to see if it can unlock the skill node
+            foreach (string id in DataReference.UnlockIDs)
+            {
+                if (DataReference.CurrentNodeWebGraphLocation.AllNodesDict[id] is SkillNodeSO skillNodeSO)
+                {
+                    skillNodeSO.SetSkillNodeActive();
+                    EditorUtility.SetDirty(node);
+                }
+
+
+
+            }
+
+
         });
 
         this.extensionContainer.Add(unlockedToogle);

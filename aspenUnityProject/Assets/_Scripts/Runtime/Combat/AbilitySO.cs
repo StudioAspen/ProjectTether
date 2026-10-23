@@ -20,9 +20,16 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private int damage;
       public int Damage => damage;
 
+      [Tooltip("Effects due to ability. 0 = Dodge , 1 = Accuracy , 2 = Defense , 3 = Critical Damage , 4 = Strength")]
+      [SerializeField] private int[] _effectsDueToAbility;
+      public int[] EffectsDueToAbility => _effectsDueToAbility;
+
+      [Tooltip("Percent change of the effect by the ability.")]
+      [SerializeField] private float[] _percentOfEffect;
+      public float[] PercentofEffect => _percentOfEffect;
+
       [SerializeField] private Element[] element; 
       public Element[] Element => element;
-
 
       [SerializeField] private float _chanceToHit;
       public float ChanceToHit => _chanceToHit;
@@ -35,7 +42,7 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private AbilityType abilityType;
       public AbilityType AbilityType => abilityType;
 
-      //ring-based range. 0=same tile only 1 = one ring around self, etc. 
+      //ring-based range. 0 = same tile only 1 = one ring around self, etc. 
       [Range(0, 3)] [SerializeField] private int range;
       public int Range => range;
     
@@ -50,7 +57,9 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private bool hitsAllies;
       public bool HitsAllies => hitsAllies;
 
-
+      //needs to be true for healing moves 
+      [SerializeField] private bool hitsSelf;
+      public bool HitsSelf => hitsSelf;
       [SerializeField] private bool canTargetEmptyTile;
       public bool CanTargetEmptyTile => canTargetEmptyTile;
    

@@ -24,6 +24,8 @@ MonoBehaviour:
     attack. This gives players a reason to balance weaker, reliable attacks against
     a more expensive strike with greater damage potential.'
   damage: 0
+  _effectsDueToAbility: 
+  _percentOfEffect: []
   element: 00000000
   _chanceToHit: 1
   _macCost: 3
@@ -33,5 +35,6 @@ MonoBehaviour:
   aoe: 0
   hitsEnemies: 1
   hitsAllies: 0
+  hitsSelf: 0
   canTargetEmptyTile: 0
-  canMiss: 1
+  canMiss: 0

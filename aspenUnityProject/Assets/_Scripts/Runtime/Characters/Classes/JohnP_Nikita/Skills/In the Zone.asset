@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: In the Zone
   m_EditorClassIdentifier: Assembly-CSharp::Skill
   name: In The Zone
-  effect: 5% Speed boost (Infinite Stack)
+  isClassInnate: 0
+  _effectsDueToSkill: 02000000
+  _percentOfEffect:
+  - 0.05
+  isStackable: 
   triggerCondition: After dodging
   explanation: Nikita gets stronger the longer she keeps moving. Staying active rewards
     her with more speed, making her harder to catch.

@@ -40,6 +40,17 @@ MonoBehaviour:
     But this NEEDS to played smart because you can burnout in a heart beat..'
   _overclockedStats: 
   _overclockedStatsPercent: []
+  _overclockedModifier: []
+  _healthStat: 10
+  _energyStat: 15
+  _strengthStat: 15
+  _defenseStat: 10
+  _techStat: 0
+  _resistanceStat: 5
+  _speedStat: 20
+  _luckStat: 0
+  _precisionStat: 0
+  _evasionStat: 0
   _health: 2
   _energy: 1
   _strength: 1

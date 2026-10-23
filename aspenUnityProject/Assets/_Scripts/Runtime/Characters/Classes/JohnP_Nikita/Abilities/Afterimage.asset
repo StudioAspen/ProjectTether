@@ -26,6 +26,9 @@ MonoBehaviour:
 
 '
   damage: 0
+  _effectsDueToAbility: 00000000
+  _percentOfEffect:
+  - 0.4
   element: 
   _chanceToHit: 1
   _macCost: 2
@@ -34,6 +37,7 @@ MonoBehaviour:
   range: 0
   aoe: 0
   hitsEnemies: 0
-  hitsAllies: 1
+  hitsAllies: 0
+  hitsSelf: 1
   canTargetEmptyTile: 0
   canMiss: 0

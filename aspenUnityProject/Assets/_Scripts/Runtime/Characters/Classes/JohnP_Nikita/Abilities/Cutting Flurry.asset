@@ -26,14 +26,17 @@ MonoBehaviour:
 
 '
   damage: 0
+  _effectsDueToAbility: 
+  _percentOfEffect: []
   element: 01000000
   _chanceToHit: 0.8
   _macCost: 2
   _energyCost: 13
   abilityType: 1
-  range: 1
-  aoe: 0
+  range: 0
+  aoe: 1
   hitsEnemies: 1
   hitsAllies: 0
+  hitsSelf: 0
   canTargetEmptyTile: 1
   canMiss: 1

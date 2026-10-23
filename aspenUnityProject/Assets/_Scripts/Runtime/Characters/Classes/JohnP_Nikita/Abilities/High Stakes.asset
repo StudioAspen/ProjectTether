@@ -22,6 +22,11 @@ MonoBehaviour:
     their own safety for a greater offensive payoff. I also believe this will have
     fun synergies to play with. '
   damage: 0
+  _effectsDueToAbility: 020000000300000004000000
+  _percentOfEffect:
+  - -0.1
+  - 0.05
+  - 0.05
   element: 
   _chanceToHit: 1
   _macCost: 3
@@ -30,6 +35,7 @@ MonoBehaviour:
   range: 0
   aoe: 0
   hitsEnemies: 0
-  hitsAllies: 1
+  hitsAllies: 0
+  hitsSelf: 1
   canTargetEmptyTile: 0
   canMiss: 0

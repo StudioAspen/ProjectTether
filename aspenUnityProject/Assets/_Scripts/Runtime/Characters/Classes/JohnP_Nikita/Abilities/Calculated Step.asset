@@ -24,6 +24,10 @@ MonoBehaviour:
     encourages players to move around the battlefield, create unique attack angles,
     and prepare for a follow up.'
   damage: 0
+  _effectsDueToAbility: 0000000001000000
+  _percentOfEffect:
+  - 0.15
+  - 0.1
   element: 
   _chanceToHit: 1
   _macCost: 1
@@ -32,6 +36,7 @@ MonoBehaviour:
   range: 2
   aoe: 0
   hitsEnemies: 0
-  hitsAllies: 1
+  hitsAllies: 0
+  hitsSelf: 1
   canTargetEmptyTile: 0
   canMiss: 0

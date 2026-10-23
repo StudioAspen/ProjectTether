@@ -7,7 +7,20 @@ public class Skill : ScriptableObject
     private string name;
 
     [SerializeField]
-    private string effect;
+    [Tooltip("Is this a class innate skill")]
+    private bool isClassInnate;
+
+    [SerializeField]
+    [Tooltip("Stats raised by skill. 0 = Attack , 1 = Dodge , 2 = Speed , 3 = Critical Chance , 4 = Critical Damage")]
+    private int[] _effectsDueToSkill;
+    public int[] EffectsDueToSkill => _effectsDueToSkill;
+
+    [Tooltip("Percent change of the effect by the skill.")]
+    [SerializeField] private float[] _percentOfEffect;
+    public float[] PercentofEffect => _percentOfEffect;
+
+    [SerializeField] private bool[] isStackable;
+    public bool[] IsStackable => isStackable;
 
     [SerializeField]
     private string triggerCondition;

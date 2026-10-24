@@ -15,36 +15,7 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639260153591029653
-  FileSizes:
-  - Name: 
-    Value: 820
-  Exists: 1
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
-  m_Name: FMODStudioCache
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EventCache
-  EditorBanks:
-  - {fileID: -6842294400158486420}
-  - {fileID: 8099404801252540683}
-  - {fileID: 255622346522675359}
-  EditorEvents:
-  - {fileID: 6402241822501107767}
-  EditorParameters: []
-  MasterBanks:
-  - {fileID: 8099404801252540683}
-  StringsBanks:
-  - {fileID: -6842294400158486420}
-  cacheVersion: 131860
-  cacheTime: 639260153591029653
+  cacheTime: 639258903808919896
   SerializableEventsDict:
   - key: event:/New Event
     index: 0
@@ -63,7 +34,7 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Battle.bank
   Name: Battle
   StudioPath: bank:/Battle
-  lastModified: 639260153591029653
+  lastModified: 639258903808919896
   FileSizes: []
   Exists: 1
 --- !u!114 &6402241822501107767
@@ -109,6 +80,6 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639260153591029653
+  lastModified: 639258903808919896
   FileSizes: []
   Exists: 1

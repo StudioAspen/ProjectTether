@@ -113,21 +113,21 @@ public class CustomGraphView : GraphView
                     {
                         case AbilityNodeSO abilityNode:
                             AbilitySO ability = abilityNode.Ability;
-                            Undo.DestroyObjectImmediate(ability);
+                            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(ability));
                             break;
 
                         case StatNodeSO statNode:
                             StatSO stat = statNode.Stat;
-                            Undo.DestroyObjectImmediate(stat);
+                            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(stat));
                             break;
 
                         case SkillNodeSO skillNode:
                             SkillSO skill = skillNode.Skill;
-                            Undo.DestroyObjectImmediate(skill);
+                            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(skill));
                             break;
                     }
 
-                    Undo.DestroyObjectImmediate(deletedNode.DataReference);
+                    AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(deletedNode.DataReference));
                     EditorUtility.SetDirty(_activeNodeWebGraph);
                 }
             }

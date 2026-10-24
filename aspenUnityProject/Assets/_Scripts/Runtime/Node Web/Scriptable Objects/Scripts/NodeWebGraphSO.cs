@@ -5,7 +5,7 @@ using AYellowpaper.SerializedCollections;
 
 namespace Slinky.NodeWeb
 {
-    [CreateAssetMenu(fileName = "New Node Web", menuName = "Node Web/Node Web Graph")]
+    [CreateAssetMenu(fileName = "New Node Web", menuName = "Scriptable Objects/Node Web Graph")]
     public class NodeWebGraphSO : ScriptableObject
     {
         [field: SerializeField] public List<BaseNodeSO> AllNodes { get; private set; } = new List<BaseNodeSO>();

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Nikita
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Entities.Scripts.Combat.PlayableCharacterUnitSO
   _portrait: {fileID: 0}
+  _id: 
   _name: Nikita
   _model: {fileID: 0}
   Level: 1
@@ -20,6 +21,16 @@ MonoBehaviour:
   TotalExPtsGained: 0
   RemainingHealth: 100
   RemainingEnergy: 100
+  _healthStat: 9
+  _energyStat: 0
+  _strengthStat: 12
+  _defenseStat: 10
+  _techStat: 10
+  _resistanceStat: 12
+  _speedStat: 15
+  _luckStat: 7
+  _precisionStat: 0
+  _evasionStat: 0
   _health: 3
   _energy: 4
   _strength: 1
@@ -42,3 +53,4 @@ MonoBehaviour:
   combatClass: {fileID: 11400000, guid: 9fae1a9a8e57ae44280f8f4bd16408a1, type: 2}
   _suits: []
   _startingSuit: {fileID: 11400000, guid: 38fb5388910d80f42900527569483ff4, type: 2}
+  characterQuirk: {fileID: 11400000, guid: a325afeccb1321c49b323b7b193f109c, type: 2}

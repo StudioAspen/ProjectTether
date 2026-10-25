@@ -17,5 +17,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     private SuitBaseDataSO _startingSuit;
     public  SuitBaseDataSO StartingSuit => _startingSuit;
 
+    [Tooltip("The character quirk")]
+    [SerializeField]
+    private QuirkSO_StandIn characterQuirk;
+    public QuirkSO_StandIn CharacterQuirk => characterQuirk;
   }
 }

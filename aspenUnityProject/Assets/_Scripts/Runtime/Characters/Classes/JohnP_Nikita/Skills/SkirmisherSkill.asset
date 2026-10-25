@@ -10,11 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
-  m_Name: Nikita_ClassInnateSkill
+  m_Name: SkirmisherSkill
   m_EditorClassIdentifier: Assembly-CSharp::Skill
   name: Swift Cutlery
-  function: Each time Nikita attacks, she gains a stack of 3.5% ATK buff and has
-    a 10% chance to dodge incoming attacks. When Nikita is hit, she loses the stack.
+  isClassInnate: 1
+  _effectsDueToSkill: 0000000001000000
+  _percentOfEffect:
+  - 0.035
+  - 0.1
+  isStackable: 0100
   triggerCondition: Passive
   explanation: This reinforces her relentless offense while giving her an impactful
     chance to evade hits.

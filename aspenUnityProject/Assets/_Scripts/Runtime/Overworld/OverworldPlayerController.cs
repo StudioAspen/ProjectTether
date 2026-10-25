@@ -8,7 +8,10 @@ namespace _Scripts.Runtime.Overworld
     [RequireComponent(typeof(CharacterController))]
     public class OverworldPlayerController : MonoBehaviour
     {
-        [SerializeField] private float _speed = 5f; // Controls how fast the player moves:
+        [Header("Movement")]
+        [Range(1f, 10f)]
+        [SerializeField] private float _characterMoveSpeed = 5f; // Controls how fast the Player's Character moves:
+
         [SerializeField] private float _gravity = -9.81f;
     
         private float _verticalVelocity;
@@ -59,14 +62,14 @@ namespace _Scripts.Runtime.Overworld
 
             // Uses the camera's direction to decide where the player moves:
             Vector3 moveDirection = cameraDirection  * _moveInput.x + cameraForward * _moveInput.y;
-            moveDirection = Vector3.ClampMagnitude(moveDirection,1);
+            moveDirection = Vector3.ClampMagnitude(moveDirection, 1);
 
             if(_controller.isGrounded && _verticalVelocity < 0)
                 _verticalVelocity = -2;
             _verticalVelocity += _gravity * Time.deltaTime;
 
             // Moves the player using the CharacterController:
-            Vector3 velocity = moveDirection * _speed;
+            Vector3 velocity = moveDirection * _characterMoveSpeed;
             velocity.y = _verticalVelocity;
 
             _controller.Move(velocity * Time.deltaTime);

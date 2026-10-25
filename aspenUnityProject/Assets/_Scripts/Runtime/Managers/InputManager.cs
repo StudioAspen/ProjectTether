@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Consystently.Essentials;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,7 +21,7 @@ namespace _Scripts.Runtime.Managers
             Gamepad
         }
         
-        public Controller CurrentController { get; private set; }
+        [field: SerializeField, ReadOnly] public Controller CurrentController { get; private set; }
         
         /// <summary>
         /// Action that is invoked when the current control scheme is changed based on the input device used.
@@ -36,7 +37,7 @@ namespace _Scripts.Runtime.Managers
         /// The intended lock state.
         /// Controllers will always be locked, but when switching back to mouse, this will be the applied lock state
         /// </summary>
-        private CursorLockMode _desiredCursorLockState;
+        [SerializeField, ReadOnly] private CursorLockMode _desiredCursorLockState;
 
         protected override void Awake()
         {

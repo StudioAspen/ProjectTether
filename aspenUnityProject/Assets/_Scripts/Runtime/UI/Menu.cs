@@ -237,7 +237,7 @@ namespace _Scripts.Runtime.UI
         /// </summary>
         public static void SetCurrentSelectedObject()
         {
-            if (InputManager.Instance.CurrentControlScheme == InputManager.ControlScheme.KeyboardMouse)
+            if (InputManager.Instance.CurrentController == InputManager.Controller.KeyboardMouse)
                 EventSystem.current.SetSelectedGameObject(null);
             else
             {

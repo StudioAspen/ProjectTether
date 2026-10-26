@@ -18,9 +18,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
 
     public string Name => _name;
 
-    [Space(5)] [SerializeField] protected GameObject _model;
-
-    public GameObject Model => _model;
+    [Space(5)] [SerializeField] protected UnitController _model;
+    public UnitController Model => _model;
 
     public virtual Faction Faction => Faction.Neutral;
 

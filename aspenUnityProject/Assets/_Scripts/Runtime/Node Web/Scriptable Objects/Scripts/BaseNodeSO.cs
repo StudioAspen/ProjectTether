@@ -11,10 +11,14 @@ namespace Slinky.NodeWeb
         [field: SerializeField] public List<string> UnlockIDs {  get; private set; } = new List<string>();
         #region EDITOR_STUFF
         [field: SerializeField] public Vector2 EditorPosition { get; private set; }
+        [field: SerializeField] public NodeWebGraphSO CurrentNodeWebGraphLocation { get; private set; }
         #endregion
 
         public void SetGUID(string id) { GUID = id; }
         public void SetEditorPosition(Vector2 editorPosition) { EditorPosition = editorPosition; }
+        public void SetCurrentNodeWebGraphLocation(NodeWebGraphSO currentNodeWebGraphLocation) { CurrentNodeWebGraphLocation  = currentNodeWebGraphLocation; }
+
+        // Do not use for SkillNodeSO
         public void SetIsUnlocked(bool isUnlocked) { IsUnlocked = isUnlocked; }
     }
 }

@@ -73,7 +73,8 @@ public class CustomGraphView : GraphView
                 parentView.DataReference.UnlockIDs.Add(childView.DataReference.GUID);
                 childView.DataReference.PrerequisitesIDs.Add(parentView.DataReference.GUID);
 
-                Debug.Log($"Parent Node Children: {childView.DataReference.UnlockIDs.Count}");
+                // This checks to see if a recenetly attached node to the skill node preresquites is active
+                if (childView.DataReference is SkillNodeSO skillNode) skillNode.SetSkillNodeActive();
             }
         }
 
@@ -90,12 +91,14 @@ public class CustomGraphView : GraphView
                     parentView.DataReference.UnlockIDs.Remove(childView.DataReference.GUID);
                     childView.DataReference.PrerequisitesIDs.Remove(parentView.DataReference.GUID);
 
-                    Debug.Log($"Parent Node Children: {childView.DataReference.UnlockIDs.Count}");
+                    // This checks to see if all the remaing preresquite nodes to the skill node preresquites is active
+                    if (childView.DataReference is SkillNodeSO skillNode) skillNode.SetSkillNodeActive();
                 }
 
                 if (ele is NodeView deletedNode)
                 {
                     _activeNodeWebGraph.AllNodes.Remove(deletedNode.DataReference);
+                    _activeNodeWebGraph.AllNodesDict.Remove(deletedNode.DataReference.GUID);
 
                     foreach (BaseNodeSO remainingNode in _activeNodeWebGraph.AllNodes)
                     {
@@ -110,21 +113,21 @@ public class CustomGraphView : GraphView
                     {
                         case AbilityNodeSO abilityNode:
                             AbilitySO ability = abilityNode.Ability;
-                            Undo.DestroyObjectImmediate(ability);
+                            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(ability));
                             break;
 
                         case StatNodeSO statNode:
                             StatSO stat = statNode.Stat;
-                            Undo.DestroyObjectImmediate(stat);
+                            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(stat));
                             break;
 
                         case SkillNodeSO skillNode:
                             SkillSO skill = skillNode.Skill;
-                            Undo.DestroyObjectImmediate(skill);
+                            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(skill));
                             break;
                     }
 
-                    Undo.DestroyObjectImmediate(deletedNode.DataReference);
+                    AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(deletedNode.DataReference));
                     EditorUtility.SetDirty(_activeNodeWebGraph);
                 }
             }
@@ -141,9 +144,18 @@ public class CustomGraphView : GraphView
 
     public void PopulateView(NodeWebGraphSO nodeWebGraphAssest)
     {
+        if (nodeWebGraphAssest == null)
+        {
+            Debug.LogWarning("No active Node Web Graph");
+            return;
+        }
+
+        Debug.Log($"Loaded a new node web: {nodeWebGraphAssest}");
+
         this._activeNodeWebGraph = nodeWebGraphAssest;
         this._isPopulating = true;
-        //this.DeleteElements(graphElements.ToList());
+        this.DeleteElements(graphElements.ToList());
+
         // Deleting Elements
         var elements = graphElements.ToList();
         foreach (var element in elements)
@@ -226,9 +238,13 @@ public class CustomGraphView : GraphView
 
         string filePath = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Nodes/{fileName}";
 
+        // Setting Info 2
+        _activeNodeWebGraph.AddNode(node);
+        _activeNodeWebGraph.AllNodesDict.Add(node.GUID, node);
+        node.SetCurrentNodeWebGraphLocation(_activeNodeWebGraph);
+
         // Saving to folder physically
         AssetDatabase.CreateAsset(node, filePath);
-        _activeNodeWebGraph.AddNode(node);
         CreateSOType(node, guid);
 
         NodeView nodeView = new NodeView(node);
@@ -251,6 +267,7 @@ public class CustomGraphView : GraphView
                 string filePath = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Abilitys/{fileName}";
 
                 AssetDatabase.CreateAsset(abilitySO, filePath);
+                AssetDatabase.SaveAssets();
                 break;
             case SkillNodeSO skillNodeSO:
                 SkillSO skillSO = ScriptableObject.CreateInstance<SkillSO>();
@@ -259,6 +276,7 @@ public class CustomGraphView : GraphView
                 string fileName2 = $"Skill_{guid}.asset";
                 string filePath2 = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Skills/{fileName2}";
                 AssetDatabase.CreateAsset(skillSO, filePath2);
+                AssetDatabase.SaveAssets();
                 break;
             case StatNodeSO statNodeSO:
                 StatSO statSO = ScriptableObject.CreateInstance<StatSO>();
@@ -267,6 +285,7 @@ public class CustomGraphView : GraphView
                 string fileName3 = $"Stat_{guid}.asset";
                 string filePath3 = $"Assets/_Scripts/Runtime/Node Web/Scriptable Objects/Stats/{fileName3}";
                 AssetDatabase.CreateAsset(statSO, filePath3);
+                AssetDatabase.SaveAssets();
                 break;
         }
 

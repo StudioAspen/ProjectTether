@@ -4,6 +4,7 @@ using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Characters.Scripts;
 using _Scripts.Runtime.Combat;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
@@ -31,7 +32,14 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         {
             SetFaction(Faction.Ally);
             OverclockLevel = OverclockTiers.Off;
-            foreach (SuitBaseDataSO sb in ((PlayableCharacterUnitSO)unit).Suits)
+
+            if (unit is not PlayableCharacterUnitSO playableCharacterUnit)
+            {
+                Debug.LogWarning($"Error initializing AllyUnit from {unit.name}, not a PlayableCharacterUnitSO");
+                return;
+            }
+            
+            foreach (SuitBaseDataSO sb in playableCharacterUnit.Suits)
             {
                SuitData suit = new SuitData(sb); 
                Suits.Add(suit); 

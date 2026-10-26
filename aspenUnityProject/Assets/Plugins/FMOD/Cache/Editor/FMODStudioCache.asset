@@ -1,6 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6842294400158486420
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15,12 +14,11 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639260153591029653
+  lastModified: 639285194300744215
   FileSizes:
   - Name: 
     Value: 820
   Exists: 1
---- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,11 +42,11 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: -6842294400158486420}
   cacheVersion: 131860
-  cacheTime: 639260153591029653
+  cacheTime: 639285194300744215
   SerializableEventsDict:
   - key: event:/New Event
     index: 0
---- !u!114 &255622346522675359
+
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,10 +61,10 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Battle.bank
   Name: Battle
   StudioPath: bank:/Battle
-  lastModified: 639260153591029653
+  lastModified: 639285194300714176
   FileSizes: []
   Exists: 1
---- !u!114 &6402241822501107767
+
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +92,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1600
---- !u!114 &8099404801252540683
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,6 +106,6 @@ MonoBehaviour:
   Path: ../FMOD/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639260153591029653
+  lastModified: 639285194300724218
   FileSizes: []
   Exists: 1

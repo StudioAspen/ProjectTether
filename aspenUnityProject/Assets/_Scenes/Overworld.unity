@@ -533,6 +533,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player With Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 2040935943939717732, guid: bab1d60b6db933f4e87dc39a151ae89e, type: 3}
+      propertyPath: <Tool>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -599,7 +603,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 85.163895
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -625,8 +629,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116163293}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15212338, y: 0.0000000049595856, z: -7.633532e-10, w: 0.98836154}
-  m_LocalPosition: {x: -0.83952004, y: 4.9925194, z: -5.1572146}
+  m_LocalRotation: {x: 0.45087755, y: -0.000000026601139, z: 0.0000000134372025, w: 0.8925858}
+  m_LocalPosition: {x: -0.83952004, y: 10.145462, z: -5.2962046}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

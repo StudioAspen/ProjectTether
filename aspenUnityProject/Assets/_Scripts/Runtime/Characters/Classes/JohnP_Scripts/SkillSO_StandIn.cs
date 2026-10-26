@@ -7,8 +7,14 @@ public class Skill : ScriptableObject
     private string name;
 
     [SerializeField]
-    [Tooltip("Is this a class innate skill")]
-    private bool isClassInnate;
+    [Tooltip("Is this a class innate skill?")]
+    private bool _isClassInnate;
+    public bool IsClassInnate => _isClassInnate;
+
+    [SerializeField]
+    [Tooltip("Is this transferable between classes")]
+    private bool _consumesMscSlot;
+    public bool ConsumesMSCSlot => _consumesMscSlot;
 
     [SerializeField]
     [Tooltip("Stats raised by skill. 0 = Attack , 1 = Dodge , 2 = Speed , 3 = Critical Chance , 4 = Critical Damage")]

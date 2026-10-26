@@ -15,6 +15,17 @@ MonoBehaviour:
   defaultAttackElements: 
   _className: Skirmisher
   _defaultAttackRange: 0
+  _innateSkill: {fileID: 11400000, guid: 03d0464c256c68d45a2d23689bab5863, type: 2}
+  _classSkills:
+  - {fileID: 11400000, guid: f3ebc2b27e3d4be4ea324e08695f1430, type: 2}
+  - {fileID: 11400000, guid: fd57ce910808cb345a88e3f7fd465c9c, type: 2}
+  _classAbilityList:
+  - {fileID: 11400000, guid: a209f4b93527a9f4884db123f469a498, type: 2}
+  - {fileID: 11400000, guid: 57847e800636c6c4d942caff714444af, type: 2}
+  - {fileID: 11400000, guid: bac68242815377b4789c95a899b921aa, type: 2}
+  - {fileID: 11400000, guid: c1310816c9d61694d8a5d4f99982f53e, type: 2}
+  - {fileID: 11400000, guid: 8a7c5dbe57953f349a786d5b49b7a0e2, type: 2}
+  - {fileID: 11400000, guid: 09139a28a32076e4598469dbe0a70a32, type: 2}
   _classDescription: A fighter who focuses on speed, quick hits, and mobility instead
     of tanking damage. Think hit and run. They dart in, land a slash or two, then
     get out before the enemy can really respond.

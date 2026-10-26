@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: In the Zone
   m_EditorClassIdentifier: Assembly-CSharp::Skill
   name: In The Zone
-  isClassInnate: 0
+  _isClassInnate: 0
+  _consumesMscSlot: 1
   _effectsDueToSkill: 02000000
   _percentOfEffect:
   - 0.05

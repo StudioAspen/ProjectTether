@@ -2,7 +2,6 @@ using _Scripts.Runtime.Combat;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
 namespace _Scripts.Runtime.Characters.Classes.Scripts
 {
@@ -21,14 +20,26 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
         [FormerlySerializedAs("defaultAttackRange")] [SerializeField, Range(0,3)]
         private int _defaultAttackRange;
 
-        public int DefaultAttackRange => _defaultAttackRange; 
-    
+        public int DefaultAttackRange => _defaultAttackRange;
+        
+        [SerializeField]
+        protected Skill _innateSkill;
+        public Skill InnateSkill => _innateSkill;
+
+        [SerializeField]
+        protected List<Skill> _classSkills;
+        public List<Skill> classSkills => _classSkills;
+
+        [SerializeField]
+        protected List<AbilitySO> _classAbilityList;
+        public List<AbilitySO> ClassAbilityList => _classAbilityList;
+
         [FormerlySerializedAs("classDescription")] [SerializeField] [TextArea(3 , 10)] private string _classDescription;
         public string ClassDescription => _classDescription;
 
+
         [Header("Overclock", order = 4)]
         [Space(5)]
-
         [Tooltip("Overclock Effects")]
         [SerializeField][TextArea(0 , 10)] private string[] effects;
 
@@ -385,15 +396,15 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
         public Affinity Fire => _fire;
 
         public Dictionary<Element, Affinity> Affinities => new Dictionary<Element, Affinity>()
-    {
-      { Element.Blunt, _blunt },
-      { Element.Slash, _slash },
-      { Element.Pierce, _pierce },
-      { Element.Blast, _blast },
-      { Element.Water, _water },
-      { Element.Earth, _earth },
-      { Element.Wind, _wind },
-      { Element.Fire, _fire },
-    };
+        {
+          { Element.Blunt, _blunt },
+          { Element.Slash, _slash },
+          { Element.Pierce, _pierce },
+          { Element.Blast, _blast },
+          { Element.Water, _water },
+          { Element.Earth, _earth },
+          { Element.Wind, _wind },
+          { Element.Fire, _fire },
+        };
     }
 }

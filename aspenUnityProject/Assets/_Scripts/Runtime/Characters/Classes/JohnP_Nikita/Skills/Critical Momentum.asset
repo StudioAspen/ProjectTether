@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Critical Momentum
   m_EditorClassIdentifier: Assembly-CSharp::Skill
   name: Critical Momentum
-  isClassInnate: 0
+  _isClassInnate: 0
+  _consumesMscSlot: 1
   _effectsDueToSkill: 0300000004000000
   _percentOfEffect:
   - 0.05

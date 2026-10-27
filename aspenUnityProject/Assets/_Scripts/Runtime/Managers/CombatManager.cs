@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Mechanics;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
 using _Scripts.Runtime.Combat.States.ContextData;
-using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
+using _Scripts.Runtime.Persistent_Data;
 using _Scripts.Runtime.Tile_System.Scripts;
 using _Scripts.Runtime.UI;
 using UnityEngine;
@@ -15,32 +16,38 @@ using Debug = UnityEngine.Debug;
 //TODO: NEED COROUTINES when we are past the mvp(?)
 namespace _Scripts.Runtime.Managers
 {
-    /*will not be a traditional manager because it does not
+   /*will not be a traditional manager because it does not
     need to be static. EncounterManager will be static and the one
     to send the data over to CombatManager. CombatManager will exist
     in the battle scene only.
     */
+    //TODO: break this down 
     public class CombatManager : MonoBehaviour, ICombatFunctionProvider
     {
         private const float ArbitraryOffset = 10;
         private const int TileNum = 19;
-        private UnitDataSO[,] initializerData;
+        
+        private InputSystem_Actions _input;
+        private EncounterSO _currentEncounter;
 
         private bool toggledManualEnemy;
         
-        private Encounter encounter; 
         [SerializeField] private Transform tilesParent;
-        private InputSystem_Actions Input { get; set; }
         private TileController[] TileControllers { get; }= new TileController[TileNum];
 
+        /// <summary>
+        /// Vector3Int -> TileControllers index (index is equal to desired count order of tiles)
+        /// </summary>
         private Dictionary<Vector3Int, int> TileCubeCoords { get; }= new Dictionary<Vector3Int, int>();
         
         //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
-        private List<UnitController> TurnOrder { get; }= new List<UnitController>();
+        private TurnQueue TurnOrder { get; } = new TurnQueue();
+        private bool _currentlyInTurn;
         private List<UnitController> DeadUnits {get; }= new List<UnitController>();
         private int _deadEnemies;
+        private int _deadAllies;
+        private List<UnitController> _deadUnitsThisTurn = new List<UnitController>();
         
-        //TODO: add an enum for this if we ever have more than just enemy/ally turns?
         private readonly BattlePhase[] _phases = new BattlePhase[2];
         private BattlePhase _currentPhase;  
         [SerializeField] private RangeDisplay rangeDisplay; 
@@ -53,22 +60,25 @@ namespace _Scripts.Runtime.Managers
         
         //for easier targeting calculation
         private List<AllyUnitController> PlayerUnits { get; } = new List<AllyUnitController>();
-        private int CurrentUnitTurn { get; set; }
+        private UnitController CurrentUnit { get; set; }
         private Vector3Int SelectedTile { get; set; }
         private Vector3Int _currentTile { get; set; } = new Vector3Int(0, 0, 0);
         private CombatActions _receivedAction { get; set; }
         private int ActionSelection { get; set; }
 
+        //no clue how to connect the Overclock status differently 
         /// <summary>
         /// statuses associated with player actions (e.g., overclocking, attacking, defending too much, etc.)
         /// </summary>
-        [SerializeField] private List<StatusSO> _actionStatuses;
+        [SerializeField] private List<StatusSO> _actionStatuses = new List<StatusSO>();
+
+        private Dictionary<string, StatusSO> _actionStatusDic = new Dictionary<string, StatusSO>();
         
         #endregion
 
         //TODO: sub to each unit themselves 
         //TODO: figure out what to do when a unit dies 
-        public static event Action<Unit[]> unitsDead;
+        public static event Action<List<UnitController>> unitsDead;
         //animation/tile update handled per unit at the instant they move. 
         public static event Action<UnitController> unitMoved;
         //we may want sounds when the cursor moves around 
@@ -78,48 +88,50 @@ namespace _Scripts.Runtime.Managers
         public static event Action<UnitController> examinedUnit;
         public static event Action exitedExamine;
         
-        public static event Action finishedBattle; 
+        /// <summary>
+        /// true = win, false = lose
+        /// </summary>
+        public static event Action<bool> finishedBattle; 
         
-
         private void Awake()
         {
-            Input = InputManager.Instance.Actions;
+            _input = InputManager.Instance.Actions;
+            _currentEncounter = GameSession.Instance.CurrentEncounterData;
         }
 
         //must occur after OnEnable bc other classes will subscribe OnEnable
-        void Start()
+        private void Start()
         {
-            encounter = EncounterManager.Instance.GetEncounter();
-            initializerData = EncounterManager.Instance.GetInitializerData();
             SortTiles(tilesParent.GetComponentsInChildren<TileController>());
             GenerateCoords();
             CreateObjects(); 
-            TurnOrder.Sort((a,b) => b.GetData().Speed.CompareTo(a.GetData().Speed));
+            
             rangeDisplay.Initialize(TileControllers);
             
-            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
-            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, Input, PlayerUnits, this));
+            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
+            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
             CombatUI.PlayerAction += HandleAction;
             CombatUI.PlayerSelectiveAction += HandleAction;
             CombatUI.ToggledManualEnemy += ToggleManualEnemy;
-            ChangeTurn(); 
+            foreach (StatusSO status in _actionStatuses)
+                _actionStatusDic.Add(status.StatusId, status);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             CombatUI.PlayerAction -= HandleAction;
             CombatUI.PlayerSelectiveAction -= HandleAction;
-            Input.TileSelect.Disable();
-           TurnOrder.Clear();
+            _input.TileSelect.Disable();
+            TurnOrder.Clear();
             PlayerUnits.Clear();
         }
 
-        /*
-        void Update()
+        //TODO: allow player to choose between allies when they have tied initiative?
+        private void Update()
         {
-           currentPhase?.Update();
+            if (TurnOrder.UpdateInitiatives() && !_currentlyInTurn)
+                ChangeTurn();
         }
-        */
 
         //Correct order is not guaranteed by GetComponentsInChildren
         private void SortTiles(TileController[] tiles)
@@ -130,43 +142,54 @@ namespace _Scripts.Runtime.Managers
             } 
         }
         
-        #region setupRelatedStuff
-
-
-        void CreateObjects()
+        private void CreateObjects()
         {
-            for (int tile = 0; tile < encounter.TotalTiles(); tile++)
+            if (_currentEncounter == null)
             {
-                if (encounter.UnitCountAtTile(tile) < 1) 
-                    continue; 
-                for (int unit = 0; unit < encounter.MaxUnitsPerTile(); unit++)
+                Debug.LogWarning($"CombatManager: Encounter is null, can't create objects");
+                return;
+            }
+            
+            for (int tileIndex = 0; tileIndex < _currentEncounter.Tiles.Count; tileIndex++)
+            {
+                if (_currentEncounter.Tiles[tileIndex].Units.Count == 0) 
+                    continue;
+
+                TileController tileController = TileControllers[tileIndex];
+                
+                foreach (UnitDataSO unitData in _currentEncounter.Tiles[tileIndex].Units)
                 {
-                    if (unit > encounter.UnitCountAtTile(tile) - 1)
-                        break;
-                    GameObject newTempObject = Instantiate(encounter[tile,unit], TileControllers[tile].Position(), Quaternion.Euler(-90f,0,0));
-                    //set up controllers after object instantiation so objects don't override each other's data
-                    //the newly cloned object does not share the same reference as the original prefab, so there is no overriding
-                    if (initializerData[tile, unit].Faction == Faction.Ally)
+                    if (unitData.Model == null)
                     {
-                        TileControllers[tile].AddUnit(newTempObject.GetComponent<AllyUnitController>());
-                        _totalAllies++;
-                        PlayerUnits.Add((AllyUnitController)TileControllers[tile].PeekUnit());
+                        Debug.LogWarning($"UnitData {unitData.name} is missing model prefab");
+                        continue;
                     }
-                    else if (initializerData[tile, unit].Faction == Faction.Enemy)
+                    
+                    UnitController unitController = Instantiate(unitData.Model, TileControllers[tileIndex].Position(), Quaternion.Euler(-90f,0,0));
+                    if (unitData.Faction == Faction.Ally)
                     {
-                        TileControllers[tile].AddUnit(newTempObject.GetComponent<EnemyUnitController>());
+                        tileController.AddUnit(unitController);
+                        PlayerUnits.Add(unitController as AllyUnitController);
+                        
+                        _totalAllies++;
+                    }
+                    else if (unitData.Faction == Faction.Enemy)
+                    {
+                        tileController.AddUnit(unitController);
+                        
                         _totalEnemies++;
                     }
-                    else 
-                        Debug.Log("neutral units not yet implemented");
-//                    Debug.Log($"{tile}: {unit}, {tileControllers[tile].UnitCount()}");
-                    TileControllers[tile].GetUnitAt(unit).Initialize(initializerData[tile,unit]);
-                    TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
-                    TurnOrder.Add(TileControllers[tile].GetUnitAt(unit));
-                    TileControllers[tile].GetUnitAt(unit).SetTile(TileControllers[tile].tileCoordinate);
-                    Debug.Log(TileControllers[tile].UnitControllers[unit].GetData().Name);
+                    else
+                    {
+                        Debug.Log($"Neutral units not yet implemented");
+                    }
+                    
+                    unitController.Initialize(unitData);
+                    unitController.SetTile(tileController.tileCoordinate);
+                    TurnOrder.Add(unitController);
                 }
-                TileControllers[tile].RepositionUnits(ArbitraryOffset);
+                
+                tileController.RepositionUnits(ArbitraryOffset);
             }
         }
 
@@ -208,51 +231,30 @@ namespace _Scripts.Runtime.Managers
                 }
             }
         } 
-
-        //debug tool
-        void ValidateData()
-        {
-            for (int tile = 0; tile < encounter.TotalTiles(); tile++)
-            {
-                if (encounter.UnitCountAtTile(tile) < 1) 
-                    continue; 
-                for (int unit = 0; unit < encounter.MaxUnitsPerTile(); unit++)
-                {
-                    if (unit > encounter.UnitCountAtTile(tile) - 1)
-                        break;
-                    Debug.Log($"{TileControllers[tile].GetUnitAt(unit).GetData().Name}:  {TileControllers[tile].GetUnitAt(unit).GetData().Speed}");
-                    
-                }
-            }
-        }
-        #endregion
-        
-        //dead are kept because lazy deletion. Also, there may or may not be a revive feature, so their order being kept is good.
-        //I am also not sure if deletion is better because deletion would require searching and result in the entire list shifting. 
-        //TODO: turn system needs to match gcc. Currently only sorts by unit speed and has the fastest unit go first
+       
         public void ChangeTurn()
         {
             if (DeadUnits.Count >= (_totalAllies + _totalEnemies))
             {
                 Debug.Log("All units dead.");
+                _currentPhase = null;
                 return;
             }
-            while (TurnOrder[CurrentUnitTurn].GetData().IsDead)
-                CurrentUnitTurn = (CurrentUnitTurn + 1)%TurnOrder.Count;
             if (_currentPhase != null)
             {
                 _currentPhase.Exit();
-                CurrentUnitTurn = (CurrentUnitTurn + 1)%TurnOrder.Count;
             }
-            if (toggledManualEnemy || TurnOrder[CurrentUnitTurn].GetData().Faction == Faction.Ally)
+            CurrentUnit = TurnOrder.GetCappedUnits()[0];
+            _currentlyInTurn = true;
+            if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally)
                 _currentPhase = _phases[0];
-            else if (TurnOrder[CurrentUnitTurn].GetData().Faction==Faction.Enemy)
+            else if (CurrentUnit.GetData().Faction==Faction.Enemy)
                 _currentPhase = _phases[1];
             else
                 return;
-            TurnOrder[CurrentUnitTurn].ResetValues();
+            CurrentUnit.ResetValues();
             _currentPhase.Enter();
-            battlePhaseChanged?.Invoke(_currentPhase, TurnOrder[CurrentUnitTurn]);
+            battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit);
         } 
         
         //functions for camera/ui movement/whatever 
@@ -275,12 +277,13 @@ namespace _Scripts.Runtime.Managers
         */
         /// <summary>
         /// Handles actions that do not require a separate ui panel. Connected to CombatUI.
+        /// Actions that require tile selection lead to SelectTile
         /// </summary>
         /// <param name="action"></param>
         private void HandleAction(CombatActions action)
         {
             _receivedAction = action;
-            UnitController currUnit = TurnOrder[CurrentUnitTurn];
+            UnitController currUnit = CurrentUnit;
             switch(action)
             {
                 case CombatActions.Attack:
@@ -317,7 +320,7 @@ namespace _Scripts.Runtime.Managers
         {
             _receivedAction = action;
             ActionSelection = selection;
-            UnitController currUnit = TurnOrder[CurrentUnitTurn];
+            UnitController currUnit = CurrentUnit;
             switch (action)
             {
                 case CombatActions.Ability:
@@ -336,12 +339,12 @@ namespace _Scripts.Runtime.Managers
         
         public TileController GetCurrTileController()
         {
-            return TileControllers[TileCubeCoords[TurnOrder[CurrentUnitTurn].TileCoords]];
+            return TileControllers[TileCubeCoords[CurrentUnit.TileCoords]];
         }
         
         private void ResetCurrentTile()
         {
-            SelectedTile = TurnOrder[CurrentUnitTurn].TileCoords;
+            SelectedTile = CurrentUnit.TileCoords;
             _currentTile = SelectedTile;
             hoverTileChanged?.Invoke(TileControllers[TileCubeCoords[_currentTile]].Position());
         }
@@ -352,7 +355,8 @@ namespace _Scripts.Runtime.Managers
         {
             SelectedTile = _currentTile;
             TileController selectedTileController = TileControllers[TileCubeCoords[SelectedTile]];
-            UnitController currentUnit = TurnOrder[CurrentUnitTurn];
+            //possible temporary use of CurrentUnit - CurrentUnit might be changed later
+            UnitController currentUnit = CurrentUnit;
             switch (_receivedAction)
             {
                 case CombatActions.Attack:
@@ -382,8 +386,13 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
-            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers) 
-                CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);  
+            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
+            {
+                CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);
+                CheckDead(enemy);
+            }
+
+            RemoveDead();
             rangeDisplay.HideRange();
             FinishSelection();
         }
@@ -395,8 +404,11 @@ namespace _Scripts.Runtime.Managers
             rangeDisplay.HideRange();           
             //epicenter hit 
             foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
-                CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
-            
+            {
+                CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
+                CheckDead(enemy);
+            }
+
             //hit the area surrounding the epicenter
             if (ability.AOE > 0)
             {
@@ -408,13 +420,18 @@ namespace _Scripts.Runtime.Managers
                         affectedTile += direction.Vector();
                         if (TileCubeCoords.TryGetValue(affectedTile, out _))
                         {
-                            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
-                                CombatFormulas.AbilityDamage(currentUnit, enemy, ability );    
+                            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]]
+                                         .UnitControllers)
+                            {
+                                CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
+                                CheckDead(enemy);
+                            }
                         }
                         else
                             break;
                     }
                 }
+                RemoveDead();
             }
             FinishSelection();
         }
@@ -427,9 +444,17 @@ namespace _Scripts.Runtime.Managers
             RedoSelection();
         }
 
+        /// <summary>
+        /// adds the actual overclock status to the player unit
+        /// </summary>
+        /// <param name="unit"></param>
         private void Overclock(UnitController unit)
         {
-            ((AllyUnit)unit.GetData()).Overclock();
+            AllyUnit au = (AllyUnit)unit.GetData();
+            au.AddStatus(_actionStatusDic["overclock"]);
+            au.Overclock();
+            if(au.OverclockLevel == OverclockTiers.Extreme)
+                au.AddStatus(_actionStatusDic["burnout_0"]);
             Debug.Log("overclocking");
             RedoSelection();
         }
@@ -440,10 +465,16 @@ namespace _Scripts.Runtime.Managers
         }
 
         private void FinishSelection()
-        { 
-            ChangeTurn();
+        {
+            Consume();
             ResetCurrentTile();
-            battlePhaseChanged?.Invoke(_currentPhase, TurnOrder[CurrentUnitTurn]);
+            battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit);
+        }
+        
+        public void Consume()
+        {
+            TurnOrder.ConsumeUnit(CurrentUnit);
+            _currentlyInTurn = false;           
         }
 
         public void RedoSelection()
@@ -452,7 +483,7 @@ namespace _Scripts.Runtime.Managers
             rangeDisplay.HideRange();
             ResetCurrentTile();
             _currentPhase.Exit();
-            battlePhaseChanged?.Invoke(_currentPhase, TurnOrder[CurrentUnitTurn]);
+            battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit);
         }
 
         private void ExamineTile()
@@ -465,8 +496,45 @@ namespace _Scripts.Runtime.Managers
             examinedUnit?.Invoke(unitController);
         }
 
-        public void CheckCombatOver()
+        /// <summary>
+        /// Must be used in every attack function after the damage calculations
+        /// </summary>
+        /// <param name="unit"></param>
+        public void CheckDead(UnitController unit)
         {
+            _deadUnitsThisTurn.Clear();
+            Unit u = unit.GetData();
+            if (u.HealthRemaining < 0)
+            {
+                u.SetDead(true);
+                if (u.Faction == Faction.Ally)
+                    _deadAllies++;
+                else
+                    _deadEnemies++;  //neutral units do not exist, apparently
+                DeadUnits.Add(unit);
+                _deadUnitsThisTurn.Add(unit);
+                Debug.Log(u.Name);
+            }
+            unitsDead?.Invoke(_deadUnitsThisTurn);
+            CheckCombatOver();
+        }
+
+        /// <summary>
+        /// should be called checkdead() after the for loop 
+        /// </summary>
+        public void RemoveDead()
+        {
+         //  foreach(UnitController u in _deadUnitsThisTurn)  
+          //     TileControllers[TileCubeCoords[u.TileCoords]].RemoveUnit(u);
+        }
+
+        private void CheckCombatOver()
+        {
+            if (_deadAllies > PlayerUnits.Count)
+            {
+               finishedBattle?.Invoke(false);
+               return;
+            }
             if (_deadEnemies >= _totalEnemies)
             {
                 foreach (AllyUnitController auc in PlayerUnits)
@@ -474,12 +542,12 @@ namespace _Scripts.Runtime.Managers
                     if(!((AllyUnit)auc.GetData()).CheckOverclock())
                        ((AllyUnit)auc.GetData()).Underclock();
                 }
-                finishedBattle?.Invoke();
+                finishedBattle?.Invoke(true);
             }
         }
 
         public void ExitExamine() { exitedExamine?.Invoke(); }
-        public UnitController GetCurrentUnit() { return TurnOrder[CurrentUnitTurn]; }
+        public UnitController GetCurrentUnit() { return CurrentUnit; }
         public Vector3Int GetSelectedTile() { return _currentTile; }
 
         private void ToggleManualEnemy(bool b) { toggledManualEnemy = b; }

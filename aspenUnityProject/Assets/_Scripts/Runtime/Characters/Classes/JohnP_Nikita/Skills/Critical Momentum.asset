@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
+  m_Name: Critical Momentum
+  m_EditorClassIdentifier: Assembly-CSharp::Skill
+  name: Critical Momentum
+  _isClassInnate: 0
+  _consumesMscSlot: 1
+  _effectsDueToSkill: 0300000004000000
+  _percentOfEffect:
+  - 0.05
+  - 0.05
+  isStackable: 
+  triggerCondition: Failing to land a critical hit
+  explanation: '- Function: Each successful attack that does not result in a critical
+    hit increases Critical Chance and Critical Damage 5%(Stacks). When a critical
+    hit occurs, all accumulated stacks are lost.
+
+
+    - Rewards consistent attacks
+    by gradually increasing critical potential. Once a critical hit lands, the accumulated
+    bonuses reset, creating a high-risk, high-reward cycle.'

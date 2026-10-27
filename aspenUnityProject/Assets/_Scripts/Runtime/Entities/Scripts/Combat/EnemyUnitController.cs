@@ -14,8 +14,13 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         //to be called by the combat manager. Will pass in encounter data and initialize the units. 
         public override void Initialize(UnitDataSO baseStats)
         {
-            //let it blow up when wrong UnitDataSO 
-            stats = new EnemyUnit((EnemyUnitSO)baseStats);
+            if (baseStats is not EnemyUnitSO enemyUnitData)
+            {
+                Debug.LogWarning($"Error initializing EnemyUnit from {baseStats.name}, not a EnemyUnitSO");
+                return;
+            }
+            
+            stats = new EnemyUnit(enemyUnitData);
             Debug.Log($"{gameObject.name} initialized with stats instance ID: {stats.GetHashCode()}"); 
         }
 
@@ -44,7 +49,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public override void ResetValues()
         {
             HasMoved = false;
-            stats.EndDefend();
+            stats.ResetValues();
         }
 
  

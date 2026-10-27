@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2fadaa9994784724a46b33e21e8bb1c, type: 3}
+  m_Name: Nikita
+  m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Entities.Scripts.Combat.PlayableCharacterUnitSO
+  _portrait: {fileID: 0}
+  _id: 
+  _name: Nikita
+  _model: {fileID: 0}
+  Level: 1
+  ExPtsToNextLevel: 0
+  TotalExPtsGained: 0
+  RemainingHealth: 100
+  RemainingEnergy: 100
+  _healthStat: 9
+  _energyStat: 0
+  _strengthStat: 12
+  _defenseStat: 10
+  _techStat: 10
+  _resistanceStat: 12
+  _speedStat: 15
+  _luckStat: 7
+  _precisionStat: 0
+  _evasionStat: 0
+  _health: 3
+  _energy: 4
+  _strength: 1
+  _defense: 2
+  _tech: 2
+  _resistance: 1
+  _speed: 0
+  _luck: 4
+  _precision: 4
+  _evasion: 4
+  _blunt: 0
+  _slash: 0
+  _pierce: 0
+  _blast: 0
+  _water: 0
+  _earth: 0
+  _wind: 0
+  _fire: 0
+  moves: []
+  combatClass: {fileID: 11400000, guid: 9fae1a9a8e57ae44280f8f4bd16408a1, type: 2}
+  _suits: []
+  _startingSuit: {fileID: 11400000, guid: 38fb5388910d80f42900527569483ff4, type: 2}
+  characterQuirk: {fileID: 11400000, guid: a325afeccb1321c49b323b7b193f109c, type: 2}

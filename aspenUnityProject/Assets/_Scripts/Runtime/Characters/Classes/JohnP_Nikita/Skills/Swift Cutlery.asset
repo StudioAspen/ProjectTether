@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea345e84f819d234cb259efd2a0ed4e8, type: 3}
+  m_Name: Swift Cutlery
+  m_EditorClassIdentifier: Assembly-CSharp::Skill
+  name: Swift Cutlery
+  _isClassInnate: 1
+  _consumesMscSlot: 0
+  _effectsDueToSkill: 0000000001000000
+  _percentOfEffect:
+  - 0.035
+  - 0.1
+  isStackable: 0100
+  triggerCondition: Passive
+  explanation: This reinforces her relentless offense while giving her an impactful
+    chance to evade hits.

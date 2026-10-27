@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc74228e44674d649feffd3909e476e6, type: 3}
+  m_Name: TestEncounterData
+  m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.EncounterSO
+  <Tiles>k__BackingField:
+  - Units:
+    - {fileID: 11400000, guid: 97b085f22f7ed431da5b68640b52fbbd, type: 2}
+    - {fileID: 11400000, guid: eeb24e9af0d794225b67dfa2b0aad5f8, type: 2}
+  - Units:
+    - {fileID: 11400000, guid: 1621663b0016c44b096897c3884364c2, type: 2}
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []
+  - Units: []

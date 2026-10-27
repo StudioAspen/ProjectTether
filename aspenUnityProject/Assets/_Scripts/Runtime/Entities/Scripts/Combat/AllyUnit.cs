@@ -4,6 +4,7 @@ using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Characters.Scripts;
 using _Scripts.Runtime.Combat;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
@@ -19,6 +20,10 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public Dictionary<CombatClassType, SuitData> SuitDictionary { get; private set; }
 
         public bool HasOverclocked { get; private set; } 
+        
+        /// <summary>
+        /// not necessarily the same as the overclock level. Decreases separately
+        /// </summary>
         public int OverclockStack { get; private set; }
         
 
@@ -27,7 +32,14 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         {
             SetFaction(Faction.Ally);
             OverclockLevel = OverclockTiers.Off;
-            foreach (SuitBaseDataSO sb in ((PlayableCharacterUnitSO)unit).Suits)
+
+            if (unit is not PlayableCharacterUnitSO playableCharacterUnit)
+            {
+                Debug.LogWarning($"Error initializing AllyUnit from {unit.name}, not a PlayableCharacterUnitSO");
+                return;
+            }
+            
+            foreach (SuitBaseDataSO sb in playableCharacterUnit.Suits)
             {
                SuitData suit = new SuitData(sb); 
                Suits.Add(suit); 
@@ -35,6 +47,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
                //should throw exception/crash because there should never be two suits of the same combat class
                SuitDictionary.Add(suit.GetClassType(),suit);
             }
+            
             // waiting for pod combat dynamics 
             // CurrentSuit = SuitDictionary[(CombatClassType)((PlayableCharacterUnitSO)unit).StartingSuit.ClassType];
             // OverclockLevel = SetOverclock(CurrentSuit.OverclockLevel);
@@ -49,24 +62,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
                 IsDead = true;
         }
 
+        //TODO: move to suit
         public override void ChangeEnergyRemaining(int value)
         {
             EnergyRemaining -= value;
         }
-
-        /*
-        public void ChangeXp(int value)
-        { 
-            XpToNextLevel -= value;
-            if (XpToNextLevel <= 0)
-            {
-                TotalXp += value;
-                LevelUp(); 
-                HasLeveled?.Invoke(this);
-            }
-
-        }
-        */
 
 
         public override void EndDefend()
@@ -75,14 +75,51 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             //new event action here for end defend animation
         }
 
-        //TODO: 
-        //redesign current xp system into pure c# class before finishing this method
-        //leveling up will modify every stat, and stat gain will be dependent on tier
-        private void LevelUp()
+        public override void AddStatus(StatusSO status)
         {
-            Level++;
-            //add stat changing algorithm from a new pure c# static ExperienceSystem class  
+            if(Statuses.TryGetValue(status.StatusId, out Status value))
+            {
+                value.CountUp(status.Duration);
+                if (status.HasStackableEffects)
+                {
+                    foreach (StatMultiplier sm in status.GetStatMultiplier(CurrentSuit.GetClassType()))
+                        MultiplyEStat(sm.stat, sm.multiplier);                               
+                }
+            }else
+            {
+                Statuses.Add(status.StatusId, new Status(status));
+                foreach (StatMultiplier sm in status.GetStatMultiplier(CurrentSuit.GetClassType()))
+                    MultiplyEStat(sm.stat, sm.multiplier);            
+            } 
         }
+
+        public override void TriggerStatuses()
+        {
+            List<string> toDelete = new List<string>();
+            foreach (var status in Statuses.Values)
+            {
+                if (status.Duration == 0)
+                {
+                    toDelete.Add(status.StatusData.StatusId);
+                    foreach (StatMultiplier sm in status.StatusData.GetStatMultiplier(CurrentSuit.GetClassType()))
+                        RevertEStat(sm.stat, sm.multiplier);
+                    continue;
+                }
+
+                HealthRemaining -= status.StatusData.DamageTakenPerTurn;
+                if (status.StatusData.IsStun)
+                    Stunned = true;
+                status.CountDown(1);
+                foreach (var t in status.StatusData.StatusTimeline)
+                {
+                    if (status.TurnsPassed == t.turnToAdd)
+                        AddStatus(t.statusToAdd);
+                }
+            }
+            foreach (var delete in toDelete)                                                     
+                Statuses.Remove(delete);                                                         
+        }
+
 
         public void ChangeClass(CombatClassType classType)
         {
@@ -109,7 +146,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             if (OverclockLevel != OverclockTiers.Off)
                 OverclockLevel = (OverclockTiers)((int)OverclockLevel - 1);
         }
-
+        
+        /// <summary>
+        /// checks if the unit has used suit overclock or overclocked in the battle
+        /// </summary>
+        /// <returns></returns>
         public bool CheckOverclock()
         {
             if (OverclockLevel != OverclockTiers.Off)

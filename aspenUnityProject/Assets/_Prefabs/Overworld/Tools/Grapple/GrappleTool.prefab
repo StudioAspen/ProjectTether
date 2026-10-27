@@ -85,7 +85,7 @@ MonoBehaviour:
   _pullSpeed: 10
   _pullStopDistance: 1
   _pullTimeoutDuration: 10
-  _shootCooldown: 5
+  _shootCooldown: 1
   _colliderShot: {fileID: 0}
   _currentState: 0
   _pullDuration: 0

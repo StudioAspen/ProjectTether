@@ -12,7 +12,6 @@ namespace _Scripts.Runtime.Combat
       //name displayed in UI 
       [SerializeField] private string abilityName;
       public string Name => name;
-      
       [SerializeField][TextArea(3,10)] private string description;
       public string Description => description;
 

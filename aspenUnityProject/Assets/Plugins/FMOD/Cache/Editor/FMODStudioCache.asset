@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5549165050121294967
+--- !u!114 &-795821369352347332
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,79 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/Master.bank
   m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
-  Path: ../FMOD/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 639260153591029653
-  FileSizes: []
-  Exists: 1
---- !u!114 &-946257873325636114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Battle.bank
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
-  Path: ../FMOD/Desktop/Battle.bank
-  Name: Battle
-  StudioPath: bank:/Battle
-  lastModified: 639260153591029653
-  FileSizes: []
-  Exists: 1
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
-  m_Name: FMODStudioCache
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EventCache
-  EditorBanks:
-  - {fileID: 921938788601804105}
-  - {fileID: -946257873325636114}
-  - {fileID: -5549165050121294967}
-  EditorEvents:
-  - {fileID: 3173161964125387995}
-  EditorParameters: []
-  MasterBanks:
-  - {fileID: -5549165050121294967}
-  StringsBanks:
-  - {fileID: 921938788601804105}
-  cacheVersion: 131860
-  cacheTime: 639260153591029653
-  SerializableEventsDict:
-  - key: event:/New Event
-    index: 0
---- !u!114 &921938788601804105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
   Path: ../FMOD/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639260153591029653
+  lastModified: 639275781030058412
   FileSizes:
   - Name: 
     Value: 820
   Exists: 1
---- !u!114 &3173161964125387995
+--- !u!114 &-48343925805714510
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,8 +39,8 @@ MonoBehaviour:
     Data3: -1667710287
     Data4: 1285836664
   Banks:
-  - {fileID: -946257873325636114}
-  - {fileID: -5549165050121294967}
+  - {fileID: 1707908382651894833}
+  - {fileID: 7203340119741673785}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -112,3 +48,67 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1600
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
+  m_Name: FMODStudioCache
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EventCache
+  EditorBanks:
+  - {fileID: -795821369352347332}
+  - {fileID: 1707908382651894833}
+  - {fileID: 7203340119741673785}
+  EditorEvents:
+  - {fileID: -48343925805714510}
+  EditorParameters: []
+  MasterBanks:
+  - {fileID: 7203340119741673785}
+  StringsBanks:
+  - {fileID: -795821369352347332}
+  cacheVersion: 131860
+  cacheTime: 639275781030058412
+  SerializableEventsDict:
+  - key: event:/New Event
+    index: 0
+--- !u!114 &1707908382651894833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: ../FMOD/Desktop/Battle.bank
+  Name: Battle
+  StudioPath: bank:/Battle
+  lastModified: 639275781030051981
+  FileSizes: []
+  Exists: 1
+--- !u!114 &7203340119741673785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: ../FMOD/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 639275781030053632
+  FileSizes: []
+  Exists: 1

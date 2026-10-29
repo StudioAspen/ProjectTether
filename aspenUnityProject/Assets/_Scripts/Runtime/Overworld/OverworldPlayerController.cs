@@ -11,6 +11,7 @@ namespace _Scripts.Runtime.Overworld
         [Header("Movement")]
         [Range(1f, 10f)]
         [SerializeField] private float _characterMoveSpeed = 5f; // Controls how fast the Player's Character moves:
+        [SerializeField] private float _characterRotationSpeed = 10f;
 
         [SerializeField] private float _gravity = -9.81f;
     
@@ -20,6 +21,8 @@ namespace _Scripts.Runtime.Overworld
         private CharacterController _controller;
 
         private Vector2 _moveInput;
+
+        private bool _isUsingCustomMovement;
     
         void Awake()
         {
@@ -50,6 +53,9 @@ namespace _Scripts.Runtime.Overworld
         
         private void ApplyMovement()
         {
+            if (_isUsingCustomMovement)
+                return;
+            
             // Gets the camera's forward direction and keeps movement on the ground:
             Vector3 cameraForward = _mainCamera.forward;
             cameraForward.y = 0;
@@ -72,7 +78,28 @@ namespace _Scripts.Runtime.Overworld
             Vector3 velocity = moveDirection * _characterMoveSpeed;
             velocity.y = _verticalVelocity;
 
-            _controller.Move(velocity * Time.deltaTime);
+            MoveWithVelocity(velocity, true);
         }
+
+        /// <summary>
+        /// Call this in Update()
+        /// </summary>
+        public void MoveWithVelocity(Vector3 velocity, bool applyRotation = true)
+        {
+            _controller.Move(velocity * Time.deltaTime);
+            
+            if (!applyRotation)
+                return;
+            
+            Vector3 planarVelocity = velocity;
+            planarVelocity.y = 0;
+            if (planarVelocity != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(planarVelocity, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _characterRotationSpeed * Time.deltaTime);
+            }
+        }
+        
+        public void OverrideWithCustomMovement(bool isUsingCustomMovement) => _isUsingCustomMovement = isUsingCustomMovement;
     }
 }

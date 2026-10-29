@@ -19,7 +19,7 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private int damage;
       public int Damage => damage;
 
-      [Tooltip("Effects due to ability. 0 = Dodge , 1 = Accuracy , 2 = Defense , 3 = Critical Damage , 4 = Strength")]
+      [Tooltip("Effects due to ability. 0 = Dodge , 1 = Accuracy , 2 = Defense , 3 = Critical Damage , 4 = Strength , 5 = Speed")]
       [SerializeField] private int[] _effectsDueToAbility;
       public int[] EffectsDueToAbility => _effectsDueToAbility;
 

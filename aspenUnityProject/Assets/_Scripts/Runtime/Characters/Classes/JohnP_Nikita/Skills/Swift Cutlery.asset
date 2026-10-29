@@ -15,11 +15,12 @@ MonoBehaviour:
   name: Swift Cutlery
   _isClassInnate: 1
   _consumesMscSlot: 0
+  _isTransferable: 0
   _effectsDueToSkill: 0000000001000000
   _percentOfEffect:
   - 0.035
   - 0.1
   isStackable: 0100
-  triggerCondition: Passive
+  triggerCondition: Stack gained when attacking, lost when hit.
   explanation: This reinforces her relentless offense while giving her an impactful
     chance to evade hits.

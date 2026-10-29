@@ -30,6 +30,9 @@ MonoBehaviour:
     of tanking damage. Think hit and run. They dart in, land a slash or two, then
     get out before the enemy can really respond.
   _whatOverclockEffects: 0100000002000000
+  _overclockEffectsOverwrites:
+  - 1
+  - 1
   explanations:
   - '*(Explanation #1)* Higher Overclock tiers allow her to land more hits per attack,
     increasing her damage potential while complementing her fast paced, aggressive

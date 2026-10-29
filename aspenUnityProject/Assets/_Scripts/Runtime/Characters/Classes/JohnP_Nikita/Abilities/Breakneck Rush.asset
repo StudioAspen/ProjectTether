@@ -24,8 +24,9 @@ MonoBehaviour:
     pressure. Traveling farther increases the damage potential, rewarding players
     who position themselves carefully before committing to the attack.'
   damage: 0
-  _effectsDueToAbility: 
-  _percentOfEffect: []
+  _effectsDueToAbility: 05000000
+  _percentOfEffect:
+  - 0.05
   element: 00000000
   _chanceToHit: 0.95
   _macCost: 2

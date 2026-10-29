@@ -174,7 +174,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
     };
 
 
-        [Header("Base Aptitudes", order = 5)]
+    [Header("Base Aptitudes", order = 5)]
     [Space(10)]
     [Tooltip("HP: Total amount of damage a unit can sustain before falling in battle.")]
     [SerializeField]
@@ -281,7 +281,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
       { Stat.EVA, _evasion },
     };
 
-    [Header("Affinities", order = 6)] [Space(10)] [Tooltip("This unit's affinity to Blunt damage.")] [SerializeField]
+    [Header("Base Affinities", order = 6)] [Space(10)] [Tooltip("This unit's affinity to Blunt damage.")] [SerializeField]
     protected Affinity _blunt;
 
     /// <summary>

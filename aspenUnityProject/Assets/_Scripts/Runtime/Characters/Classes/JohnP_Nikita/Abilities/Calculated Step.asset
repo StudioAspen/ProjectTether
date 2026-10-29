@@ -26,8 +26,8 @@ MonoBehaviour:
   damage: 0
   _effectsDueToAbility: 0000000001000000
   _percentOfEffect:
-  - 0.15
   - 0.1
+  - 0.15
   element: 
   _chanceToHit: 1
   _macCost: 1

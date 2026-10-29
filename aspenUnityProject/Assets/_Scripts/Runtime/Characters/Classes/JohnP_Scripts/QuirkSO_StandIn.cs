@@ -5,12 +5,12 @@ public class QuirkSO_StandIn : ScriptableObject
 {
     [SerializeField] private string nameOfTool;
 
-    [SerializeField] private string nameOfPassive;
+    [SerializeField] private string nameOfBattlePassive;
 
     [SerializeField]
     [Tooltip("Effects due to Quirk. 0 = Attack , 1 = Dodge , 2 = Speed , 3 = Critical Chance , 4 = Critical Damage")]
-    private int[] _effectsDueToQuirk;
-    public int[] EffectsDueToQuirk => _effectsDueToQuirk;
+    private int[] _battleEffectsDueToQuirk;
+    public int[] BattleEffectsDueToQuirk => _battleEffectsDueToQuirk;
 
     [Tooltip("Percent change of the effect by the quirk.")]
     [SerializeField] private float[] _percentOfEffect;
@@ -18,5 +18,5 @@ public class QuirkSO_StandIn : ScriptableObject
 
     [SerializeField]
     [TextArea(3 , 10)]
-    private string explanation;
+    private string effectExplained;
 }

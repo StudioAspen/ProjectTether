@@ -53,4 +53,4 @@ MonoBehaviour:
   combatClass: {fileID: 11400000, guid: 9fae1a9a8e57ae44280f8f4bd16408a1, type: 2}
   _suits: []
   _startingSuit: {fileID: 11400000, guid: 38fb5388910d80f42900527569483ff4, type: 2}
-  characterQuirk: {fileID: 11400000, guid: a325afeccb1321c49b323b7b193f109c, type: 2}
+  _characterQuirk: {fileID: 11400000, guid: a325afeccb1321c49b323b7b193f109c, type: 2}

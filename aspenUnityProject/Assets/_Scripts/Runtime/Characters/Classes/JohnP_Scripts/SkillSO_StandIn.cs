@@ -12,9 +12,14 @@ public class Skill : ScriptableObject
     public bool IsClassInnate => _isClassInnate;
 
     [SerializeField]
-    [Tooltip("Is this transferable between classes")]
+    [Tooltip("Does this consume an MSC slot?")]
     private bool _consumesMscSlot;
     public bool ConsumesMSCSlot => _consumesMscSlot;
+
+    [SerializeField]
+    [Tooltip("Is this a transferable skill.")]
+    private bool _isTransferable;
+    public bool IsTransferable => _isTransferable;
 
     [SerializeField]
     [Tooltip("Stats raised by skill. 0 = Attack , 1 = Dodge , 2 = Speed , 3 = Critical Chance , 4 = Critical Damage")]

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
@@ -72,8 +73,14 @@ namespace _Scripts.Runtime.Combat
      public TileSO TileEffect => tileEffect;
      */
 
-        //we can add specific unique ranges later by having an array of cube coordinate directions
+      // custom range. list of directions walked from the unit's tile
+      // e.g. (0, 1), (0, 1), (0, 1) = line of 3 tiles north
+      [SerializeField] private List<Vector2> customRange;
+      public List<Vector2> CustomRange => customRange;
+
 
         public void SetName(string name) => abilityName = name;
+    
     }
+    
 }

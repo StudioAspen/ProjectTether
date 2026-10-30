@@ -14,21 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: High Stakes
-  description: '**Effect:** The character sacrifices some of their Defense to increase
+  _isModifiedAbility: 0
+  _modifiedFrom: {fileID: 0}
+  _description: '**Effect:** The character sacrifices some of their Defense to increase
     her Strength and Critical Damage.
 
 
+
     **Explanation:** The character risks
-    their own safety for a greater offensive payoff. I also believe this will have
+    their own safety for a greater offensive payoff.I also believe this will have
     fun synergies to play with. '
-  damage: 0
-  _effectsDueToAbility: 020000000300000004000000
-  _percentOfEffect:
-  - -0.1
-  - 0.05
-  - 0.05
+  _damage: 0
+  _numberOfHits: 0
+  _effectsDueToAbility: 010000000000000004000000
+  _effectAmount:
+  - -0.15
+  - 0.25
+  - 0.25
+  _numberOfTurnsEffectLasts: 000000000000000000000000
   element: 
   _chanceToHit: 1
+  _hitChanceLossPerTileTravelled: 0
   _macCost: 3
   _energyCost: 18
   abilityType: 1

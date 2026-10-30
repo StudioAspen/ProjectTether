@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279d2ab0528d3e4c19cd7682bdffa241, type: 3}
+  m_Name: Mirror Relay
+  m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
+  id: 
+  abilityName: Mirror Relay
+  _isModifiedAbility: 1
+  _modifiedFrom: {fileID: 11400000, guid: 09139a28a32076e4598469dbe0a70a32, type: 2}
+  _description: 'Effect: Nikita distributes Afterimage''s +25% Dodge bonus between
+    herself and an ally within 2 tiles. Both receive +12.5% Dodge until Nikita''s
+    next turn. The Energy recovery effect from successful dodges is removed.
+
+
+    Explanation:
+    Changes Afterimage from a personal defensive ability into a team-oriented defensive
+    tool. Useful when paired with fragile teammates or against bosses that frequently
+    target multiple party members. '
+  _damage: 0
+  _numberOfHits: 0
+  _effectsDueToAbility: 05000000
+  _effectAmount:
+  - 0.125
+  element: 
+  _chanceToHit: 1
+  _hitChanceLossPerTileTravelled: 0
+  _macCost: 2
+  _energyCost: 10
+  abilityType: 1
+  range: 0
+  aoe: 0
+  hitsEnemies: 0
+  hitsAllies: 1
+  hitsSelf: 1
+  canTargetEmptyTile: 0
+  canMiss: 0

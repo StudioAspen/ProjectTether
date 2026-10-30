@@ -27,8 +27,12 @@ MonoBehaviour:
     survivability.'
   _damage: 0
   _numberOfHits: 0
-  _effectsDueToAbility: 
-  _effectAmount: []
+  _effectsDueToAbility: 000000000400000001000000
+  _effectAmount:
+  - 0
+  - 0
+  - 0
+  _numberOfTurnsEffectLasts: 
   element: 
   _chanceToHit: 1
   _hitChanceLossPerTileTravelled: 0

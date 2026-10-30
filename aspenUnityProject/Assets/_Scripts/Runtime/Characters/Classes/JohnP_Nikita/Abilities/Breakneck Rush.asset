@@ -29,7 +29,7 @@ MonoBehaviour:
 
 '
   _damage: 0
-  _numberOfHits: 0
+  _numberOfHits: 1
   _effectsDueToAbility: 02000000
   _effectAmount:
   - 0.05

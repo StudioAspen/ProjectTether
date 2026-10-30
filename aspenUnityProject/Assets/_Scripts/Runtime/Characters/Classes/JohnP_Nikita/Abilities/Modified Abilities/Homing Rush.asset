@@ -23,11 +23,13 @@ MonoBehaviour:
     evasive bosses or when Nikita needs to reliably land attacks from a distance.
     \r\n"
   _damage: 0
-  _numberOfHits: 0
+  _numberOfHits: 1
   _effectsDueToAbility: 
-  _percentOfEffect: []
+  _effectAmount: []
+  _numberOfTurnsEffectLasts: 
   element: 
   _chanceToHit: 0.95
+  _hitChanceLossPerTileTravelled: 0
   _macCost: 2
   _energyCost: 12
   abilityType: 1

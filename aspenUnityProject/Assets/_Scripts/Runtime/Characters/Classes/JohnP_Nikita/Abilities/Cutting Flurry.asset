@@ -14,22 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Cutting Flurry
-  description: '**Effect:** The character performs three rapid attacks against enemy. 
-    The third hit has an increased chance to critically strike. (If one attack misses
-    then the sequence of attacks stop.)
+  _isModifiedAbility: 0
+  _modifiedFrom: {fileID: 0}
+  _description: '**Effect:** The character performs three rapid attacks against the
+    enemy.  The third hit has an increased chance to critically strike. (If one attack
+    misses then the sequence of attacks stops.)
 
 
-    **Explanation**: Allows the Character
-    to unleash a series of rapid attacks against enemies positioned on either side.
-    The increased critical hit chance on the third strike rewards aggressive positioning
-    and gives the ability a stronger finishing hit.
 
-'
-  damage: 0
-  _effectsDueToAbility: 
-  _percentOfEffect: []
+    **Explanation**: Allows the
+    Character to unleash a series of rapid attacks against enemies positioned on
+    either side. The increased critical hit chance on the third strike rewards aggressive
+    positioning and gives the ability a stronger finishing hit.'
+  _damage: 0
+  _numberOfHits: 3
+  _effectsDueToAbility: 03000000
+  _effectAmount:
+  - 0.1
+  _numberOfTurnsEffectLasts: 00000000
   element: 01000000
   _chanceToHit: 0.8
+  _hitChanceLossPerTileTravelled: 0
   _macCost: 2
   _energyCost: 13
   abilityType: 1

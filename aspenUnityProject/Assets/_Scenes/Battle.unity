@@ -1937,6 +1937,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4136689117828811674, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
+      propertyPath: cursor
+      value: 
+      objectReference: {fileID: 1409074498}
+    - target: {fileID: 4376689271322193861, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
+      propertyPath: m_fontSize
+      value: 65
+      objectReference: {fileID: 0}
     - target: {fileID: 4376689271322193861, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_RaycastTarget
       value: 0

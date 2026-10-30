@@ -15,10 +15,11 @@ MonoBehaviour:
   name: In The Zone
   _isClassInnate: 0
   _consumesMscSlot: 1
+  _isTransferable: 1
   _effectsDueToSkill: 02000000
   _percentOfEffect:
   - 0.05
-  isStackable: 
-  triggerCondition: After dodging
+  isStackable: 01
+  triggerCondition: After dodging (stacks infinitely)
   explanation: Nikita gets stronger the longer she keeps moving. Staying active rewards
     her with more speed, making her harder to catch.

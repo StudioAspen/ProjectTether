@@ -29,15 +29,10 @@ MonoBehaviour:
   _classDescription: A fighter who focuses on speed, quick hits, and mobility instead
     of tanking damage. Think hit and run. They dart in, land a slash or two, then
     get out before the enemy can really respond.
-  effects:
-  - '1. While Overclocked, Nikita''s attacks are guaranteed to hit multiple times,
-    with the number of hits increasing by Overclock tier.
-
-    + (It sounds like
-    both are supposed to happen)
-
-    2. Evades attacks for several turns depending
-    on Overclock tier (1-3 turns).'
+  _whatOverclockEffects: 0100000002000000
+  _overclockEffectsOverwrites:
+  - 1
+  - 1
   explanations:
   - '*(Explanation #1)* Higher Overclock tiers allow her to land more hits per attack,
     increasing her damage potential while complementing her fast paced, aggressive

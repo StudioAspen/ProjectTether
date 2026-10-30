@@ -14,20 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Breakneck Rush
-  description: '**Effect:** The character rushes in a straight line toward an enemy,
+  _isModifiedAbility: 0
+  _modifiedFrom: {fileID: 0}
+  _description: '**Effect:** The character rushes in a straight line toward an enemy,
     striking them upon reaching an adjacent tile. Damage increases with each tile
-    traveled. On a successful hit, the character gains a temporary +5 Speed boost.
+    traveled. On a successful hit, the character gains a temporary 5% Speed boost.
+
 
 
     **Explanation:**
     The character closes the distance to an enemy while turning movement into offensive
     pressure. Traveling farther increases the damage potential, rewarding players
-    who position themselves carefully before committing to the attack.'
-  damage: 0
-  _effectsDueToAbility: 
-  _percentOfEffect: []
+    who position themselves carefully before committing to the attack.
+
+'
+  _damage: 0
+  _numberOfHits: 0
+  _effectsDueToAbility: 02000000
+  _effectAmount:
+  - 0.05
+  _numberOfTurnsEffectLasts: 01000000
   element: 00000000
   _chanceToHit: 0.95
+  _hitChanceLossPerTileTravelled: 0.05
   _macCost: 2
   _energyCost: 12
   abilityType: 1

@@ -14,22 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Calculated Step
-  description: '- Effect: The character quickly dashes up to 2 tiles in a chosen
-    direction. After moving, the character gains a temporary 15% Accuracy bonus on
-    their next attack against an enemy within range and 10% Dodge.
+  _isModifiedAbility: 0
+  _modifiedFrom: {fileID: 0}
+  _description: 'Effect: The character quickly dashes up to 2 tiles in a chosen direction.
+    After moving, the character gains a temporary 15% Accuracy bonus on their next
+    attack against an enemy within range and 10% Dodge.
 
 
-    - Explanation:
-    The character uses their agility to reposition before attacking. Calculated Step
-    encourages players to move around the battlefield, create unique attack angles,
-    and prepare for a follow up.'
-  damage: 0
-  _effectsDueToAbility: 0000000001000000
-  _percentOfEffect:
-  - 0.15
+
+    Explanation: The character
+    uses their agility to reposition before attacking. Calculated Step encourages
+    players to move around the battlefield, create unique attack angles, and prepare
+    for a follow up.
+
+'
+  _damage: 0
+  _numberOfHits: 0
+  _effectsDueToAbility: 0500000006000000
+  _effectAmount:
   - 0.1
+  - 0.15
   element: 
   _chanceToHit: 1
+  _hitChanceLossPerTileTravelled: 0
   _macCost: 1
   _energyCost: 5
   abilityType: 1

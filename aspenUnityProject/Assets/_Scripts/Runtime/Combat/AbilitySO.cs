@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
 {
-   [CreateAssetMenu(fileName = "Ability", menuName = "Scriptable Objects/Misc/Ability")]
+   [CreateAssetMenu(fileName = "Ability" , menuName = "Scriptable Objects/Misc/Ability")]
    public class AbilitySO : ScriptableObject
    {
       //e.g., fireball_0 or obliterate_0
@@ -12,27 +14,44 @@ namespace _Scripts.Runtime.Combat
       //name displayed in UI 
       [SerializeField] private string abilityName;
       public string Name => name;
-      
-      [SerializeField][TextArea(3,10)] private string description;
-      public string Description => description;
+
+      [SerializeField] private bool _isModifiedAbility;
+      public bool IsModifiedAbility => _isModifiedAbility;
+
+      [Tooltip("If Applicable")]
+      [SerializeField] private AbilitySO _modifiedFrom;
+      public bool ModifiedFrom => _modifiedFrom;
+
+      [SerializeField][TextArea(3,10)] private string _description;
+      public string Description => _description;
 
       //make negative for healing moves 
-      [SerializeField] private int damage;
-      public int Damage => damage;
+      [SerializeField] private int _damage;
+      public int Damage => _damage;
 
-      [Tooltip("Effects due to ability. 0 = Dodge , 1 = Accuracy , 2 = Defense , 3 = Critical Damage , 4 = Strength")]
-      [SerializeField] private int[] _effectsDueToAbility;
-      public int[] EffectsDueToAbility => _effectsDueToAbility;
+      [SerializeField] private int _numberOfHits;
+      public int NumberOfHits => _numberOfHits;
 
-      [Tooltip("Percent change of the effect by the ability.")]
-      [SerializeField] private float[] _percentOfEffect;
-      public float[] PercentofEffect => _percentOfEffect;
+      [SerializeField] private BattleParametersList.BattleParameters[] _effectsDueToAbility;
+      public BattleParametersList.BattleParameters[] EffectsDueToAbility => _effectsDueToAbility;
+
+      [Tooltip("If the number is between 0 and 1 it is the percent change of the " +
+               "battle parameter by the ability. If it is over one, it is simply an addition")]
+      [SerializeField] private float[] _effectAmount;
+      public float[] EffectAmount => _effectAmount;
+
+      [SerializeField] private int[] _numberOfTurnsEffectLasts;
+      public int[] NumberOfTurnsEffectLasts => _numberOfTurnsEffectLasts;
 
       [SerializeField] private Element[] element; 
       public Element[] Element => element;
 
       [SerializeField] private float _chanceToHit;
       public float ChanceToHit => _chanceToHit;
+
+      //This field is primarily for a move called breakneck rush.
+      [SerializeField] private float _hitChanceLossPerTileTravelled;
+      public float HitChanceLossPerTileTraveled => _hitChanceLossPerTileTravelled;
 
       [SerializeField] private float _macCost;
       public float MACCost => _macCost;
@@ -73,8 +92,14 @@ namespace _Scripts.Runtime.Combat
      public TileSO TileEffect => tileEffect;
      */
 
-        //we can add specific unique ranges later by having an array of cube coordinate directions
+      // custom range. list of directions walked from the unit's tile
+      // e.g. (0, 1), (0, 1), (0, 1) = line of 3 tiles north
+      [SerializeField] private List<Vector2> customRange;
+      public List<Vector2> CustomRange => customRange;
+
 
         public void SetName(string name) => abilityName = name;
+    
     }
+    
 }

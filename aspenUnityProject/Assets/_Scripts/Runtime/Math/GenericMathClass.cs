@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using System.Numerics;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Tile_System.Scripts;
+using Vector2 = UnityEngine.Vector2;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Math
@@ -59,7 +62,13 @@ namespace _Scripts.Runtime.Math
         public static bool AbilityReachable(this UnitController cc, AbilitySO ability, TileController target)
         {
             Vector3Int from = cc.TileCoords;
-            bool tileWithinRange = target.tileCoordinate.HexGridDistance(from) <= ability.Range;
+            // use custom range if the ability has one, if not then normal range
+            bool tileWithinRange;
+            if (ability.CustomRange.Count > 0)
+                tileWithinRange = from.CustomRange(ability.CustomRange, target.tileCoordinate);
+            else
+                tileWithinRange = target.tileCoordinate.HexGridDistance(from) <= ability.Range;
+
             if (!tileWithinRange)
                 return false;
             bool targetContainsUnit = target.UnitControllers.Count > 0;
@@ -79,6 +88,19 @@ namespace _Scripts.Runtime.Math
             return (targetContainsAlly && ability.HitsAllies) ||
                    (!targetContainsUnit && ability.CanTargetEmptyTile) ||
                    (targetContainsEnemy && ability.HitsEnemies);
+        }
+
+        // checks if the target tile is on the custom range path
+        public static bool CustomRange(this Vector3Int origin, List<Vector2> customRange, Vector3Int target)
+        {
+            Vector3Int current = origin;
+            foreach (Vector2 step in customRange)
+            {
+                current += step.GetDirection().Vector();
+                if (current == target)
+                    return true;
+            }
+            return false;
         }
     }
 }

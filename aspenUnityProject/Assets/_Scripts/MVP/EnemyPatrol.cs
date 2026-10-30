@@ -4,6 +4,8 @@ public class EnemyPatrol : MonoBehaviour
 {
     public float moveSpeed = 5;
     public Transform[] waypoints;
+    public float gravity = -9.81f;
+    private float verticalVelocity;
     private int currentWaypoints = 0;
     private EnemyState currentState = EnemyState.Wait;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,6 +23,14 @@ public class EnemyPatrol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (controller.isGrounded && verticalVelocity < 0f)
+        {
+            verticalVelocity = -2f;
+        }
+
+        verticalVelocity += gravity * Time.deltaTime;
+        controller.Move(Vector3.up * verticalVelocity * Time.deltaTime);
+
         if (waypoints == null || waypoints.Length == 0)
         {
             return;

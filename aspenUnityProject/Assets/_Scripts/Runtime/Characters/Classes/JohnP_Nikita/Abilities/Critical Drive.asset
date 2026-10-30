@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Critical Drive
-  description: '**Effect:** The character performs a powerful, focused strike. If
+  _isModifiedAbility: 0
+  _modifiedFrom: {fileID: 0}
+  _description: '**Effect:** The character performs a powerful, focused strike. If
     you accumulated stacks from Critical Momentum, those bonuses improve the character''s
     chance of landing a critical hit and the resulting critical damage.
 
@@ -23,11 +25,13 @@ MonoBehaviour:
     The Character converts the critical potential they had built up into a powerful
     attack. This gives players a reason to balance weaker, reliable attacks against
     a more expensive strike with greater damage potential.'
-  damage: 0
+  _damage: 0
+  _numberOfHits: 1
   _effectsDueToAbility: 
-  _percentOfEffect: []
+  _effectAmount: []
   element: 00000000
   _chanceToHit: 1
+  _hitChanceLossPerTileTravelled: 0
   _macCost: 3
   _energyCost: 20
   abilityType: 1

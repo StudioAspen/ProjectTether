@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279d2ab0528d3e4c19cd7682bdffa241, type: 3}
+  m_Name: Cleaving Flurry
+  m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
+  id: 
+  abilityName: Cleaving Flurry
+  _isModifiedAbility: 1
+  _modifiedFrom: {fileID: 11400000, guid: 57847e800636c6c4d942caff714444af, type: 2}
+  _description: 'Effect: Cutting Flurry''s third strike also attacks a second enemy
+    adjacent to the original target. Each strike''s Hit Chance is reduced from 90%
+    to 85%. The attack sequence still ends if a strike misses, and the third strike
+    retains its +20 percentage-point Critical Chance bonus.
+
+
+    Explanation: Allows
+    Nikita to damage multiple enemies instead of focusing entirely on one target.
+    Useful against bosses that summon additional enemies, but sacrifices individual
+    attack reliability for greater offensive coverage. '
+  _damage: 0
+  _numberOfHits: 3
+  _effectsDueToAbility: 03000000
+  _effectAmount: []
+  element: 01000000
+  _chanceToHit: 0.85
+  _hitChanceLossPerTileTravelled: 0
+  _macCost: 2
+  _energyCost: 13
+  abilityType: 1
+  range: 1
+  aoe: 0
+  hitsEnemies: 1
+  hitsAllies: 0
+  hitsSelf: 0
+  canTargetEmptyTile: 1
+  canMiss: 1

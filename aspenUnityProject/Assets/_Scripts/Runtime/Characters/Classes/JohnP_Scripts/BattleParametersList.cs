@@ -11,6 +11,8 @@ public static class BattleParametersList
         CriticalHitDamage = 4,
         DodgeChance = 5,
         Accuracy = 6,
-        EnergyPoints = 7
+        EnergyPoints = 7,
+        Attack = 8,
+        Resistance = 9
     }
 }

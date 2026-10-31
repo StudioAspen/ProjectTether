@@ -16,10 +16,10 @@ MonoBehaviour:
   _isClassInnate: 0
   _consumesMscSlot: 1
   _isTransferable: 1
-  _effectsDueToSkill: 02000000
+  _effectsDueToAbility: 02000000
   _percentOfEffect:
   - 0.05
   isStackable: 01
-  triggerCondition: After dodging (stacks infinitely)
+  triggerCondition: After dodging an ability/attack. Stacks till end of combat.
   explanation: Nikita gets stronger the longer she keeps moving. Staying active rewards
     her with more speed, making her harder to catch.

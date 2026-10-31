@@ -70,10 +70,10 @@ namespace _Scripts.Consystently.UI
     }
     
     protected virtual void OnDestroy() {
-      CombatManager.battlePhaseChanged += HandleUserActions;
-      CombatManager.examinedTile += ExamineTile;
-      CombatManager.exitedExamine += ExitExamine;
-      CombatManager.examinedUnit += ExamineUnit;
+      CombatManager.battlePhaseChanged -= HandleUserActions;
+      CombatManager.examinedTile -= ExamineTile;
+      CombatManager.exitedExamine -= ExitExamine;
+      CombatManager.examinedUnit -= ExamineUnit;
       if (_attackButton != null) _attackButton.onClick.RemoveAllListeners();
       if (_defendButton != null) _defendButton.onClick.RemoveAllListeners();
       if (_moveButton != null) _moveButton.onClick.RemoveAllListeners();

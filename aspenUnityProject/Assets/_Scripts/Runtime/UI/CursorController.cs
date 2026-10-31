@@ -5,12 +5,12 @@ namespace _Scripts.Runtime.UI
 {
     public class CursorController : MonoBehaviour
     {
-        void OnEnable()
+        void Awake()
         {
             CombatManager.hoverTileChanged += Move;
         }
 
-        void OnDisable()
+        void OnDestroy()
         {
             CombatManager.hoverTileChanged -= Move;
         }

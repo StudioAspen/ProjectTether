@@ -10,6 +10,7 @@ namespace _Scripts.Runtime.Combat
         public void ReturnToOverworld()
         {
             GameManager.Instance.ChangeGameState(GameManager.State.Overworld);
+            GameManager.ChangeScene(GameManager.Instance.OverworldScene.Name);
         }
     }
 }

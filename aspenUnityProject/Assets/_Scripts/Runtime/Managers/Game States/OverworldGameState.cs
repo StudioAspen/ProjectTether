@@ -12,8 +12,6 @@ namespace _Scripts.Runtime.Managers.Game_States
             InputManager.Instance.Actions.UI.Disable();
 
             InputManager.Instance.LockCursor(true);
-
-            GameManager.ChangeScene(GameManager.Instance.OverworldScene.Name);
         }
 
         public override void Update()

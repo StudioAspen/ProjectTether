@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Runtime.Managers;
 using DG.Tweening;
 using NaughtyAttributes;
@@ -13,12 +15,7 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
         [SerializeField, Required] private OverworldPlayerController _playerController;
         [SerializeField, Required] private GrappleProjectile _projectilePrefab;
         [SerializeField, Required] private Transform _projectileSpawnTransform;
-        [SerializeField, Required] private Transform _cameraTargetTransform;
-        
-        [Header("Aim Lookahead")]
-        [SerializeField] private float _aimLookaheadOffset = 3f;
-        [SerializeField] private float _aimLookaheadAnimDuration = 0.3f;
-        [SerializeField] private Ease _aimLookaheadAnimEase = Ease.OutCubic;
+        [SerializeField, Required] private GameObject _lightIndicatorObject;
         
         [Header("Grapple Config")]
         [SerializeField] private float _shootRange = 10f;
@@ -31,55 +28,41 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
         public enum State
         {
             Ready,
-            Aiming,
             Shooting,
             Pulling,
             Cooldown
         }
         [SerializeField, ReadOnly] private State _currentState = State.Ready;
         
+        private Vector3? _targetProjectileDestination;
         private GrappleProjectile _currentProjectile;
         [SerializeField, ReadOnly] private float _pullDuration = 0f;
         [SerializeField, ReadOnly] private float _cooldownTimer = 0f;
 
+        private void Start()
+        {
+            _lightIndicatorObject.SetActive(false);
+        }
+
         private void OnEnable()
         {
             InputManager.Instance.Actions.Player.PrimaryToolAction.performed += Input_PrimaryToolActionPerformed;
-            
-            InputManager.Instance.Actions.Player.SecondaryToolAction.started += Input_SecondaryToolActionStarted;
-            InputManager.Instance.Actions.Player.SecondaryToolAction.canceled += Input_SecondaryToolActionCanceled;
         }
 
         private void OnDisable()
         {
             InputManager.Instance.Actions.Player.PrimaryToolAction.performed -= Input_PrimaryToolActionPerformed;
-            
-            InputManager.Instance.Actions.Player.SecondaryToolAction.started -= Input_SecondaryToolActionStarted;
-            InputManager.Instance.Actions.Player.SecondaryToolAction.canceled -= Input_SecondaryToolActionCanceled;
         }
 
         private void Input_PrimaryToolActionPerformed(InputAction.CallbackContext context)
         {
-            if (_currentState != State.Aiming)
+            if (_currentState != State.Ready)
+                return;
+
+            if (_targetProjectileDestination == null)
                 return;
 
             ChangeState(State.Shooting);
-        }
-        
-        private void Input_SecondaryToolActionStarted(InputAction.CallbackContext context)
-        {
-            if (_currentState != State.Ready)
-                return;
-            
-            ChangeState(State.Aiming);
-        }
-        
-        private void Input_SecondaryToolActionCanceled(InputAction.CallbackContext context)
-        {
-            if (_currentState != State.Aiming)
-                return;
-
-            ChangeState(State.Ready);
         }
 
         private void ChangeState(State newState, bool forceChange = false)
@@ -98,14 +81,9 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             {
                 case State.Ready:
                     break;
-                case State.Aiming:
-                    _cameraTargetTransform.DOKill();
-                    _cameraTargetTransform.DOLocalMoveZ(_aimLookaheadOffset, _aimLookaheadAnimDuration)
-                        .SetEase(_aimLookaheadAnimEase);
-                    break;
                 case State.Shooting:
                     _currentProjectile = Instantiate(_projectilePrefab, _projectileSpawnTransform.position, Quaternion.identity);
-                    _currentProjectile.Shoot(this, transform.forward, _shootRange, _projectileSpeed);
+                    _currentProjectile.Shoot(this, _targetProjectileDestination.Value, _projectileSpeed);
                     break;
                 case State.Pulling:
                     _playerController.OverrideWithCustomMovement(true);
@@ -126,8 +104,8 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             switch (state) 
             {
                 case State.Ready:
-                    break;
-                case State.Aiming:
+                    ScanForAimSurfaces();
+                    UpdateLightIndicator();
                     break;
                 case State.Shooting:
                     break;
@@ -175,10 +153,7 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             switch (state) 
             {
                 case State.Ready:
-                    break;
-                case State.Aiming:
-                    _cameraTargetTransform.DOKill();
-                    _cameraTargetTransform.DOLocalMove(Vector3.zero, _aimLookaheadAnimDuration).SetEase(_aimLookaheadAnimEase);
+                    _lightIndicatorObject.SetActive(false);
                     break;
                 case State.Shooting:
                     break;
@@ -190,7 +165,7 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             }
         }
 
-        public void OnProjectileCollideSuccess()
+        public void OnProjectileReachedDestination()
         {
             if (_currentState != State.Shooting)
                 return;
@@ -198,17 +173,50 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             ChangeState(State.Pulling);
         }
         
-        public void OnProjectileCollideFail()
-        {
-            if (_currentState != State.Shooting)
-                return;
-
-            ChangeState(State.Cooldown);
-        }
-        
         private void Update()
         {
             UpdateState(_currentState);
+        }
+
+        private void ScanForAimSurfaces()
+        {
+            List<Vector3> validHitPoints = new();
+            
+            RaycastHit[] hits = Physics.RaycastAll(_projectileSpawnTransform.position, transform.forward, _shootRange);
+            foreach (RaycastHit hit in hits)
+            {
+                Grappleable grappleable = hit.collider.GetComponentInParent<Grappleable>();
+                if (grappleable == null)
+                    continue;
+                
+                validHitPoints.Add(hit.point);
+            }
+
+            if (validHitPoints.Count == 0)
+            {
+                _targetProjectileDestination = null;
+                return;
+            }
+            
+            // Get closest hitpoint
+            float closestSqrMagnitude = float.MaxValue;
+            Vector3? closestPoint = null;
+            foreach (Vector3 point in validHitPoints)
+            {
+                float sqrMagnitude = (point - _playerController.transform.position).sqrMagnitude;
+                if (sqrMagnitude < closestSqrMagnitude)
+                {
+                    closestSqrMagnitude = sqrMagnitude;
+                    closestPoint = point;
+                }
+            }
+            
+            _targetProjectileDestination = closestPoint;
+        }
+
+        private void UpdateLightIndicator()
+        {
+            _lightIndicatorObject.SetActive(_targetProjectileDestination != null);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Scripts.Consystently.UI;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.Mechanics;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
@@ -110,17 +111,18 @@ namespace _Scripts.Runtime.Managers
             
             _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
             _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
-            CombatUI.PlayerAction += HandleAction;
-            CombatUI.PlayerSelectiveAction += HandleAction;
-            CombatUI.ToggledManualEnemy += ToggleManualEnemy;
+            BattleMenuHE.PlayerAction += HandleAction;
+            BattleMenuHE.PlayerSelectiveAction += HandleAction;
+            BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;
             foreach (StatusSO status in _actionStatuses)
                 _actionStatusDic.Add(status.StatusId, status);
         }
 
         private void OnDestroy()
         {
-            CombatUI.PlayerAction -= HandleAction;
-            CombatUI.PlayerSelectiveAction -= HandleAction;
+            BattleMenuHE.PlayerAction -= HandleAction;
+            BattleMenuHE.PlayerSelectiveAction -= HandleAction;
+            BattleMenuHE.ToggledManualEnemy -= ToggleManualEnemy;
             _input.TileSelect.Disable();
             TurnOrder.Clear();
             PlayerUnits.Clear();

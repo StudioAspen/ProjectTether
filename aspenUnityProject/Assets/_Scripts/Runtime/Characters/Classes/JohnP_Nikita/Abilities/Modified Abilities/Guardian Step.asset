@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279d2ab0528d3e4c19cd7682bdffa241, type: 3}
+  m_Name: Guardian Step
+  m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
+  id: 
+  abilityName: Guardian Step
+  _isModifiedAbility: 1
+  _modifiedFrom: {fileID: 11400000, guid: c1310816c9d61694d8a5d4f99982f53e, type: 2}
+  _description: 'Effect: Instead of performing a standard dash, Nikita swaps positions
+    with an ally within 2 tiles. She retains the +5% Dodge bonus and gains 1 Swift
+    Cutlery stack, but loses the +10% Accuracy bonus.
+
+
+    Explanation: Allows Nikita
+    to reposition teammates out of danger or place herself in an advantageous position.
+    Particularly useful against bosses with telegraphed attacks or when protecting
+    vulnerable allies. '
+  _damage: 0
+  _numberOfHits: 0
+  _effectsDueToAbility: 05000000
+  _effectAmount:
+  - 0.05
+  element: 
+  _chanceToHit: 1
+  _hitChanceLossPerTileTravelled: 0
+  _macCost: 1
+  _energyCost: 10
+  abilityType: 2
+  range: 2
+  aoe: 0
+  hitsEnemies: 0
+  hitsAllies: 1
+  hitsSelf: 1
+  canTargetEmptyTile: 0
+  canMiss: 0

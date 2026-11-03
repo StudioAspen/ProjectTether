@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
   abilityName: Afterimage
-  description: '**Effect:** The character enters an evasive stance, gaining a temporary
+  _isModifiedAbility: 0
+  _modifiedFrom: {fileID: 0}
+  _description: '**Effect:** The character enters an evasive stance, gaining a temporary
     40% Dodge bonus until their next turn. If an enemy attack misses because of this
-    bonus, the character regenerates a +35 Energy points.
+    bonus, the character regenerates a +35 Energy points .
+
 
 
     **Explanation:**
@@ -25,12 +28,16 @@ MonoBehaviour:
     and maintain their momentum.
 
 '
-  damage: 0
-  _effectsDueToAbility: 00000000
-  _percentOfEffect:
+  _damage: 0
+  _numberOfHits: 0
+  _effectsDueToAbility: 0500000007000000
+  _effectAmount:
   - 0.4
+  - 35
+  _numberOfTurnsEffectLasts: 0100000000000000
   element: 
   _chanceToHit: 1
+  _hitChanceLossPerTileTravelled: 0
   _macCost: 2
   _energyCost: 10
   abilityType: 1

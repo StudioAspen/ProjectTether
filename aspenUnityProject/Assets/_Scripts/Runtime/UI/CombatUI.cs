@@ -31,7 +31,7 @@ namespace _Scripts.Runtime.UI {
         
         private Button[] abilityButtons;
 
-        public static event Action<CombatActions> PlayerAction;
+        public static Action<CombatActions> PlayerAction;
         public static event Action<CombatActions, int> PlayerSelectiveAction;
 
         public static event Action<bool> ToggledManualEnemy;

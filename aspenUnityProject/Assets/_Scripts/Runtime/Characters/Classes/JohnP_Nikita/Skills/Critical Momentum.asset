@@ -15,12 +15,14 @@ MonoBehaviour:
   name: Critical Momentum
   _isClassInnate: 0
   _consumesMscSlot: 1
+  _isTransferable: 1
   _effectsDueToSkill: 0300000004000000
   _percentOfEffect:
   - 0.05
   - 0.05
-  isStackable: 
-  triggerCondition: Failing to land a critical hit
+  isStackable: 0101
+  triggerCondition: Failing to land a critical hit increases the stack. Landing it
+    resets the stack.
   explanation: '- Function: Each successful attack that does not result in a critical
     hit increases Critical Chance and Critical Damage 5%(Stacks). When a critical
     hit occurs, all accumulated stacks are lost.

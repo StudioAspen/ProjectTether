@@ -1,5 +1,6 @@
 using _Scripts.Runtime.Combat;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -40,8 +41,16 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
 
         [Header("Overclock", order = 4)]
         [Space(5)]
-        [Tooltip("Overclock Effects")]
-        [SerializeField][TextArea(0 , 10)] private string[] effects;
+        [Tooltip("What Overclock is effecting (That is not stats): 1 = Attack Chance , 2 = Attack Repitition Frequency")]
+        [SerializeField]
+        protected List<int> _whatOverclockEffects;
+        public List<int> WhatOverclockEffects => WhatOverclockEffects;
+
+        [Space(5)]
+        [Tooltip("Overclock Effects Percent")]
+        [SerializeField]
+        protected List<float> _overclockEffectsOverwrites;
+        public List<float> OverclockEffectsOverwrites => _overclockEffectsOverwrites;
 
         [Tooltip("Overclock Explanations")]
         [SerializeField][TextArea(0, 10)] private string[] explanations;

@@ -11,18 +11,17 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
     {
     
         //TODO: add stat modifier later 
-        [SerializeField] private Element[] defaultAttackElements;
-        public Element[] DefaultAttackElements => defaultAttackElements;
-
         [FormerlySerializedAs("className")] [SerializeField] private string _className;
         public string ClassName => _className;
 
         //0 = cannot attack anything, 1 = 1 ring around unit, 3 = effectively global range for 19 tiles
         [FormerlySerializedAs("defaultAttackRange")] [SerializeField, Range(0,3)]
         private int _defaultAttackRange;
-
         public int DefaultAttackRange => _defaultAttackRange;
-        
+
+        [SerializeField] private Element[] defaultAttackElements;
+        public Element[] DefaultAttackElements => defaultAttackElements;
+
         [SerializeField]
         protected Skill _innateSkill;
         public Skill InnateSkill => _innateSkill;

@@ -27,17 +27,19 @@ MonoBehaviour:
     survivability.'
   _damage: 0
   _numberOfHits: 0
-  _effectsDueToAbility: 000000000400000001000000
+  _effectsDueToAbility: 0100000009000000000000000400000002000000
   _effectAmount:
-  - 0
-  - 0
-  - 0
-  _numberOfTurnsEffectLasts: 
+  - -0.2
+  - -0.2
+  - 0.4
+  - 0.4
+  - 0.1
+  _numberOfTurnsEffectLasts: 0200000002000000020000000200000002000000
   element: 
   _chanceToHit: 1
   _hitChanceLossPerTileTravelled: 0
   _macCost: 3
-  _energyCost: 18
+  _energyCost: 25
   abilityType: 1
   range: 0
   aoe: 0

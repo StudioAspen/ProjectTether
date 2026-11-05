@@ -1,15 +1,24 @@
 using _Scripts.Consystently.Essentials;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 
 namespace _Scripts.Runtime.Input
 {
+    [RequireComponent(typeof(EventSystem))]
+    [RequireComponent(typeof(InputSystemUIInputModule))]
     public class EventSystemSingleton : Singleton<EventSystemSingleton>
     {
+        public EventSystem EventSystem { get; private set; }
+        public InputSystemUIInputModule UIInputModule { get; private set; }
+        
         protected override void Awake()
         {
             base.Awake();
+            
+            EventSystem = GetComponent<EventSystem>();
+            UIInputModule = GetComponent<InputSystemUIInputModule>();
             
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_ActiveSceneChanged;
             DestroyOtherEventSystems();

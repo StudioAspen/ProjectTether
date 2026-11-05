@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Consystently.Essentials;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,13 +15,13 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         [SerializeField] private PlayerInput _playerInput;
         
-        public enum ControlScheme
+        public enum Controller
         {
             KeyboardMouse,
             Gamepad
         }
         
-        public ControlScheme CurrentControlScheme { get; private set; }
+        [field: SerializeField, ReadOnly] public Controller CurrentController { get; private set; }
         
         /// <summary>
         /// Action that is invoked when the current control scheme is changed based on the input device used.
@@ -30,13 +31,13 @@ namespace _Scripts.Runtime.Managers
         /// <item><description><c>ControlScheme controlScheme</c>: The new controlScheme that was changed to.</description></item>
         /// </list>
         /// </remarks>
-        public event Action<ControlScheme> OnControlSchemeChanged = delegate { };
+        public event Action<Controller> OnNewControllerDetected = delegate { };
         
         /// <summary>
         /// The intended lock state.
         /// Controllers will always be locked, but when switching back to mouse, this will be the applied lock state
         /// </summary>
-        private CursorLockMode _desiredCursorLockState;
+        [SerializeField, ReadOnly] private CursorLockMode _desiredCursorLockState;
 
         protected override void Awake()
         {
@@ -51,17 +52,15 @@ namespace _Scripts.Runtime.Managers
             if (Actions == null)
                 return;
 
-            Actions.Global.Enable();
-            Actions.Global.OpenMenu.performed += OpenMenu_Performed;
+            Actions.Enable();
         }
 
         private void OnDisable()
         {
             if (Actions == null)
                 return;
-
-            Actions.Global.OpenMenu.performed -= OpenMenu_Performed;
-            Actions.Global.Disable();
+            
+            Actions.Disable();
         }
 
         protected override void OnDestroy()
@@ -71,25 +70,20 @@ namespace _Scripts.Runtime.Managers
             base.OnDestroy();
         }
 
-        private void OpenMenu_Performed(InputAction.CallbackContext context)
-        {
-            GameManager.Instance?.ToggleMenu();
-        }
-
         /// <summary>
         /// Detects whether the control scheme has changed based on the input device used.
         /// </summary>
         /// <param name="input">The PlayerInput component that detected the control scheme change</param>
         private void PlayerInput_OnControlsChanged(PlayerInput input)
         {
-            ControlScheme newScheme = ControlScheme.KeyboardMouse;
+            Controller newController = Controller.KeyboardMouse;
             if (input.currentControlScheme == "Gamepad")
-                newScheme = ControlScheme.Gamepad;
+                newController = Controller.Gamepad;
 
-            if (newScheme != CurrentControlScheme)
+            if (newController != CurrentController)
             {
-                CurrentControlScheme = newScheme;
-                OnControlSchemeChanged.Invoke(CurrentControlScheme);
+                CurrentController = newController;
+                OnNewControllerDetected.Invoke(CurrentController);
                 
                 ApplyCursorLockState();
             }
@@ -114,7 +108,7 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         private void ApplyCursorLockState()
         {
-            if (CurrentControlScheme == ControlScheme.Gamepad)
+            if (CurrentController == Controller.Gamepad)
             {
                 // Gamepad always locks
                 Cursor.lockState = CursorLockMode.Locked;

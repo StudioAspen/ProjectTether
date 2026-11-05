@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: JadeData
   m_EditorClassIdentifier: Assembly-CSharp::PlayableCharacteUnitSO
   _portrait: {fileID: 0}
+  _id: 
   _name: '[Jade]'
-  _model: {fileID: 8795100597650411823, guid: d7776909af29f045f874bc6979c93064, type: 3}
+  _model: {fileID: 2756469413355777779, guid: d7776909af29f045f874bc6979c93064, type: 3}
   Level: 10
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
@@ -41,3 +42,5 @@ MonoBehaviour:
   moves:
   - {fileID: 11400000, guid: 5ba17807c606d90809524740f4ca5cc2, type: 2}
   combatClass: {fileID: 11400000, guid: c65cbfb3357a276c6984e2b6b525bb83, type: 2}
+  _suits: []
+  _startingSuit: {fileID: 0}

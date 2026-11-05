@@ -11,13 +11,20 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
 
     public Sprite Portrait => _portrait;
 
+    [SerializeField] protected string _id;
+    public string Id => _id;
+
     [Space(5)] [SerializeField] protected string _name;
 
     public string Name => _name;
 
-    [Space(5)] [SerializeField] protected GameObject _model;
+    [Space(5)] [SerializeField] protected UnitController _model;
+    public UnitController Model => _model;
 
-    public GameObject Model => _model;
+    [SerializeField]
+    [TextArea(3, 10)]
+    protected string _description;
+    public string Description => _description;
 
     public virtual Faction Faction => Faction.Neutral;
 
@@ -45,6 +52,132 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
     [Range(0.00f, 100.00f)]
     [SerializeField]
     public float RemainingEnergy = 100.00f;
+
+    [Header("Base Stats", order = 5)]
+    [Space(10)]
+    [Tooltip("HP: Total amount of damage a unit can sustain before falling in battle.")]
+    [SerializeField]
+    private int _healthStat;
+
+    /// <summary>
+    /// HP: Total amount of damage a unit can sustain before falling in battle.
+    /// </summary>
+    public int HealthStat => _healthStat;
+
+
+    [Space(5)]
+    [Tooltip("EN: Total amount of resources a unit can spend to use special abilities.")]
+    [SerializeField]
+    protected int _energyStat;
+
+    /// <summary>
+    /// EN: Total amount of resources a unit can spend to use special abilities.
+    /// </summary>
+    public int EnergyStat => _energyStat;
+
+
+    [Space(5)]
+    [Tooltip("STR: A unit's physical power.")]
+    [SerializeField]
+    protected int _strengthStat;
+
+    /// <summary>
+    /// STR: A unit's physical power.
+    /// </summary>
+    public int StrengthStat => _strengthStat;
+
+
+    [Space(5)]
+    [Tooltip("DEF: A unit's durability against physical power.")]
+    [SerializeField]
+    protected int _defenseStat;
+
+    /// <summary>
+    /// DEF: A unit's durability against physical power.
+    /// </summary>
+    public int DefenseStat => _defenseStat;
+
+
+    [Space(5)]
+    [Tooltip("TEC: A unit's technical power.")]
+    [SerializeField]
+    protected int _techStat;
+
+    /// <summary>
+    /// TEC: A unit's technical power.
+    /// </summary>
+    public int TechStat => _techStat;
+
+
+    [Space(5)]
+    [Tooltip("RES: A unit's durability against technical power.")]
+    [SerializeField]
+    protected int _resistanceStat;
+
+    /// <summary>
+    /// RES: A unit's durability against technical power.
+    /// </summary>
+    public int ResistanceStat => _resistanceStat;
+
+
+    [Space(5)]
+    [Tooltip("SPE: How often a unit moves during battle.")]
+    [SerializeField]
+    protected int _speedStat;
+
+    /// <summary>
+    /// SPE: How often a unit moves during battle.
+    /// </summary>
+    public int SpeedStat => _speedStat;
+
+
+    [Space(5)]
+    [Tooltip("LCK: A unit's affinity for chance.")]
+    [SerializeField]
+    protected int _luckStat;
+
+    /// <summary>
+    /// LCK: A unit's affinity for chance.
+    /// </summary>
+    public int LuckStat => _luckStat;
+
+
+    [Space(5)]
+    [Tooltip("PRC: A unit's accuracy for targeting attacks & abilities.")]
+    [SerializeField]
+    protected int _precisionStat;
+
+    /// <summary>
+    /// PRC: A unit's accuracy for targeting attacks & abilities.
+    /// </summary>
+    public int PrecisionStat => _precisionStat;
+
+
+    [Space(5)]
+    [Tooltip("EVA: A unit's evasiveness to incoming attacks & abilities.")]
+    [SerializeField]
+    protected int _evasionStat;
+
+    /// <summary>
+    /// EVA: A unit's evasiveness to incoming attacks & abilities.
+    /// </summary>
+    public int EvasionStat => _evasionStat;
+
+    public Dictionary<Stat, int> BaseStats => new Dictionary<Stat, int>()
+    {
+            { Stat.HP, _healthStat },
+            //TODO: remove energy 
+            { Stat.EN, _energyStat },
+            { Stat.STR, _strengthStat },
+            { Stat.DEF, _defenseStat },
+            { Stat.TEC, _techStat },
+            { Stat.RES, _resistanceStat },
+            { Stat.SPE, _speedStat },
+            { Stat.LCK, _luckStat },
+            { Stat.PRC, _precisionStat },
+            { Stat.EVA, _evasionStat },
+    };
+
 
     [Header("Base Aptitudes", order = 5)]
     [Space(10)]
@@ -153,7 +286,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
       { Stat.EVA, _evasion },
     };
 
-    [Header("Affinities", order = 6)] [Space(10)] [Tooltip("This unit's affinity to Blunt damage.")] [SerializeField]
+    [Header("Base Affinities", order = 6)] [Space(10)] [Tooltip("This unit's affinity to Blunt damage.")] [SerializeField]
     protected Affinity _blunt;
 
     /// <summary>

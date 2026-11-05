@@ -7,10 +7,10 @@ using Random = UnityEngine.Random;
 
 namespace _Scripts.Runtime
 {
+
   public static class CombatFormulas
   {
     //TODO: create a separate function for healing?
-    //TODO: split the damage formulas for enemy and ally? Allies can overclock. We will probably put overclock stat buff here
     public static void Damage(UnitController attacker, Element[] attackElements, UnitController defender)
     {
       Unit attackerStats = attacker.GetData();
@@ -26,10 +26,12 @@ namespace _Scripts.Runtime
       }
       //Actual Damage
       //currently picks the highest stat between strength/technical (classes should generally have a focus on either str/tech)
-      if(attackerStats.Strength > attackerStats.Tech) 
-        damage = MathF.Round(attackerStats.Strength*(166f / (166f + defenderStats.Defense)) * Random.Range(0.9f, 1.1f)); //Round up
+      if (attackerStats.GetEStat(Stat.STR) > attackerStats.GetEStat(Stat.TEC))
+        damage = MathF.Round(attackerStats.GetEStat(Stat.STR) * (166f / (166f + defenderStats.GetEStat(Stat.DEF))) *
+                             Random.Range(0.9f, 1.1f));
       else
-        damage = MathF.Round(attackerStats.Tech*(166f / (166f + defenderStats.Resistance)) * Random.Range(0.9f, 1.1f)); //Round up
+        damage = MathF.Round(attackerStats.GetEStat(Stat.TEC) * (166f / (166f + defenderStats.GetEStat(Stat.RES))) *
+                             Random.Range(0.9f, 1.1f));
     
       //Dodge Chance
       if(miss)
@@ -51,8 +53,8 @@ namespace _Scripts.Runtime
         Debug.Log($"{defender.name} was blocking!");
       }
       Debug.Log(damage);
-      foreach (Element element in attackElements)
-        damage *= defenderStats.Affinities[element].Multiplier();
+//      foreach (Element element in attackElements)
+       // damage *= defenderStats.Affinities[element].Multiplier();
       defenderStats.ChangeHealthRemaining(Mathf.CeilToInt(damage));
       Debug.Log(damage);
       Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 
@@ -77,11 +79,11 @@ namespace _Scripts.Runtime
       switch (ability.AbilityType)
       {
         case AbilityType.Physical:
-          damage = MathF.Round(attackerStats.Strength * (166f / (166f + defenderStats.Defense)) *
+          damage = MathF.Round(attackerStats.GetEStat(Stat.STR)* (166f / (166f + defenderStats.GetEStat(Stat.DEF))) *
             Random.Range(0.9f, 1.1f) + ability.Damage); //Round up
           break;
         case AbilityType.Technical: 
-          damage = MathF.Round(attackerStats.Tech * (166f / (166f + defenderStats.Resistance)) *
+          damage = MathF.Round(attackerStats.GetEStat(Stat.TEC)* (166f / (166f + defenderStats.GetEStat(Stat.RES))) *
             Random.Range(0.9f, 1.1f) + ability.Damage); //Round up
           break;
         case AbilityType.Status:
@@ -147,7 +149,7 @@ namespace _Scripts.Runtime
         return false;
       }
 
-      float hitChance = (attackerStats.Precision / (defenderStats.Evasion * 1.0f));
+      float hitChance = attackerStats.GetEStat(Stat.PRC) / (defenderStats.GetEStat(Stat.EVA) * 1.0f);
       //Debug.Log(hitchance);
 
       if (hitChance >= 1f) //If Precision > Finesse i.e. hit > dodge chance
@@ -163,5 +165,9 @@ namespace _Scripts.Runtime
         return true;
 
     }
+    
+
   }
+  
+
 }

@@ -6,11 +6,13 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
-    public abstract class Unit
+
+    public abstract class Unit : IComparable<Unit>
     {
      //TODO: add buff feature (MAKE scriptable objects for buffs/debuffs) then store array in unit
      //TODO: remove energy (it is part of suit)
      
+     //TODO: probably need something that lets you set the data with another unit class to pass data from ow for ally
 
 
         public Sprite Portrait { get; private set; }
@@ -25,6 +27,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 
         //statMs
         public int Health { get; protected set; }
+        
+        /*
+        //TODO: remove energy from unit (moved to suit)
         public int Energy { get; protected set; }
         public int Strength { get; protected set; }
         public int Defense { get; protected set; }
@@ -34,6 +39,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public int Luck { get; protected set; }
         public int Precision { get; protected set; }
         public int Evasion { get; protected set; }
+        */
+
+        public Dictionary<Stat, UnitStat> Stats { get; protected set; }
 
         public int HealthRemaining { get; protected set; }
         public int EnergyRemaining { get; protected set; }
@@ -42,11 +50,23 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public bool IsDead { get; protected set; }
         public List<AbilitySO> Moves { get; protected set; }
 
+        //TODO: remove and change shit later 
         public CombatClassSO CombatClass { get; protected set; }
         
-        public List<StatusSO> Statuses { get; protected set; }
+        public Dictionary<string, Status> Statuses { get; protected set; }
+        
+        public List<int> tempStats = new List<int>(); 
+        public bool Stunned { get; protected set; }
+        
+        //easiest to just have them here whatever man 
+        /// <summary>
+        /// part of turn system. 
+        /// </summary>
+        public int Initiative { get; private set; }
 
-
+        public float InitModifier { get; private set; } = 1.0f;
+        
+        public int InitiativeAfterDefending = 30;
 
 //   public event Action HasDied;
 
@@ -67,7 +87,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Health = Formulae.CalculateStat(Stat.HP, StatGrowths[Stat.HP], Level);
             
             //part of suit now
-         //   Energy = Formulae.CalculateStat(Stat.EN, StatGrowths[Stat.EN], Level);
+            //Energy = Formulae.CalculateStat(Stat.EN, StatGrowths[Stat.EN], Level);
+            /*
             Strength = Formulae.CalculateStat(Stat.STR, StatGrowths[Stat.STR], Level);
             Defense = Formulae.CalculateStat(Stat.DEF, StatGrowths[Stat.DEF], Level);
             Tech = Formulae.CalculateStat(Stat.TEC, StatGrowths[Stat.TEC], Level);
@@ -75,14 +96,22 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Speed = Formulae.CalculateStat(Stat.SPE, StatGrowths[Stat.SPE], Level);
             Luck = Formulae.CalculateStat(Stat.LCK, StatGrowths[Stat.LCK], Level);
             Precision = Formulae.CalculateStat(Stat.PRC, StatGrowths[Stat.PRC], Level);
+            */
+
+            Stats =  new Dictionary<Stat, UnitStat>();
+            foreach (Stat stat in Enum.GetValues(typeof(Stat)))
+            {
+                //should crash if there are two same stats
+                Stats.Add(stat, new UnitStat(Formulae.CalculateStat(stat, StatGrowths[stat], Level)));
+            }
 
             HealthRemaining = Health;
-            EnergyRemaining = Energy;
+            //EnergyRemaining = Energy;
 
             Moves = unit.Moves;
             CombatClass = unit.CombatClass;
         }
-
+        
         //placeholder
 
         protected void SetFaction(Faction value)
@@ -90,11 +119,21 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Faction = value;
         }
 
-        public int[] GetStats()
-        {
-            return new int[] { Health, Strength, Defense, Tech, Resistance, Speed, Luck, Precision, Evasion };
-        }
+        /// <summary>
+        /// stat change will only occur when the status is added 
+        /// </summary>
+        /// <param name="status"></param>
+        public abstract void AddStatus(StatusSO status);
 
+        /// <summary>
+        /// triggers per turn. 
+        /// </summary>
+        public abstract void TriggerStatuses();
+
+        public void RemoveStatus(StatusSO status)
+        {
+            Statuses.Remove(status.StatusId);
+        }
 
         public abstract void ChangeHealthRemaining(int value);
         public abstract void ChangeEnergyRemaining(int value);
@@ -103,6 +142,8 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         {
             IsBlocking = true;
         }
+        
+        //abstract because defend will have additional player function later 
         public abstract void EndDefend();
 
         public Element[] DefaultAttackTypes()
@@ -115,6 +156,67 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             return CombatClass.DefaultAttackRange;
         }
 
+        public int GetBaseStat(Stat stat)
+        {
+            return Stats[stat].BaseStat;
+        }
+        
+        public int GetEStat(Stat stat)
+        {
+            return Stats[stat].EffectiveStat;
+        }
+        
+        public void SetDead(bool value) { IsDead = value;}
+
+        public void RevertEStat(Stat stat, float multiplier)
+        {
+            if (multiplier == 0)
+            {
+                Stats[stat].SetEffectiveStat(0);
+            }
+            else
+            {
+                Stats[stat].SetEffectiveStat((int)(Stats[stat].EffectiveStat * 1.0f/multiplier));
+            }
+        }
+
+        public void MultiplyEStat(Stat stat, float multiplier)
+        {
+            Stats[stat].SetEffectiveStat((int)(Stats[stat].EffectiveStat * multiplier));    
+        }
+
+        /// <summary>
+        /// resets values that should refresh per turn. Should be called at the very start of the turn
+        /// </summary>
+        public void ResetValues()
+        {
+            Stunned = false;
+            EndDefend();
+        }
+
+        public void SetInit(int init)
+        {
+            Initiative = init;
+        }
+
+        public void SetInitMod(float mod)
+        {
+            InitModifier = mod;
+        }
+
+        public void DecInitMod()
+        {
+            InitModifier -= 0.1f;
+            if(InitModifier < 0.1f)
+                InitModifier = 0.1f;
+        }
+        
+
+        public int CompareTo(Unit other)
+        {
+            if (other is null) return 1;
+            return Level.CompareTo(other.Level);
+        }
 
     }
 

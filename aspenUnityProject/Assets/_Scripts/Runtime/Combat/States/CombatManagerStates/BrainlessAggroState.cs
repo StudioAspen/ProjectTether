@@ -47,7 +47,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                 Debug.Log("enemy defended");
             }
 
-            ecb.CombatContext.CombatFunctionProvider.ChangeTurn();
+            ecb.CombatContext.CombatFunctionProvider.Consume();
         }
 
         //brainless targeting for now. Target closest player unit 

@@ -166,6 +166,44 @@ namespace _Scripts.Runtime.Save
         public string GetString(string key, string defaultValue = "") => GetValue(key, defaultValue);
         public void SetString(string key, string value) => SetValue(key, value == null ? string.Empty : value);
 
+        /// <summary>
+        /// Loads a serializable object stored as JSON under the specified key.
+        /// Fields added to the object later keep their defaults when loading older saves.
+        /// </summary>
+        public T GetObject<T>(string key, T defaultValue = null) where T : class, new()
+        {
+            string json = GetValue(key);
+            if (string.IsNullOrEmpty(json))
+                return defaultValue ?? new T();
+
+            T value = new T();
+            try
+            {
+                JsonUtility.FromJsonOverwrite(json, value);
+                return value;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(
+                    $"Failed to parse saved object '{key}' from '{FilePath}'. Using defaults.\nError: {e.Message}");
+                return defaultValue ?? new T();
+            }
+        }
+
+        /// <summary>
+        /// Saves a serializable object as JSON under the specified key.
+        /// </summary>
+        public void SetObject<T>(string key, T value) where T : class
+        {
+            if (value == null)
+            {
+                DeleteKey(key);
+                return;
+            }
+
+            SetValue(key, JsonUtility.ToJson(value));
+        }
+
         public bool GetBool(string key, bool defaultValue = false) => GetInt(key, defaultValue ? 1 : 0) == 1;
         public void SetBool(string key, bool value) => SetInt(key, value ? 1 : 0);
 

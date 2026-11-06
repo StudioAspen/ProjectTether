@@ -83,6 +83,9 @@ namespace _Scripts.Runtime.Managers
         //animation/tile update handled per unit at the instant they move. 
         public static event Action<UnitController> unitMoved;
         //we may want sounds when the cursor moves around 
+
+        // Notify the camera system when a unit performs an action:
+        public static event Action<UnitController> unitActionStarted;
         public static event Action<Vector3> hoverTileChanged;  
         public static event Action<BattlePhase, UnitController> battlePhaseChanged;
         public static event Action<TileController> examinedTile;
@@ -388,6 +391,8 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
+            // Camera Event: Focus on the attacking unit when an attack begins.
+            unitActionStarted?.Invoke(currentUnit);
             foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
             {
                 CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);
@@ -401,6 +406,8 @@ namespace _Scripts.Runtime.Managers
 
         private void HandleSelectAbility(UnitController currentUnit)
         {
+            // Camera Event: Focus on the acting unit when an ability is used.
+            unitActionStarted?.Invoke(currentUnit);
             TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
             AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
             rangeDisplay.HideRange();           
@@ -440,6 +447,8 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectMove(TileController selectedTileController, UnitController currentUnit)
         {
+            // Camera Event: Focus on the moving unit when movement begins.
+            unitActionStarted?.Invoke(currentUnit);
             selectedTileController.AddUnit(GetCurrTileController().RemoveUnit(currentUnit));
             currentUnit.TryMove(selectedTileController.Position(),selectedTileController.tileCoordinate);
             selectedTileController.RepositionUnits(ArbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 

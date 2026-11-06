@@ -86,6 +86,7 @@ namespace _Scripts.Runtime.Combat
             return null;
         }
         
+        //This function is mainly for the group boss first passive.
         public void AffinityModifiedDueToStatus(UnitDataSO unitToBeModified , StatusSO status)
         {
             foreach (ElementAffinityChange elementAffinityChange in status.AffinitiesModified)

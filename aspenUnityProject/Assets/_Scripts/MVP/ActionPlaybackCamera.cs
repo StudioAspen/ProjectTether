@@ -71,4 +71,5 @@ public class ActionPlaybackCamera : MonoBehaviour
         if (virtualCamera != null)
             virtualCamera.Priority = 0;
     }
+ 
 }

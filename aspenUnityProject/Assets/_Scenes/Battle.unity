@@ -1874,6 +1874,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2492403399427205023, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
+      propertyPath: m_fontSize
+      value: 59.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2492403399427205023, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
@@ -1941,13 +1945,21 @@ PrefabInstance:
       propertyPath: cursor
       value: 
       objectReference: {fileID: 1409074498}
+    - target: {fileID: 4136689117828811674, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
+      propertyPath: hudName
+      value: ActionRingPanel(battlelog )
+      objectReference: {fileID: 0}
     - target: {fileID: 4376689271322193861, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_fontSize
-      value: 64.95
+      value: 59.55
       objectReference: {fileID: 0}
     - target: {fileID: 4376689271322193861, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150184950514871422, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
+      propertyPath: m_fontSize
+      value: 59.65
       objectReference: {fileID: 0}
     - target: {fileID: 5150184950514871422, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_RaycastTarget
@@ -1986,16 +1998,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6828476850641638942, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
+      propertyPath: m_fontSize
+      value: 59.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 6828476850641638942, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6846799885791236495, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_fontSize
-      value: 63.65
+      value: 59.75
       objectReference: {fileID: 0}
     - target: {fileID: 6846799885791236495, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684468657091480467, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
+      propertyPath: m_fontSize
+      value: 44.45
       objectReference: {fileID: 0}
     - target: {fileID: 7684468657091480467, guid: 2d37766f376688b4aa7898306df6d8e2, type: 3}
       propertyPath: m_RaycastTarget

@@ -1,35 +1,41 @@
+using _Scripts.Runtime.Combat;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SkillSO_StandIn", menuName = "Scriptable Objects/Misc/Skill_StandIn")]
 public class Skill : ScriptableObject
 {
     [SerializeField]
-    private string name;
+    protected string name;
 
     [SerializeField]
     [Tooltip("Is this a class innate skill?")]
-    private bool _isClassInnate;
+    protected bool _isClassInnate;
     public bool IsClassInnate => _isClassInnate;
 
     [SerializeField]
     [Tooltip("Does this consume an MSC slot?")]
-    private bool _consumesMscSlot;
+    protected bool _consumesMscSlot;
     public bool ConsumesMSCSlot => _consumesMscSlot;
 
     [SerializeField]
     [Tooltip("Is this a transferable skill.")]
-    private bool _isTransferable;
+    protected bool _isTransferable;
     public bool IsTransferable => _isTransferable;
 
     [SerializeField]
-    private BattleParametersList.BattleParameters[] _effectsDueToAbility;
-    public BattleParametersList.BattleParameters[] EffectsDueToAbility => _effectsDueToAbility;
+    [Tooltip("Is this an enemy skill.")]
+    protected bool _isEnemySkill;
+    public bool IsEnemySkill => _isEnemySkill;
+
+    [SerializeField]
+    protected StatusSO[] _statusEffectsDueToAbility;
+    public StatusSO[] StatusEffectsDueToAbility => _statusEffectsDueToAbility;
 
     [Tooltip("Percent change of the effect by the skill.")]
-    [SerializeField] private float[] _percentOfEffect;
+    [SerializeField] protected float[] _percentOfEffect;
     public float[] PercentofEffect => _percentOfEffect;
 
-    [SerializeField] private bool[] isStackable;
+    [SerializeField] protected bool[] isStackable;
     public bool[] IsStackable => isStackable;
 
     [SerializeField]

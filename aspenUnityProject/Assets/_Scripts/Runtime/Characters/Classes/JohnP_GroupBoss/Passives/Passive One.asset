@@ -16,8 +16,13 @@ MonoBehaviour:
   _isClassInnate: 0
   _consumesMscSlot: 0
   _isTransferable: 0
-  _effectsDueToAbility: 
+  _isEnemySkill: 1
+  _statusEffectsDueToAbility:
+  - {fileID: 11400000, guid: 9075c441b346fe24193361d97c12540a, type: 2}
+  - {fileID: 11400000, guid: ba0da67615e05c6459d3d7fb5873d72c, type: 2}
+  - {fileID: 11400000, guid: e666cdb8a63614d4583f2458fb637c42, type: 2}
+  - {fileID: 11400000, guid: 52efb4457bd505848b5caec4dd70f3b2, type: 2}
   _percentOfEffect: []
   isStackable: 
-  triggerCondition: 
-  explanation: 
+  triggerCondition: Start of their respective phase or every other turn.
+  explanation: Swap unit affinities.

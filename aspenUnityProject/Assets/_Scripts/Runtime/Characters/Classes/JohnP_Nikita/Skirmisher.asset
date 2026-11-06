@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf402000706b3fe42b429548fcf1d4fc, type: 3}
   m_Name: Skirmisher
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Characters.Classes.Scripts.CombatClassSO
-  defaultAttackElements: 
   _className: Skirmisher
   _defaultAttackRange: 0
+  defaultAttackElements: 0200000006000000
   _innateSkill: {fileID: 11400000, guid: 03d0464c256c68d45a2d23689bab5863, type: 2}
   _classSkills:
   - {fileID: 11400000, guid: f3ebc2b27e3d4be4ea324e08695f1430, type: 2}
@@ -27,8 +27,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8a7c5dbe57953f349a786d5b49b7a0e2, type: 2}
   - {fileID: 11400000, guid: 09139a28a32076e4598469dbe0a70a32, type: 2}
   _classDescription: A unit that focuses on speed, quick hits, and mobility instead
-    of tanking damage. Think hit and run. They dart in, land a slash or two, then
-    get out before the enemy can really respond.
+    of tanking damage. Instead of mitigating damage, it focuses on avoiding it and
+    taking as many turns as possible. Its kit focuses on "Wind" and "Piercing" affinities.
   _whatOverclockEffects: 0100000002000000
   _overclockEffectsOverwrites:
   - 1
@@ -47,31 +47,31 @@ MonoBehaviour:
   _overclockedStats: 
   _overclockedStatsPercent: []
   _overclockedModifier: []
-  _healthStat: 10
-  _energyStat: 15
+  _healthStat: 15
+  _energyStat: 10
   _strengthStat: 15
-  _defenseStat: 0
-  _techStat: 10
-  _resistanceStat: 5
+  _defenseStat: 5
+  _techStat: 0
+  _resistanceStat: 10
   _speedStat: 20
   _luckStat: 0
   _precisionStat: 0
   _evasionStat: 0
   _health: 2
-  _energy: 4
+  _energy: 5
   _strength: 1
-  _defense: 3
+  _defense: 2
   _tech: 3
-  _resistance: 2
+  _resistance: 1
   _speed: 0
-  _luck: 4
-  _precision: 4
-  _evasion: 4
-  _blunt: 0
+  _luck: 5
+  _precision: 5
+  _evasion: 5
+  _blunt: 1
   _slash: 0
-  _pierce: 1
-  _blast: 2
+  _pierce: 2
+  _blast: 0
   _water: 0
   _earth: 1
-  _wind: 0
-  _fire: 2
+  _wind: 2
+  _fire: 0

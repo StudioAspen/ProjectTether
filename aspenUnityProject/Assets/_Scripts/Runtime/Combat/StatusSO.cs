@@ -86,9 +86,10 @@ namespace _Scripts.Runtime.Combat
             return null;
         }
         
-        public void AffinityModifiedDueToStatus(UnitDataSO unitToBeModified , Combat.Element combatElement , Affinity modifiedAffinity)
+        public void AffinityModifiedDueToStatus(UnitDataSO unitToBeModified , StatusSO status)
         {
-            unitToBeModified.Affinities[combatElement] = modifiedAffinity;
+            foreach (ElementAffinityChange elementAffinityChange in status.AffinitiesModified)
+                unitToBeModified.Affinities[elementAffinityChange.elementToChange] = elementAffinityChange.changeInAffinity;
         }
 
         //overclock -> burnout + stunned 

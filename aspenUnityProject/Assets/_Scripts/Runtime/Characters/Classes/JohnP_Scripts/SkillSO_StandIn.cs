@@ -28,8 +28,8 @@ public class Skill : ScriptableObject
     public bool IsEnemySkill => _isEnemySkill;
 
     [SerializeField]
-    protected StatusSO[] _statusEffectsDueToAbility;
-    public StatusSO[] StatusEffectsDueToAbility => _statusEffectsDueToAbility;
+    protected StatusSO[] _statusEffectsDueToSkill;
+    public StatusSO[] StatusEffectsDueToSkill => _statusEffectsDueToSkill;
 
     [Tooltip("Percent change of the effect by the skill.")]
     [SerializeField] protected float[] _percentOfEffect;

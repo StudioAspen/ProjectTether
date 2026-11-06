@@ -17,7 +17,7 @@ MonoBehaviour:
   _consumesMscSlot: 0
   _isTransferable: 0
   _isEnemySkill: 1
-  _statusEffectsDueToAbility:
+  _statusEffectsDueToSkill:
   - {fileID: 11400000, guid: 9075c441b346fe24193361d97c12540a, type: 2}
   - {fileID: 11400000, guid: ba0da67615e05c6459d3d7fb5873d72c, type: 2}
   - {fileID: 11400000, guid: e666cdb8a63614d4583f2458fb637c42, type: 2}

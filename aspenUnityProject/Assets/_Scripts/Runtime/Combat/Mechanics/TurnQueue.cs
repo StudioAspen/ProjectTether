@@ -131,6 +131,7 @@ namespace _Scripts.Runtime.Combat.Mechanics
         /// <returns></returns>
         private void CalcInitiative(Entities.Scripts.Combat.Unit u)
         {
+            //current formula is terrible because a player will go 2x before an enemy even with a minor speed advantage
             int result = (int)((1.0f * u.Stats[Stat.SPE].EffectiveStat * u.InitModifier + u.Initiative) / (_speedAll/(_totalUnits*1.0f)) * 100.0f);
             int clamp = System.Math.Clamp(result, 0, 100);
             u.SetInit(clamp);

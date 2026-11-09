@@ -25,10 +25,6 @@ namespace _Scripts.Runtime.Managers
     //TODO: break this down 
     public class CombatManager : MonoBehaviour, ICombatFunctionProvider
     {
-        /// <summary>
-        /// UNIT offset on tile 
-        /// </summary>
-        private const float ArbitraryOffset = 5;
         private const int TileNum = 19;
         
         private InputSystem_Actions _input;
@@ -194,7 +190,7 @@ namespace _Scripts.Runtime.Managers
                     TurnOrder.Add(unitController);
                 }
                 
-                tileController.RepositionUnits(ArbitraryOffset);
+                tileController.RepositionUnits();
             }
         }
 
@@ -445,7 +441,7 @@ namespace _Scripts.Runtime.Managers
         {
             selectedTileController.AddUnit(GetCurrTileController().RemoveUnit(currentUnit));
             currentUnit.TryMove(selectedTileController.Position(),selectedTileController.tileCoordinate);
-            selectedTileController.RepositionUnits(ArbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
+            selectedTileController.RepositionUnits(); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
             RedoSelection();
         }
 

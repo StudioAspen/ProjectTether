@@ -21,19 +21,17 @@ MonoBehaviour:
     attack against an enemy within range and 10% Dodge.
 
 
-
     Explanation: The character
     uses their agility to reposition before attacking. Calculated Step encourages
     players to move around the battlefield, create unique attack angles, and prepare
-    for a follow up.
-
-'
+    for a follow up.'
   _damage: 0
   _numberOfHits: 0
   _effectsDueToAbility: 0500000006000000
   _effectAmount:
   - 0.1
   - 0.15
+  _numberOfTurnsEffectLasts: 
   element: 
   _chanceToHit: 1
   _hitChanceLossPerTileTravelled: 0

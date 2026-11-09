@@ -21,6 +21,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat {
     [Space(5)] [SerializeField] protected UnitController _model;
     public UnitController Model => _model;
 
+    [SerializeField]
+    [TextArea(3, 10)]
+    protected string _description;
+    public string Description => _description;
+
     public virtual Faction Faction => Faction.Neutral;
 
     [Header("Progress", order = 1)] [Space(10)] [Range(1, 99)] [SerializeField]

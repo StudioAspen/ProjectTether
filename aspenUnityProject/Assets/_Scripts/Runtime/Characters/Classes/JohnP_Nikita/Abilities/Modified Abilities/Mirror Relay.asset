@@ -30,13 +30,14 @@ MonoBehaviour:
   _effectsDueToAbility: 05000000
   _effectAmount:
   - 0.125
+  _numberOfTurnsEffectLasts: 
   element: 
   _chanceToHit: 1
   _hitChanceLossPerTileTravelled: 0
   _macCost: 2
   _energyCost: 10
   abilityType: 1
-  range: 0
+  range: 2
   aoe: 0
   hitsEnemies: 0
   hitsAllies: 1

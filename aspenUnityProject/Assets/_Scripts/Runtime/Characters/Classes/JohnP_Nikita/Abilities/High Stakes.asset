@@ -26,17 +26,18 @@ MonoBehaviour:
     fun synergies to play with. '
   _damage: 0
   _numberOfHits: 0
-  _effectsDueToAbility: 010000000000000004000000
+  _effectsDueToAbility: 01000000090000000000000004000000
   _effectAmount:
-  - -0.15
-  - 0.25
-  - 0.25
-  _numberOfTurnsEffectLasts: 000000000000000000000000
+  - -0.1
+  - -0.1
+  - 0.15
+  - 0.15
+  _numberOfTurnsEffectLasts: 030000000300000003000000
   element: 
   _chanceToHit: 1
   _hitChanceLossPerTileTravelled: 0
   _macCost: 3
-  _energyCost: 18
+  _energyCost: 15
   abilityType: 1
   range: 0
   aoe: 0

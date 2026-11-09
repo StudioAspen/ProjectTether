@@ -22,9 +22,8 @@ public class Skill : ScriptableObject
     public bool IsTransferable => _isTransferable;
 
     [SerializeField]
-    [Tooltip("Stats raised by skill. 0 = Attack , 1 = Dodge , 2 = Speed , 3 = Critical Chance , 4 = Critical Damage")]
-    private int[] _effectsDueToSkill;
-    public int[] EffectsDueToSkill => _effectsDueToSkill;
+    private BattleParametersList.BattleParameters[] _effectsDueToAbility;
+    public BattleParametersList.BattleParameters[] EffectsDueToAbility => _effectsDueToAbility;
 
     [Tooltip("Percent change of the effect by the skill.")]
     [SerializeField] private float[] _percentOfEffect;

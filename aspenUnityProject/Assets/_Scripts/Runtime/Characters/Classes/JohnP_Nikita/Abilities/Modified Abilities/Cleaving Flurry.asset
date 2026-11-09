@@ -29,7 +29,9 @@ MonoBehaviour:
   _damage: 0
   _numberOfHits: 3
   _effectsDueToAbility: 03000000
-  _effectAmount: []
+  _effectAmount:
+  - 0.2
+  _numberOfTurnsEffectLasts: 
   element: 01000000
   _chanceToHit: 0.85
   _hitChanceLossPerTileTravelled: 0

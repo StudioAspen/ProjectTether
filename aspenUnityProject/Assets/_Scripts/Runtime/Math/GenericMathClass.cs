@@ -15,6 +15,12 @@ namespace _Scripts.Runtime.Math
         {
             return (Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y) + Mathf.Abs(from.z - to.z)) / 2;
         }
+        
+        /// <summary>
+        /// converts movement vector to a direction
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
 
         public static CubeCoordDirections GetDirection(this Vector2 vector)
         {

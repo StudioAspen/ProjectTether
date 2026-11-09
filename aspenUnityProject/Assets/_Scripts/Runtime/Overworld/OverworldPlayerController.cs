@@ -39,10 +39,13 @@ namespace _Scripts.Runtime.Overworld
             ApplyMovement();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            GameSession.Instance.PlayerData.OverworldPosition = transform.position;
-            GameSession.Instance.Save();
+            if (GameSession.Instance != null)
+            {
+                GameSession.Instance.PlayerData.OverworldPosition = transform.position;
+                GameSession.Instance.Save();
+            }
         }
 
         private void ReadInput()

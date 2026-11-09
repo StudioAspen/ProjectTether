@@ -25,6 +25,9 @@ namespace _Scripts.Runtime.Managers
     //TODO: break this down 
     public class CombatManager : MonoBehaviour, ICombatFunctionProvider
     {
+        /// <summary>
+        /// UNIT offset on tile 
+        /// </summary>
         private const float ArbitraryOffset = 5;
         private const int TileNum = 19;
         

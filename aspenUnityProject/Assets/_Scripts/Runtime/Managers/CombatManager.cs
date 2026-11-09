@@ -42,6 +42,10 @@ namespace _Scripts.Runtime.Managers
         
         //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
         private TurnQueue TurnOrder { get; } = new TurnQueue();
+        
+        /// <summary>
+        /// stop progressing initiative when it is currently a unit's turn 
+        /// </summary>
         private bool _currentlyInTurn;
         private List<UnitController> DeadUnits {get; }= new List<UnitController>();
         private int _deadEnemies;
@@ -237,7 +241,6 @@ namespace _Scripts.Runtime.Managers
         {
             if (DeadUnits.Count >= (_totalAllies + _totalEnemies))
             {
-                Debug.Log("All units dead.");
                 _currentPhase = null;
                 return;
             }
@@ -247,7 +250,7 @@ namespace _Scripts.Runtime.Managers
             }
             CurrentUnit = TurnOrder.GetCappedUnits()[0];
             _currentlyInTurn = true;
-            if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally)
+            if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally) //manual enemy treats enemy phase like an ally phase
                 _currentPhase = _phases[0];
             else if (CurrentUnit.GetData().Faction==Faction.Enemy)
                 _currentPhase = _phases[1];

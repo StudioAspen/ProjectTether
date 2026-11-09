@@ -66,7 +66,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 
         public float InitModifier { get; private set; } = 1.0f;
         
-        public int InitiativeAfterDefending = 30;
 
 //   public event Action HasDied;
 
@@ -204,6 +203,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             InitModifier = mod;
         }
 
+        /// <summary>
+        /// decreases the rate at which a unit gains initiative by an arbitrary value
+        /// </summary>
         public void DecInitMod()
         {
             InitModifier -= 0.1f;
@@ -215,7 +217,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public int CompareTo(Unit other)
         {
             if (other is null) return 1;
-            return Level.CompareTo(other.Level);
+            return (Initiative, Faction, Level).CompareTo((other.Initiative, other.Faction, other.Level));
         }
 
     }

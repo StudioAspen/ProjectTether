@@ -11,11 +11,16 @@ namespace _Scripts.Consystently.UI
     public int TrackPlacement = 0;
     public TextMeshProUGUI PlacementText { get; private set; }
     public RectTransform RTransform { get; private set; }
+    
+    public Image Portrait { get; private set; }
+    
+    
 
     public void Initialize(int i)
     {
       PlacementText ??= GetComponentInChildren<TextMeshProUGUI>();
       RTransform ??= GetComponent<RectTransform>();
+      Portrait ??= GetComponentInChildren<Image>();
       
       TrackPlacement = i;
       PlacementText.maxVisibleCharacters = 2;

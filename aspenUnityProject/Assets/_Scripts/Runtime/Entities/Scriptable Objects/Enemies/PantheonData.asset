@@ -12,15 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5459b02eac575472e99541bd894a6cf1, type: 3}
   m_Name: PantheonData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnitSO
-  _portrait: {fileID: 0}
+  _portrait: {fileID: 21300000, guid: dec8d8826eeb249ff96f820f6dec4b04, type: 3}
   _id: 
   _name: Pantheon
   _model: {fileID: 1130279044128415484, guid: 128631cd648082e0ab1c702d007c89dd, type: 3}
+  _description: 
   Level: 3
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
   RemainingHealth: 100
   RemainingEnergy: 100
+  _healthStat: 0
+  _energyStat: 0
+  _strengthStat: 0
+  _defenseStat: 0
+  _techStat: 0
+  _resistanceStat: 0
+  _speedStat: 0
+  _luckStat: 0
+  _precisionStat: 0
+  _evasionStat: 0
   _health: 3
   _energy: 3
   _strength: 3

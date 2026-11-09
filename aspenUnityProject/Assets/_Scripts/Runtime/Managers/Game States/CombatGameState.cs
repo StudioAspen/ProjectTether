@@ -6,9 +6,15 @@ namespace _Scripts.Runtime.Managers.Game_States
     {
        public override void Enter()
        {
-           Debug.Log("combat game state entered");
-           UnityEngine.SceneManagement.SceneManager.LoadScene("battleScene");
+           InputManager.Instance.Actions.Player.Disable();
+           InputManager.Instance.Actions.UI.Enable();
+           InputManager.Instance.Actions.TileSelect.Enable();
+
+           InputManager.Instance.LockCursor(false);
+           
+           GameManager.ChangeScene(GameManager.Instance.BattleScene.Name);
        }
+       
        public override void Update()
        {
            
@@ -16,7 +22,7 @@ namespace _Scripts.Runtime.Managers.Game_States
 
        protected override void OnExit()
        {
-           
+           InputManager.Instance.Actions.TileSelect.Disable();
        }
     }
 }

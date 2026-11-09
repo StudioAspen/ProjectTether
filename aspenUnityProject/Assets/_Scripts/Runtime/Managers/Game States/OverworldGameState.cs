@@ -6,19 +6,22 @@ namespace _Scripts.Runtime.Managers.Game_States
     //get inputActions that invoke using GameManager function for UImanager
     public class OverworldGameState : GameState
     {
-       public override void Enter()
-       {
-           Debug.Log("Entering Overworld Game State");
-       }
+        public override void Enter()
+        {
+            InputManager.Instance.Actions.Player.Enable();
+            InputManager.Instance.Actions.UI.Disable();
 
-       public override void Update()
-       {
-           
-       }
+            InputManager.Instance.LockCursor(true);
+        }
 
-       protected override void OnExit()
-       {
-           
-       }
+        public override void Update()
+        {
+
+        }
+
+        protected override void OnExit()
+        {
+
+        }
     }
 }

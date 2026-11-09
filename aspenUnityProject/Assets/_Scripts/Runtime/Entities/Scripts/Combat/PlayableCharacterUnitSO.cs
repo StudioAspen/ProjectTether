@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
-  [CreateAssetMenu(fileName = "NewPlayableCharacterData", menuName = "Scriptable Objects/Unit/Playable Character", order = 0)]
+  [CreateAssetMenu(fileName = "NewPlayableCharacterData" , menuName = "Scriptable Objects/Unit/Playable Character" , order = 0)]
   public class PlayableCharacterUnitSO : UnitDataSO
   {
     public override Faction Faction => Faction.Ally;
@@ -17,5 +17,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     private SuitBaseDataSO _startingSuit;
     public  SuitBaseDataSO StartingSuit => _startingSuit;
 
+    [Tooltip("The character quirk")]
+    [SerializeField]
+    private QuirkSO_StandIn _characterQuirk;
+    public QuirkSO_StandIn CharacterQuirk => _characterQuirk;
   }
 }

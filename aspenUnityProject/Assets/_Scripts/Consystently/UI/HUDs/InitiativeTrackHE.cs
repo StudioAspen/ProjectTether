@@ -24,7 +24,7 @@ namespace _Scripts.Consystently.UI
         initiativeSlots[i].RTransform.pivot = new Vector2(0.5f, 0.5f);
       }
 
-      // Zero Slot needs to stretch to be larger than the rest
+      // Active Slot needs to stretch to be larger than the rest
       initiativeSlots[0].RTransform.sizeDelta = Vector2.zero;
     }
   }

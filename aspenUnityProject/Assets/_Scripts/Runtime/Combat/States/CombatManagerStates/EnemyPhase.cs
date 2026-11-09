@@ -82,13 +82,23 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         }
 
         #region reusable functions for various enemy states 
-        //attack will probably be the same for every EnemyStateSO
+        /// <summary>
+        /// Attack is the same for all enemies. Must check for dead enemies.
+        /// </summary>
+        /// <returns></returns>
         public bool Attack()
         {
             if (Euc.GetData().DefaultAttackRange() < ecb.Target.HexGridDistance(Euc.TileCoords))
                 return false;
-            foreach (UnitController receiver in CombatContext.TileControllers[CombatContext.TileCubeCoords[ecb.Target]].UnitControllers) 
-                CombatFormulas.Damage(Euc, Euc.GetData().DefaultAttackTypes(), receiver);  
+            foreach (UnitController receiver in CombatContext.TileControllers[CombatContext.TileCubeCoords[ecb.Target]]
+                         .UnitControllers)
+            {
+                CombatFormulas.Damage(Euc, Euc.GetData().DefaultAttackTypes(), receiver);
+                CombatContext.CombatFunctionProvider.CheckDead(receiver);
+            }
+
+            CombatContext.CombatFunctionProvider.RemoveDead();
+
             return true;
         }
 

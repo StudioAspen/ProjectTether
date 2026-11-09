@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
 using _Scripts.Runtime.Combat.States;
 using _Scripts.Runtime.Managers.Game_States;
+using Eflatun.SceneReference;
 using NaughtyAttributes;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace _Scripts.Runtime.Managers
 {
@@ -28,8 +30,11 @@ namespace _Scripts.Runtime.Managers
         
         [ShowNonSerializedField]
         private readonly Stack<State> _previousGameStates = new Stack<State>();
-
-        public bool DesignerMode { get; private set; }
+        
+        [field: Header("Scenes")]
+        [field: SerializeField] public SceneReference MainMenuScene { get; private set; }
+        [field: SerializeField] public SceneReference OverworldScene { get; private set; }
+        [field: SerializeField] public SceneReference BattleScene { get; private set; }
         
         protected override void Awake()
         {
@@ -39,25 +44,22 @@ namespace _Scripts.Runtime.Managers
             _gameStates[State.Combat] = new CombatGameState();
             _gameStates[State.Pause] = new PauseGameState();
             _gameStates[State.Overworld] = new OverworldGameState();
-            
+        }
+
+        private void Start()
+        {
             ChangeGameState(State.MainMenu);
         }
 
         void OnEnable()
         {
             InputManager.Instance.Actions.Global.Pause.performed += Input_OnPause;
-            
-            EncounterManager.encountered += EnterCombat;
-            BattleSimManager.submitted += EnterCombat;
         }
 
         //don't know if this matters with a singleton but who knows 
         void OnDisable()
         {
             InputManager.Instance.Actions.Global.Pause.performed -= Input_OnPause;
-            
-            EncounterManager.encountered -= EnterCombat; 
-            BattleSimManager.submitted -= EnterCombat; 
         }
         
         void Update()
@@ -95,13 +97,6 @@ namespace _Scripts.Runtime.Managers
             OnGameStateChanged?.Invoke(CurrentGameState);
         }
 
-        //probably add an enum or something for the states later
-        void EnterCombat(bool isBattleSim)
-        {
-            ChangeGameState(State.Combat);
-            DesignerMode = isBattleSim;
-        }
-
         private void Input_OnPause(InputAction.CallbackContext context)
         {
             if (CurrentGameState == State.Pause)
@@ -117,6 +112,30 @@ namespace _Scripts.Runtime.Managers
                 return;
             
             ChangeGameState(State.Pause);
+        }
+
+        public void GotoMainMenu()
+        {
+            if (CurrentGameState == State.MainMenu)
+                return;
+
+            ChangeGameState(State.MainMenu);
+        }
+
+        public void StartGame()
+        {
+            if (CurrentGameState != State.MainMenu)
+                return;
+            
+            ChangeGameState(State.Overworld);
+        }
+
+        public static void ChangeScene(string sceneName)
+        {
+            if (sceneName == SceneManager.GetActiveScene().name)
+                return;
+            
+            SceneManager.LoadScene(sceneName);
         }
         
         public static void QuitApplication()

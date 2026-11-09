@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: MaxData
   m_EditorClassIdentifier: Assembly-CSharp::PlayableCharacteUnitSO
   _portrait: {fileID: 0}
+  _id: 
   _name: '[Max]'
-  _model: {fileID: 881918336904627242, guid: 5d1f11a0e82ca2d8ebe0c69820bc7dc0, type: 3}
+  _model: {fileID: 4283532326735753904, guid: 5d1f11a0e82ca2d8ebe0c69820bc7dc0, type: 3}
   Level: 10
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
@@ -41,3 +42,5 @@ MonoBehaviour:
   moves:
   - {fileID: 11400000, guid: 5ba17807c606d90809524740f4ca5cc2, type: 2}
   combatClass: {fileID: 11400000, guid: c65cbfb3357a276c6984e2b6b525bb83, type: 2}
+  _suits: []
+  _startingSuit: {fileID: 0}

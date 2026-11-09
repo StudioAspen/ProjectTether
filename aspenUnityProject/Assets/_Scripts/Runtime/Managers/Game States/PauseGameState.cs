@@ -8,6 +8,10 @@ namespace _Scripts.Runtime.Managers.Game_States
         public override void Enter()
         {
             Time.timeScale = 0;
+            InputManager.Instance.Actions.Player.Disable();
+            InputManager.Instance.Actions.UI.Enable();
+
+            InputManager.Instance.LockCursor(false);
             
             Menu.Focus(PersistentMenuManager.Instance.PauseMenu);
         }

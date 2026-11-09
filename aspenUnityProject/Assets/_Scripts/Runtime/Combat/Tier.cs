@@ -8,7 +8,8 @@ namespace _Scripts.Runtime.Combat
     A = 1,
     B = 2,
     C = 3,
-    D = 4
+    D = 4,
+    NA = 5 //This is for when the field is unavailable
   }
 
 //robbing Fire Emblem's leveling system for now. f value * 100 = chance the stat is raised on level up

@@ -13,13 +13,21 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public TileController GetTileController(Vector3Int to);
         public void SelectTile(InputAction.CallbackContext context);
         public void MoveTileSelector(CubeCoordDirections directions);
-        public Vector3Int GetSelectedTile(); 
+        public Vector3Int GetSelectedTile();
+
+        public void CheckDead(UnitController receiver);
+        public void RemoveDead();
         
         public void RedoSelection();
         public UnitController GetCurrentUnit();
         public void ChangeTurn();
         public void ExitExamine();
         public void ExamineUnit(UnitController unit);
+        
+        /// <summary>
+        /// MUST be called as the final method for every function in enemy behavior states that handle attacks/abilities
+        /// </summary>
+        public void Consume(); 
 
 
 

@@ -16,7 +16,6 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         //since we're using a stack already, we could represent enemy 'phases' with them quite easily
         //e.g., when the enemy is low on hp, pop the aggressive state and drop them into a defensive one
         private Stack<EnemyStateSO> stateStack = new Stack<EnemyStateSO>();
-        private const int ArbitraryOffset = 10;
 
 
         private List<EnemyStateSO> behaviourStates;
@@ -114,7 +113,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             TileController selectedTile = CombatContext.CombatFunctionProvider.GetTileController(to);
             selectedTile.AddUnit(CombatContext.CombatFunctionProvider.GetCurrTileController().RemoveUnit(Euc));
             Euc.TryMove(selectedTile.Position(),selectedTile.tileCoordinate); 
-            selectedTile.RepositionUnits(ArbitraryOffset);
+            selectedTile.RepositionUnits();
         }
 
         //I guess bro

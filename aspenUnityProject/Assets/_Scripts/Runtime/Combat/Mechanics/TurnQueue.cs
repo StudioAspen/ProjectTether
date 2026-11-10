@@ -29,7 +29,7 @@ namespace _Scripts.Runtime.Combat.Mechanics
         private int _allyBurstCounter;
         private int _enemyBurstCounter;
         
-        public static event Action OnShuffled;
+        public static event Action<List<UnitController>> OnShuffled;
         
         public TurnQueue() {}
 
@@ -77,7 +77,7 @@ namespace _Scripts.Runtime.Combat.Mechanics
                 else
                     break;
             }
-            OnShuffled?.Invoke();
+            OnShuffled?.Invoke(_units);
             return false;
         }
 

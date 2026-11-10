@@ -26,5 +26,15 @@ namespace _Scripts.Consystently.UI
       PlacementText.maxVisibleCharacters = 2;
       PlacementText.text = i.ToString();
     }
+
+    public void SetText(string text)
+    {
+      PlacementText.text = text;
+    }
+    
+    public void SetPortrait(Sprite sprite)
+    {
+      Portrait.sprite = sprite;
+    }
   }
 }

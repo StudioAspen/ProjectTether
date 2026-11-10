@@ -9,15 +9,14 @@ namespace _Scripts.Runtime.Combat.Mechanics
 {
     public class TurnQueue
     {
-        /// <summary>
-        /// prob usually too small to care about time complexity of using a list
-        /// </summary>
-        private List<(UnitController unit, int initiative, Faction faction)> _units { get; set; } = new List<(UnitController unit, int initiative, Faction faction)>();
+        private List<UnitController> _units { get; set; } = new List<UnitController>();
 
         /// <summary>
         /// total speed of all units. Averaged speed of all units will be the denominator
         /// </summary>
         private int _speedAll;
+
+        private float denominator;
 
         private int _totalUnits; 
 
@@ -26,11 +25,11 @@ namespace _Scripts.Runtime.Combat.Mechanics
         /// <summary>
         /// tries to prevent one unit from going 20+ times. Resets when everyone has taken a turn
         /// </summary>
-        private HashSet<UnitController> _arbitrationSet =  new HashSet<UnitController>();
+        private HashSet<UnitController> _agingSet =  new HashSet<UnitController>();
         private int _allyBurstCounter;
         private int _enemyBurstCounter;
         
-        public static event Action Shuffle;
+        public static event Action OnShuffled;
         
         public TurnQueue() {}
 
@@ -40,11 +39,12 @@ namespace _Scripts.Runtime.Combat.Mechanics
             {
                 Add(unit);
             }
+            denominator = _speedAll*1.0f / _totalUnits;
         }
 
         public void Add(UnitController unit)
         {
-            _units.Add((unit, unit.GetData().Initiative, unit.GetData().Faction));
+            _units.Add(unit);
             _totalUnits++;
             _speedAll+=unit.GetData().Stats[Stat.SPE].EffectiveStat;
         }
@@ -56,28 +56,28 @@ namespace _Scripts.Runtime.Combat.Mechanics
         {
             if (_cappedUnits.Count > 0)
             {
-                return true;
+               return true;
             }
 
-            if(_arbitrationSet.Count == _cappedUnits.Count)
+            if(_agingSet.Count == _cappedUnits.Count)
                 ResetInitMod(1.0f);
             for (int i = 0; i < _units.Count; i++)
             {
-                Entities.Scripts.Combat.Unit u = _units[i].unit.GetData();
-                if (u.IsDead)
+                if (_units[i].GetData().IsDead)
                     continue;
-                _units[i] =  (_units[i].unit, CalcInitiative(u), _units[i].faction);
+                CalcInitiative(_units[i].GetData());
             }
-            //ally should before enemy due to enum value being higher
+            //ally should be before enemy due to enum value being higher
+            
             _units.Sort((a, b) => b.CompareTo(a));
-            for (int i = 0; i < _units.Count; i++)
+            for(int i = 0; i < _units.Count; i++)
             {
-                if (_units[i].initiative >= 100)
-                    _cappedUnits.Add(_units[i].unit);
+                if (_units[i].GetData().Initiative >= 100)
+                    _cappedUnits.Add(_units[i]);
                 else
                     break;
             }
-            Shuffle?.Invoke();
+            OnShuffled?.Invoke();
             return false;
         }
 
@@ -111,11 +111,12 @@ namespace _Scripts.Runtime.Combat.Mechanics
                 return;
             }
 
-            if (_cappedUnits.Remove(unit) && !_arbitrationSet.Add(unit))
+            if (_cappedUnits.Remove(unit))
             {
-                unit.GetData().DecInitMod();
+                if(!_agingSet.Add(unit))
+                    unit.GetData().DecInitMod();
                 if (unit.GetData().IsBlocking) 
-                    unit.GetData().SetInit(unit.GetData().InitiativeAfterDefending);
+                    unit.GetData().SetInitMod(unit.GetData().InitModifier+0.01f); //temp value/formula
                 else
                     unit.GetData().SetInit(0);
             }
@@ -128,20 +129,20 @@ namespace _Scripts.Runtime.Combat.Mechanics
         /// <param name="u"></param>
         /// <param name="initialInit"></param>
         /// <returns></returns>
-        private int CalcInitiative(Entities.Scripts.Combat.Unit u)
+        private void CalcInitiative(Entities.Scripts.Combat.Unit u)
         {
+            //current formula is terrible because a player will go 2x before an enemy even with a minor speed advantage
             int result = (int)((1.0f * u.Stats[Stat.SPE].EffectiveStat * u.InitModifier + u.Initiative) / (_speedAll/(_totalUnits*1.0f)) * 100.0f);
             int clamp = System.Math.Clamp(result, 0, 100);
             u.SetInit(clamp);
-            return u.Initiative;
         }
 
-        public void ResetInitMod(float baseline)
+        private void ResetInitMod(float baseline)
         {
-            _arbitrationSet.Clear();
+            _agingSet.Clear();
             for(int i = 0; i < _units.Count; i++)
             {
-               _units[i].unit.GetData().SetInitMod(baseline); 
+               _units[i].GetData().SetInitMod(baseline); 
             }
         }
 

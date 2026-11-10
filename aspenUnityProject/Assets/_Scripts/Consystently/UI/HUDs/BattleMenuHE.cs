@@ -27,8 +27,8 @@ namespace _Scripts.Consystently.UI
         [SerializeField] private Button _defendButton;
         [SerializeField] private Button _moveButton;
 
-       
-
+      
+        //todo: needs to be moved to a separate script attached to the battle log, not this script for the action ring 
         [Header("Battle Announcements")]
 
         [SerializeField]

@@ -12,15 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5459b02eac575472e99541bd894a6cf1, type: 3}
   m_Name: MettoolData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnitSO
-  _portrait: {fileID: 0}
+  _portrait: {fileID: 21300000, guid: a9c2aa9fa0ce440a4a0df1d1b37da0a5, type: 3}
   _id: 
   _name: Mettool
   _model: {fileID: 1130279044128415484, guid: 128631cd648082e0ab1c702d007c89dd, type: 3}
+  _description: 
   Level: 11
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
   RemainingHealth: 100
   RemainingEnergy: 100
+  _healthStat: 0
+  _energyStat: 0
+  _strengthStat: 0
+  _defenseStat: 0
+  _techStat: 0
+  _resistanceStat: 0
+  _speedStat: 0
+  _luckStat: 0
+  _precisionStat: 0
+  _evasionStat: 0
   _health: 4
   _energy: 4
   _strength: 4

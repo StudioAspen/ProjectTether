@@ -25,7 +25,6 @@ namespace _Scripts.Runtime.Managers
     //TODO: break this down 
     public class CombatManager : MonoBehaviour, ICombatFunctionProvider
     {
-        private const float ArbitraryOffset = 10;
         private const int TileNum = 19;
         
         private InputSystem_Actions _input;
@@ -43,6 +42,10 @@ namespace _Scripts.Runtime.Managers
         
         //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
         private TurnQueue TurnOrder { get; } = new TurnQueue();
+        
+        /// <summary>
+        /// stop progressing initiative when it is currently a unit's turn 
+        /// </summary>
         private bool _currentlyInTurn;
         private List<UnitController> DeadUnits {get; }= new List<UnitController>();
         private int _deadEnemies;
@@ -83,6 +86,9 @@ namespace _Scripts.Runtime.Managers
         //animation/tile update handled per unit at the instant they move. 
         public static event Action<UnitController> unitMoved;
         //we may want sounds when the cursor moves around 
+
+        // Notify the camera system when a unit performs an action:
+        public static event Action<UnitController> unitActionStarted;
         public static event Action<Vector3> hoverTileChanged;  
         public static event Action<BattlePhase, UnitController> battlePhaseChanged;
         public static event Action<TileController> examinedTile;
@@ -191,7 +197,7 @@ namespace _Scripts.Runtime.Managers
                     TurnOrder.Add(unitController);
                 }
                 
-                tileController.RepositionUnits(ArbitraryOffset);
+                tileController.RepositionUnits();
             }
         }
 
@@ -238,7 +244,6 @@ namespace _Scripts.Runtime.Managers
         {
             if (DeadUnits.Count >= (_totalAllies + _totalEnemies))
             {
-                Debug.Log("All units dead.");
                 _currentPhase = null;
                 return;
             }
@@ -248,7 +253,7 @@ namespace _Scripts.Runtime.Managers
             }
             CurrentUnit = TurnOrder.GetCappedUnits()[0];
             _currentlyInTurn = true;
-            if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally)
+            if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally) //manual enemy treats enemy phase like an ally phase
                 _currentPhase = _phases[0];
             else if (CurrentUnit.GetData().Faction==Faction.Enemy)
                 _currentPhase = _phases[1];
@@ -388,6 +393,8 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
+            // Camera Event: Focus on the attacking unit when an attack begins.
+            unitActionStarted?.Invoke(currentUnit);
             foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
             {
                 CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);
@@ -401,6 +408,8 @@ namespace _Scripts.Runtime.Managers
 
         private void HandleSelectAbility(UnitController currentUnit)
         {
+            // Camera Event: Focus on the acting unit when an ability is used.
+            unitActionStarted?.Invoke(currentUnit);
             TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
             AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
             rangeDisplay.HideRange();           
@@ -440,9 +449,11 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectMove(TileController selectedTileController, UnitController currentUnit)
         {
+            // Camera Event: Focus on the moving unit when movement begins.
+            unitActionStarted?.Invoke(currentUnit);
             selectedTileController.AddUnit(GetCurrTileController().RemoveUnit(currentUnit));
             currentUnit.TryMove(selectedTileController.Position(),selectedTileController.tileCoordinate);
-            selectedTileController.RepositionUnits(ArbitraryOffset); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
+            selectedTileController.RepositionUnits(); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 
             RedoSelection();
         }
 

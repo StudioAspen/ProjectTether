@@ -13,7 +13,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         
         private Tile tileData;
         private const int MaxUnits = 4;
-        private const float ArbitraryOffset = 10;
+        private const float ArbitraryOffset = 5;
 
         [SerializeField, Range(0,18)]
         private int tileNum;
@@ -60,7 +60,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         {
             UnitController removed = unitController;
             UnitControllers.Remove(unitController);
-            RepositionUnits(ArbitraryOffset);
+            RepositionUnits();
             return removed;
         }
 
@@ -70,7 +70,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         }
 
         //. . . triangle box 
-        public void RepositionUnits(float offset)
+        public void RepositionUnits()
         {
             int count = UnitControllers.Count;
             if (count <= 1)
@@ -78,7 +78,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             for (int unit = 0; unit < count; unit++)
             {
                 float angle = (2f * Mathf.PI * unit) / count;
-                UnitControllers[unit].Move(transform.position + new Vector3(offset * -Mathf.Cos(angle), 0, offset * Mathf.Sin(angle)));
+                UnitControllers[unit].Move(transform.position + new Vector3(ArbitraryOffset * -Mathf.Cos(angle), 0, ArbitraryOffset* Mathf.Sin(angle)));
             }
         }
         

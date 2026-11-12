@@ -20,6 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/MVP/battleScene.unity
     guid: 26c5f0027842f36ba863fc0c8b2a0803
+  - enabled: 1
+    path: Assets/_Scenes/Transition Test/area 1.unity
+    guid: e32cbf9dfc019403fae5d59a59e4d128
+  - enabled: 1
+    path: Assets/_Scenes/Transition Test/area 2.unity
+    guid: 5a4f943cba6d141c8af02b2bf91d8e59
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 4ded4a164995149758509c33687e656c, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

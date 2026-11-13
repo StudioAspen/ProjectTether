@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f5c1aefca06224da707cbef9d72de4, type: 3}
+  m_Name: Stat_4b8ca174-36cd-4172-9a73-ce53009145da
+  m_EditorClassIdentifier: Assembly-CSharp::StatSO
+  <Name>k__BackingField: Stat Name
+  <Health>k__BackingField: 0
+  <Strength>k__BackingField: 0
+  <Tech>k__BackingField: 0
+  <Defense>k__BackingField: 0
+  <Resistance>k__BackingField: 0
+  <Speed>k__BackingField: 0
+  <Luck>k__BackingField: 0

@@ -15,7 +15,7 @@ namespace _Scripts.Runtime.Math
         {
             return (Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y) + Mathf.Abs(from.z - to.z)) / 2;
         }
-        
+
         /// <summary>
         /// converts movement vector to a direction
         /// </summary>
@@ -26,21 +26,21 @@ namespace _Scripts.Runtime.Math
         {
             switch (vector.x, vector.y)
             {
-                case(1f,1f):
+                case (1f, 1f):
                     return CubeCoordDirections.NE;
-                case(1f,-1f):
+                case (1f, -1f):
                     return CubeCoordDirections.SE;
-                case(-1f,-1f):
+                case (-1f, -1f):
                     return CubeCoordDirections.SW;
-                case(-1f, 1f):
+                case (-1f, 1f):
                     return CubeCoordDirections.NW;
-                case(0f, 1f):
+                case (0f, 1f):
                     return CubeCoordDirections.N;
-                case(0f,-1f):
+                case (0f, -1f):
                     return CubeCoordDirections.S;
-                case(1f, 0f):
+                case (1f, 0f):
                     return CubeCoordDirections.NE;
-                case(-1f, 0f):
+                case (-1f, 0f):
                     return CubeCoordDirections.SW;
                 default:
                     return CubeCoordDirections.N;
@@ -97,12 +97,12 @@ namespace _Scripts.Runtime.Math
         }
 
         // checks if the target tile is on the custom range path
-        public static bool CustomRange(this Vector3Int origin, List<Vector2> customRange, Vector3Int target)
+        public static bool CustomRange(this Vector3Int origin, List<CubeCoordDirections> customRange, Vector3Int target)
         {
             Vector3Int current = origin;
-            foreach (Vector2 step in customRange)
+            foreach (CubeCoordDirections step in customRange)
             {
-                current += step.GetDirection().Vector();
+                current += step.Vector();
                 if (current == target)
                     return true;
             }

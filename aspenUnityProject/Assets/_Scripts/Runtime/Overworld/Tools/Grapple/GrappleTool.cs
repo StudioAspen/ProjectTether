@@ -73,35 +73,13 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             if (_projectileSpawnTransform == null)
                 return;
 
-            Vector3 direction = transform.forward.normalized;
-            float radius = Mathf.Max(0f, _rayDetectionRadius);
-            Vector3 spawnPosition = _projectileSpawnTransform.position;
-            Vector3 origin = spawnPosition + direction * radius;
-            float distance = Mathf.Max(0f, _maxDetectionRadius);
-            Vector3 end = origin + direction * distance;
-
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(spawnPosition, origin);
-            Gizmos.DrawWireSphere(origin, radius);
-            Gizmos.DrawWireSphere(end, radius);
-            Gizmos.DrawLine(origin, end);
-
-            // Draw rails around the sphere's path.
-            Vector3 right = Vector3.Cross(direction, Vector3.up);
-            if (right.sqrMagnitude < 0.001f)
-                right = Vector3.Cross(direction, Vector3.right);
-
-            right.Normalize();
-            Vector3 up = Vector3.Cross(right, direction).normalized;
-
-            const int railCount = 8;
-            for (int i = 0; i < railCount; i++)
-            {
-                float angle = i * Mathf.PI * 2f / railCount;
-                Vector3 offset = (right * Mathf.Cos(angle) + up * Mathf.Sin(angle)) * radius;
-
-                Gizmos.DrawLine(origin + offset, end + offset);
-            }
+            CapsuleDetection.DrawGizmos(
+                _projectileSpawnTransform.position,
+                transform.forward,
+                _maxDetectionRadius,
+                _rayDetectionRadius,
+                Color.cyan
+            );
         }
 
         private void Input_PrimaryToolActionPerformed(InputAction.CallbackContext context)
@@ -296,43 +274,13 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
         
         private void ScanForAimSurfaces()
         {
-            List<(Grappleable grappleable, Vector3 hitPoint)> validHits = new();
-            
-            RaycastHit[] hits = Physics.SphereCastAll(
-                _projectileSpawnTransform.position + transform.forward * _rayDetectionRadius, 
-                _rayDetectionRadius, 
-                transform.forward, 
-                _maxDetectionRadius
+            CapsuleDetection.TryGetObjectInCapsule<Grappleable>(
+                _projectileSpawnTransform.position,
+                transform.forward,
+                _maxDetectionRadius,
+                _rayDetectionRadius,
+                out _targetGrappleObject
             );
-            foreach (RaycastHit hit in hits)
-            {
-                Grappleable grappleable = hit.collider.GetComponentInParent<Grappleable>();
-                if (grappleable == null)
-                    continue;
-
-                validHits.Add((grappleable, hit.collider.ClosestPoint(_projectileSpawnTransform.position)));
-            }
-
-            if (validHits.Count == 0)
-            {
-                _targetGrappleObject = null;
-                return;
-            }
-            
-            // Get closest hitpoint
-            float closestSqrMagnitude = float.MaxValue;
-            (Grappleable grappleable, Vector3 hitPoint)? closestHit = null;
-            foreach (var hit in validHits)
-            {
-                float sqrMagnitude = (hit.hitPoint - _playerController.transform.position).sqrMagnitude;
-                if (sqrMagnitude < closestSqrMagnitude)
-                {
-                    closestSqrMagnitude = sqrMagnitude;
-                    closestHit = hit;
-                }
-            }
-            
-            _targetGrappleObject = closestHit;
         }
 
         private void UpdateLightIndicator()

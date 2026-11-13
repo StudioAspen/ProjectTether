@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55348bcf7c3dd1b4aa3217b6887e7c2a, type: 3}
+  m_Name: AbilityNode_bf239
+  m_EditorClassIdentifier: Assembly-CSharp::Slinky.NodeWeb.AbilityNodeSO
+  <GUID>k__BackingField: bf2391e3-4f1a-4115-98c6-02aef3f1bdd0
+  <IsUnlocked>k__BackingField: 0
+  <PrerequisitesIDs>k__BackingField:
+  - 981db3ba-d4de-41ab-ba4b-6f2932488932
+  <UnlockIDs>k__BackingField:
+  - 1cf5d171-5862-4cf8-8fee-edebe9981f14
+  <EditorPosition>k__BackingField: {x: 490.29477, y: -66.000015}
+  <CurrentNodeWebGraphLocation>k__BackingField: {fileID: 11400000, guid: af07506c9595a834194d425351be1a13, type: 2}
+  <Ability>k__BackingField: {fileID: 11400000, guid: c1d9fefd67fab514a8bd46f90f0e49a8, type: 2}

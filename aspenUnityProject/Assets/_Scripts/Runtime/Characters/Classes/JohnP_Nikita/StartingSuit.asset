@@ -16,3 +16,4 @@ MonoBehaviour:
   _energyCapacity: 10
   _skillCapacity: 1
   _abilityCapacity: 1
+  <SkillTree>k__BackingField: {fileID: 11400000, guid: af07506c9595a834194d425351be1a13, type: 2}

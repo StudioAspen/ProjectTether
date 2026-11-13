@@ -98,12 +98,18 @@ namespace _Scripts.Runtime.Managers
         /// <summary>
         /// true = win, false = lose
         /// </summary>
-        public static event Action<bool> finishedBattle; 
-        
+        public static event Action<bool> finishedBattle;
+
+        // For now, until theres a better way
+        #region UI_References
+        AbilitySelectionPanel _abilitySelectionPanel;
+        #endregion
+
         private void Awake()
         {
             _input = InputManager.Instance.Actions;
             _currentEncounter = GameSession.Instance.CurrentEncounterData;
+            _abilitySelectionPanel = GameObject.Find("AbilitySelectionPanel").GetComponent<AbilitySelectionPanel>();
         }
 
         //must occur after OnEnable bc other classes will subscribe OnEnable
@@ -122,6 +128,7 @@ namespace _Scripts.Runtime.Managers
             BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;
             foreach (StatusSO status in _actionStatuses)
                 _actionStatusDic.Add(status.StatusId, status);
+                
         }
 
         private void OnDestroy()
@@ -312,6 +319,17 @@ namespace _Scripts.Runtime.Managers
                     if(currUnit.GetData().Faction == Faction.Ally)
                         Overclock(currUnit);
                     return;
+                    /*
+                     * Putting the ability action here till we figure out how to isolate buttons that open a UI Menu - Jason
+                     */
+                case CombatActions.Ability:
+                    Debug.Log("Ability Button Clicked");
+                    //_currentPhase.PushState();
+                    _abilitySelectionPanel.OnSetUp(CurrentUnit);
+                    _abilitySelectionPanel.Open();
+                    Debug.Log(CurrentUnit);
+                    break;
+
                 default:
                     Debug.Log($"Unknown action: {action}");
                     return;

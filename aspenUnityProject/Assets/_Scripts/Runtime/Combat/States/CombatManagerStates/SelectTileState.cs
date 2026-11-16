@@ -1,3 +1,4 @@
+using System;
 using _Scripts.Runtime.Combat.States.ContextData;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Math;
@@ -9,6 +10,9 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
     //the state when the player is selecting a tile for an action (e.g., attacking, viewing, etc.)
     public class SelectTileState : ActionState
     {
+        // Camera events for entering and exiting tile selection:
+        public static event Action TileSelectionStarted;
+        public static event Action TileSelectionEnded;
         public SelectTileState(CombatContext combatContext, PlayerPhase battlePhase) : base(combatContext, battlePhase) {}
         
        
@@ -18,6 +22,8 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             CombatContext.Input.TileSelect.Confirm.performed += CombatContext.CombatFunctionProvider.SelectTile;
             CombatContext.Input.TileSelect.Exit.performed += ((PlayerPhase)BattlePhase).PopState;
             CombatContext.Input.TileSelect.Move.started += OnMove;
+            // Notify the camera system that tile selection has started:
+            TileSelectionStarted?.Invoke();
         }
 
         public override void Update()
@@ -43,6 +49,8 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             CombatContext.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
             CombatContext.Input.TileSelect.Move.started -= OnMove;
             CombatContext.Input.TileSelect.Disable();
+            // Notify the camera system that tile selection has ended:
+            TileSelectionEnded?.Invoke();
         }
     }
 }

@@ -83,6 +83,9 @@ namespace _Scripts.Runtime.Managers
         //animation/tile update handled per unit at the instant they move. 
         public static event Action<UnitController> unitMoved;
         //we may want sounds when the cursor moves around 
+
+        // Notify the camera system when a unit performs an action:
+        public static event Action<UnitController> unitActionStarted;
         public static event Action<Vector3> hoverTileChanged;  
         public static event Action<BattlePhase, UnitController> battlePhaseChanged;
         public static event Action<TileController> examinedTile;
@@ -92,12 +95,18 @@ namespace _Scripts.Runtime.Managers
         /// <summary>
         /// true = win, false = lose
         /// </summary>
-        public static event Action<bool> finishedBattle; 
-        
+        public static event Action<bool> finishedBattle;
+
+        // For now, until theres a better way
+        #region UI_References
+        AbilitySelectionPanel _abilitySelectionPanel;
+        #endregion
+
         private void Awake()
         {
             _input = InputManager.Instance.Actions;
             _currentEncounter = GameSession.Instance.CurrentEncounterData;
+            _abilitySelectionPanel = GameObject.Find("AbilitySelectionPanel").GetComponent<AbilitySelectionPanel>();
         }
 
         //must occur after OnEnable bc other classes will subscribe OnEnable
@@ -307,6 +316,17 @@ namespace _Scripts.Runtime.Managers
                     if(currUnit.GetData().Faction == Faction.Ally)
                         Overclock(currUnit);
                     return;
+                    /*
+                     * Putting the ability action here till we figure out how to isolate buttons that open a UI Menu - Jason
+                     */
+                case CombatActions.Ability:
+                    Debug.Log("Ability Button Clicked");
+                    //_currentPhase.PushState();
+                    _abilitySelectionPanel.OnSetUp(CurrentUnit);
+                    _abilitySelectionPanel.Open();
+                    Debug.Log(CurrentUnit);
+                    break;
+
                 default:
                     Debug.Log($"Unknown action: {action}");
                     return;
@@ -388,6 +408,8 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectAttack(UnitController currentUnit)
         {
+            // Camera Event: Focus on the attacking unit when an attack begins.
+            unitActionStarted?.Invoke(currentUnit);
             foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
             {
                 CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);
@@ -403,6 +425,8 @@ namespace _Scripts.Runtime.Managers
         //TODO: move to ability class execute function
         private void HandleSelectAbility(UnitController currentUnit)
         {
+            // Camera Event: Focus on the acting unit when an ability is used.
+            unitActionStarted?.Invoke(currentUnit);
             TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
             AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
             rangeDisplay.HideRange();           
@@ -442,6 +466,8 @@ namespace _Scripts.Runtime.Managers
         
         private void HandleSelectMove(TileController selectedTileController, UnitController currentUnit)
         {
+            // Camera Event: Focus on the moving unit when movement begins.
+            unitActionStarted?.Invoke(currentUnit);
             selectedTileController.AddUnit(GetCurrTileController().RemoveUnit(currentUnit));
             currentUnit.TryMove(selectedTileController.Position(),selectedTileController.tileCoordinate);
             selectedTileController.RepositionUnits(); //maybe more efficient to call here than in AddUnit bc of the CreateObjects function 

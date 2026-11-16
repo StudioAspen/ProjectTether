@@ -93,9 +93,9 @@ namespace _Scripts.Runtime.Combat
      */
 
       // custom range. list of directions walked from the unit's tile
-      // e.g. (0, 1), (0, 1), (0, 1) = line of 3 tiles north
-      [SerializeField] private List<Vector2> customRange;
-      public List<Vector2> CustomRange => customRange;
+      // e.g. N, N, N = line of 3 tiles north
+      [SerializeField] private List<CubeCoordDirections> customRange;
+      public List<CubeCoordDirections> CustomRange => customRange;
 
 
         public void SetName(string name) => abilityName = name;

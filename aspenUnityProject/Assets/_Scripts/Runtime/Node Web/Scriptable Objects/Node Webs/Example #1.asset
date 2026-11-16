@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de5f1d5e85d72f44fa564adcc1602323, type: 3}
+  m_Name: Example #1
+  m_EditorClassIdentifier: Assembly-CSharp::Slinky.NodeWeb.NodeWebGraphSO
+  <AllNodes>k__BackingField:
+  - {fileID: 11400000, guid: c24710ca87a3d3c43835bc583a6b1e1f, type: 2}
+  - {fileID: 11400000, guid: 6ccd472f84c51444da7d6f74363525a6, type: 2}
+  - {fileID: 11400000, guid: e643c910b34b51c488a913e5e2eef228, type: 2}
+  - {fileID: 11400000, guid: d28d1423a8bf25449b90361b1acab9ae, type: 2}
+  - {fileID: 11400000, guid: fde49dd18acc907408c3d709eeab4f78, type: 2}
+  - {fileID: 11400000, guid: 2abe79e39b71070419e32fd5ea6623de, type: 2}
+  <AllNodesDict>k__BackingField:
+    _serializedList:
+    - Key: 79c6630d-ce5a-453e-808c-ded29bdc78e5
+      Value: {fileID: 11400000, guid: c24710ca87a3d3c43835bc583a6b1e1f, type: 2}
+    - Key: 70e3518d-3393-4278-8e9f-797f9746c525
+      Value: {fileID: 11400000, guid: 6ccd472f84c51444da7d6f74363525a6, type: 2}
+    - Key: bf2391e3-4f1a-4115-98c6-02aef3f1bdd0
+      Value: {fileID: 11400000, guid: e643c910b34b51c488a913e5e2eef228, type: 2}
+    - Key: 981db3ba-d4de-41ab-ba4b-6f2932488932
+      Value: {fileID: 11400000, guid: d28d1423a8bf25449b90361b1acab9ae, type: 2}
+    - Key: 1cf5d171-5862-4cf8-8fee-edebe9981f14
+      Value: {fileID: 11400000, guid: fde49dd18acc907408c3d709eeab4f78, type: 2}
+    - Key: 4b8ca174-36cd-4172-9a73-ce53009145da
+      Value: {fileID: 11400000, guid: 2abe79e39b71070419e32fd5ea6623de, type: 2}

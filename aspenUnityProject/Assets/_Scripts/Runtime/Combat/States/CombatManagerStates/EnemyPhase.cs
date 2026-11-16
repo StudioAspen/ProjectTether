@@ -41,9 +41,11 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 
         public override void Exit()
         {
-            stateStack.Clear();
+            while(stateStack.Count > 0)
+                PopState();
         }
 
+        
         //this will simply reset their behavior stack
         public override void PushState()
         {

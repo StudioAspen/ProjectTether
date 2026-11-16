@@ -992,18 +992,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""180454ee-7a77-4553-9a60-02fd61a49bb6"",
-                    ""path"": ""<Keyboard>/x"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Exit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a2494876-23c5-4cc4-b32b-85b6ddfbde99"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -1047,6 +1036,34 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""NoUICombatActions"",
+            ""id"": ""42f03529-1078-46e9-8567-385f86ab0612"",
+            ""actions"": [
+                {
+                    ""name"": ""Examine"",
+                    ""type"": ""Button"",
+                    ""id"": ""eac35752-95f1-41ec-81d1-fd69fa9326bd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""70bcbe0b-6da8-4528-bab8-29d22af5a305"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Examine"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1142,6 +1159,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         // Global
         m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
         m_Global_Pause = m_Global.FindAction("Pause", throwIfNotFound: true);
+        // NoUICombatActions
+        m_NoUICombatActions = asset.FindActionMap("NoUICombatActions", throwIfNotFound: true);
+        m_NoUICombatActions_Examine = m_NoUICombatActions.FindAction("Examine", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1150,6 +1170,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, InputSystem_Actions.UI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_TileSelect.enabled, "This will cause a leak and performance issues, InputSystem_Actions.TileSelect.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Global.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Global.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_NoUICombatActions.enabled, "This will cause a leak and performance issues, InputSystem_Actions.NoUICombatActions.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1759,6 +1780,102 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="GlobalActions" /> instance referencing this action map.
     /// </summary>
     public GlobalActions @Global => new GlobalActions(this);
+
+    // NoUICombatActions
+    private readonly InputActionMap m_NoUICombatActions;
+    private List<INoUICombatActionsActions> m_NoUICombatActionsActionsCallbackInterfaces = new List<INoUICombatActionsActions>();
+    private readonly InputAction m_NoUICombatActions_Examine;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "NoUICombatActions".
+    /// </summary>
+    public struct NoUICombatActionsActions
+    {
+        private @InputSystem_Actions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public NoUICombatActionsActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "NoUICombatActions/Examine".
+        /// </summary>
+        public InputAction @Examine => m_Wrapper.m_NoUICombatActions_Examine;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_NoUICombatActions; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="NoUICombatActionsActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(NoUICombatActionsActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="NoUICombatActionsActions" />
+        public void AddCallbacks(INoUICombatActionsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_NoUICombatActionsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_NoUICombatActionsActionsCallbackInterfaces.Add(instance);
+            @Examine.started += instance.OnExamine;
+            @Examine.performed += instance.OnExamine;
+            @Examine.canceled += instance.OnExamine;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="NoUICombatActionsActions" />
+        private void UnregisterCallbacks(INoUICombatActionsActions instance)
+        {
+            @Examine.started -= instance.OnExamine;
+            @Examine.performed -= instance.OnExamine;
+            @Examine.canceled -= instance.OnExamine;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="NoUICombatActionsActions.UnregisterCallbacks(INoUICombatActionsActions)" />.
+        /// </summary>
+        /// <seealso cref="NoUICombatActionsActions.UnregisterCallbacks(INoUICombatActionsActions)" />
+        public void RemoveCallbacks(INoUICombatActionsActions instance)
+        {
+            if (m_Wrapper.m_NoUICombatActionsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="NoUICombatActionsActions.AddCallbacks(INoUICombatActionsActions)" />
+        /// <seealso cref="NoUICombatActionsActions.RemoveCallbacks(INoUICombatActionsActions)" />
+        /// <seealso cref="NoUICombatActionsActions.UnregisterCallbacks(INoUICombatActionsActions)" />
+        public void SetCallbacks(INoUICombatActionsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_NoUICombatActionsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_NoUICombatActionsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="NoUICombatActionsActions" /> instance referencing this action map.
+    /// </summary>
+    public NoUICombatActionsActions @NoUICombatActions => new NoUICombatActionsActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1981,5 +2098,20 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "NoUICombatActions" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="NoUICombatActionsActions.AddCallbacks(INoUICombatActionsActions)" />
+    /// <seealso cref="NoUICombatActionsActions.RemoveCallbacks(INoUICombatActionsActions)" />
+    public interface INoUICombatActionsActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Examine" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnExamine(InputAction.CallbackContext context);
     }
 }

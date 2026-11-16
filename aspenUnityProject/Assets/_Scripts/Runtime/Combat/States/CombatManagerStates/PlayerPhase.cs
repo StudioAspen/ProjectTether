@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat.States.ContextData;
-using _Scripts.Runtime.Managers;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _Scripts.Runtime.Combat.States.CombatManagerStates
@@ -20,7 +18,6 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 
         public override void Enter()
         {
-           Debug.Log("player phase entered"); 
            stateStack.Clear();
         }
 
@@ -37,30 +34,36 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         {
             foreach (ActionState state in stateStack)
                state.Exit();
-            stateStack.Clear();
+            while (stateStack.Count > 0)
+                PopState();
         }
         
         public override void PopState()
         {
-            
+            if (stateStack.Count == 0)
+                return;
+            stateStack.Pop().Exit(); 
+            if (stateStack.Count == 0)
+            {
+                CombatContext.CombatFunctionProvider.RedoSelection();
+            }
+            else
+                stateStack.Peek().Enter();
         }
 
+        /// <summary>
+        /// removes one state from the stack. Called when backing out.
+        /// </summary>
+        /// <param name="context"></param>
         public void PopState(InputAction.CallbackContext context)
         {
-           if (stateStack.Count == 0)
-                return;
-           stateStack.Pop().Exit();
-           if (stateStack.Count == 0)
-               CombatContext.CombatFunctionProvider.RedoSelection(); 
-           else
-               stateStack.Peek().Enter();
+            PopState();
         }
 
         public override void PushState()
         {
             if (stateStack.Count > states.Count - 1)
             {
-                Debug.Log("playerState stack bug. how is this possible");
                 return;
             }
             if (stateStack.Count > 0)
@@ -68,6 +71,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             stateStack.Push(states[stateStack.Count]);
             stateStack.Peek().Enter();
         }
-        
+
+       
     }
 }

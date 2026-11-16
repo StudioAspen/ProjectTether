@@ -18,16 +18,19 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public void CheckDead(UnitController receiver);
         public void RemoveDead();
         
+        /// <summary>
+        /// mainly for ally turns where the UI pops up after cancellation
+        /// </summary>
         public void RedoSelection();
         public UnitController GetCurrentUnit();
+        
+        /// <summary>
+        /// Should be called wherever the turn should change after a unit action
+        /// </summary>
         public void ChangeTurn();
         public void ExitExamine();
         public void ExamineUnit(UnitController unit);
         
-        /// <summary>
-        /// MUST be called as the final method for every function in enemy behavior states that handle attacks/abilities
-        /// </summary>
-        public void Consume(); 
 
 
 

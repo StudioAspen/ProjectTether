@@ -21,5 +21,6 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         {
             return (EnemyUnitController)CombatContext.CombatFunctionProvider.GetCurrentUnit();
         }
+        
     }
 }

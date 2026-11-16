@@ -41,12 +41,8 @@ namespace _Scripts.Runtime.Managers
         private Dictionary<Vector3Int, int> TileCubeCoords { get; }= new Dictionary<Vector3Int, int>();
         
         //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
-        private TurnQueue TurnOrder { get; } = new TurnQueue();
+        private TurnQueue TurnOrder;
         
-        /// <summary>
-        /// stop progressing initiative when it is currently a unit's turn 
-        /// </summary>
-        private bool _currentlyInTurn;
         private List<UnitController> DeadUnits {get; }= new List<UnitController>();
         private int _deadEnemies;
         private int _deadAllies;
@@ -63,7 +59,8 @@ namespace _Scripts.Runtime.Managers
         private int _totalEnemies { get; set; }
         
         //for easier targeting calculation
-        private List<AllyUnitController> PlayerUnits { get; } = new List<AllyUnitController>();
+        private List<AllyUnitController> _playerUnits { get; } = new List<AllyUnitController>();
+        private List<UnitController> _allUnits { get; } = new List<UnitController>();
         private UnitController CurrentUnit { get; set; }
         private Vector3Int SelectedTile { get; set; }
         private Vector3Int _currentTile { get; set; } = new Vector3Int(0, 0, 0);
@@ -108,17 +105,19 @@ namespace _Scripts.Runtime.Managers
         {
             SortTiles(tilesParent.GetComponentsInChildren<TileController>());
             GenerateCoords();
-            CreateObjects(); 
+            CreateObjects();
             
+            TurnOrder = new TurnQueue(_allUnits); 
             rangeDisplay.Initialize(TileControllers);
             
-            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
-            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
+            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
+            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
             BattleMenuHE.PlayerAction += HandleAction;
             BattleMenuHE.PlayerSelectiveAction += HandleAction;
             BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;
             foreach (StatusSO status in _actionStatuses)
                 _actionStatusDic.Add(status.StatusId, status);
+            ChangeTurn();
         }
 
         private void OnDestroy()
@@ -127,15 +126,11 @@ namespace _Scripts.Runtime.Managers
             BattleMenuHE.PlayerSelectiveAction -= HandleAction;
             BattleMenuHE.ToggledManualEnemy -= ToggleManualEnemy;
             _input.TileSelect.Disable();
-            TurnOrder.Clear();
-            PlayerUnits.Clear();
+            _playerUnits.Clear();
         }
 
-        //TODO: allow player to choose between allies when they have tied initiative?
         private void Update()
         {
-            if (TurnOrder.UpdateInitiatives() && !_currentlyInTurn)
-                ChangeTurn();
         }
 
         //Correct order is not guaranteed by GetComponentsInChildren
@@ -174,7 +169,7 @@ namespace _Scripts.Runtime.Managers
                     if (unitData.Faction == Faction.Ally)
                     {
                         tileController.AddUnit(unitController);
-                        PlayerUnits.Add(unitController as AllyUnitController);
+                        _playerUnits.Add(unitController as AllyUnitController);
                         
                         _totalAllies++;
                     }
@@ -191,7 +186,7 @@ namespace _Scripts.Runtime.Managers
                     
                     unitController.Initialize(unitData);
                     unitController.SetTile(tileController.tileCoordinate);
-                    TurnOrder.Add(unitController);
+                    _allUnits.Add(unitController);
                 }
                 
                 tileController.RepositionUnits();
@@ -247,9 +242,11 @@ namespace _Scripts.Runtime.Managers
             if (_currentPhase != null)
             {
                 _currentPhase.Exit();
+                TurnOrder.Consume();
             }
-            CurrentUnit = TurnOrder.GetCappedUnits()[0];
-            _currentlyInTurn = true;
+
+            CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
+            Debug.Log($"hello: {CurrentUnit}");
             if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally) //manual enemy treats enemy phase like an ally phase
                 _currentPhase = _phases[0];
             else if (CurrentUnit.GetData().Faction==Faction.Enemy)
@@ -288,6 +285,7 @@ namespace _Scripts.Runtime.Managers
         {
             _receivedAction = action;
             UnitController currUnit = CurrentUnit;
+            Debug.Log(CurrentUnit);
             switch(action)
             {
                 case CombatActions.Attack:
@@ -401,6 +399,8 @@ namespace _Scripts.Runtime.Managers
             FinishSelection();
         }
 
+        
+        //TODO: move to ability class execute function
         private void HandleSelectAbility(UnitController currentUnit)
         {
             TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
@@ -470,15 +470,8 @@ namespace _Scripts.Runtime.Managers
 
         private void FinishSelection()
         {
-            Consume();
             ResetCurrentTile();
-            battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit);
-        }
-        
-        public void Consume()
-        {
-            TurnOrder.ConsumeUnit(CurrentUnit);
-            _currentlyInTurn = false;           
+            ChangeTurn();
         }
 
         public void RedoSelection()
@@ -487,7 +480,7 @@ namespace _Scripts.Runtime.Managers
             rangeDisplay.HideRange();
             ResetCurrentTile();
             _currentPhase.Exit();
-            battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit);
+            battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit); //calls this to make the UI pop up again even when turn is same
         }
 
         private void ExamineTile()
@@ -517,7 +510,6 @@ namespace _Scripts.Runtime.Managers
                     _deadEnemies++;  //neutral units do not exist, apparently
                 DeadUnits.Add(unit);
                 _deadUnitsThisTurn.Add(unit);
-                Debug.Log(u.Name);
             }
             unitsDead?.Invoke(_deadUnitsThisTurn);
             CheckCombatOver();
@@ -534,14 +526,14 @@ namespace _Scripts.Runtime.Managers
 
         private void CheckCombatOver()
         {
-            if (_deadAllies > PlayerUnits.Count)
+            if (_deadAllies > _playerUnits.Count)
             {
                finishedBattle?.Invoke(false);
                return;
             }
             if (_deadEnemies >= _totalEnemies)
             {
-                foreach (AllyUnitController auc in PlayerUnits)
+                foreach (AllyUnitController auc in _playerUnits)
                 {
                     if(!((AllyUnit)auc.GetData()).CheckOverclock())
                        ((AllyUnit)auc.GetData()).Underclock();

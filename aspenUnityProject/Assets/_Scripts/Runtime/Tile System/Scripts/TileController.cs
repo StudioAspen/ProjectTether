@@ -12,7 +12,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         [SerializeField] private TileSO baseData;
         
         private Tile tileData;
-        private const int MaxUnits = 4;
+        private const int MAX_UNITS = 4;
         private const float ArbitraryOffset = 5;
 
         [SerializeField, Range(0,18)]
@@ -32,7 +32,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
 
         public bool AddUnit(UnitController unitController)
         {
-            if (UnitControllers.Contains(unitController) || UnitControllers.Count >= MaxUnits)
+            if (UnitControllers.Contains(unitController) || UnitControllers.Count >= MAX_UNITS)
                 return false;
             UnitControllers.Add(unitController);
 //            RepositionUnits(ArbitraryOffset);
@@ -96,7 +96,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         //currently, units can only move to adjacent tiles 
         public bool IsMoveable(Vector3Int from, int range, Faction faction)
         {
-            if (tileCoordinate == from || UnitControllers.Count >= MaxUnits || from.HexGridDistance(tileCoordinate) > range)
+            if (tileCoordinate == from || UnitControllers.Count >= MAX_UNITS || from.HexGridDistance(tileCoordinate) > range)
                 return false;
             foreach (UnitController unit in UnitControllers)
             {

@@ -56,8 +56,16 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         }
 
         //should reset values that should be upon turn change  (e.g., hasMoved)
+        /// <summary>
+        /// Resets values that should be reset per turn like stunned bool (status effects are applied after) 
+        /// </summary>
         public abstract void ResetValues();
 
+        /// <summary>
+        /// compares UnitController via Unit, which compares faction and level. Allies are placed before Enemies (higher prio in turns)
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(UnitController other)
         {
             if (other is null) return 1;

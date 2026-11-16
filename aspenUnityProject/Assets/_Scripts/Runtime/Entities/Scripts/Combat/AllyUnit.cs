@@ -93,6 +93,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             } 
         }
 
+        //TODO: move status effect execution to status class 
         public override void TriggerStatuses()
         {
             List<string> toDelete = new List<string>();

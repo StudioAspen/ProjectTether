@@ -39,8 +39,6 @@ namespace _Scripts.Runtime.Managers
         /// Vector3Int -> TileControllers index (index is equal to desired count order of tiles)
         /// </summary>
         private Dictionary<Vector3Int, int> TileCubeCoords { get; }= new Dictionary<Vector3Int, int>();
-        
-        //TODO: update turn order to match the initiative proposal in the doc  - we will have to create a new class 
         private TurnQueue TurnOrder;
         
         private List<UnitController> DeadUnits {get; }= new List<UnitController>();
@@ -61,10 +59,23 @@ namespace _Scripts.Runtime.Managers
         //for easier targeting calculation
         private List<AllyUnitController> _playerUnits { get; } = new List<AllyUnitController>();
         private List<UnitController> _allUnits { get; } = new List<UnitController>();
+        
+        /// <summary>
+        /// unit who is currently taking their turn 
+        /// </summary>
         private UnitController CurrentUnit { get; set; }
+        
         private Vector3Int SelectedTile { get; set; }
+        
+        /// <summary>
+        /// tracks position of cursor (cursor is mainly cosmetic) 
+        /// </summary>
         private Vector3Int _currentTile { get; set; } = new Vector3Int(0, 0, 0);
         private CombatActions _receivedAction { get; set; }
+        
+        /// <summary>
+        /// int used for knowing which thing is selected from a submenu
+        /// </summary>
         private int ActionSelection { get; set; }
 
         //no clue how to connect the Overclock status differently 
@@ -88,6 +99,7 @@ namespace _Scripts.Runtime.Managers
         public static event Action<UnitController> unitActionStarted;
         public static event Action<Vector3> hoverTileChanged;  
         public static event Action<BattlePhase, UnitController> battlePhaseChanged;
+        
         public static event Action<TileController> examinedTile;
         public static event Action<UnitController> examinedUnit;
         public static event Action exitedExamine;
@@ -124,6 +136,8 @@ namespace _Scripts.Runtime.Managers
             BattleMenuHE.PlayerAction += HandleAction;
             BattleMenuHE.PlayerSelectiveAction += HandleAction;
             BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;
+            _input.NoUICombatActions.Examine.performed += ExamineTile;
+            
             foreach (StatusSO status in _actionStatuses)
                 _actionStatusDic.Add(status.StatusId, status);
             ChangeTurn();
@@ -134,7 +148,9 @@ namespace _Scripts.Runtime.Managers
             BattleMenuHE.PlayerAction -= HandleAction;
             BattleMenuHE.PlayerSelectiveAction -= HandleAction;
             BattleMenuHE.ToggledManualEnemy -= ToggleManualEnemy;
-            _input.TileSelect.Disable();
+            _input.NoUICombatActions.Examine.performed -= ExamineTile;
+            
+            _input.NoUICombatActions.Disable(); 
             _playerUnits.Clear();
         }
 
@@ -241,6 +257,10 @@ namespace _Scripts.Runtime.Managers
             }
         } 
        
+        /// <summary>
+        /// should be called somehow whenever an action that should end a turn is performed by any unit
+        /// (e.g., attacking, using an ability, defending)
+        /// </summary>
         public void ChangeTurn()
         {
             if (DeadUnits.Count >= (_totalAllies + _totalEnemies))
@@ -251,15 +271,21 @@ namespace _Scripts.Runtime.Managers
             if (_currentPhase != null)
             {
                 _currentPhase.Exit();
-                TurnOrder.Consume();
+                _input.NoUICombatActions.Disable(); 
+                TurnOrder.Consume(); //dequeue only after turn ends to keep portrait of current unit
             }
 
             CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
-            Debug.Log($"hello: {CurrentUnit}");
-            if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally) //manual enemy treats enemy phase like an ally phase
+            if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally)
+            {
+                //manual enemy treats enemy phase like an ally phase
                 _currentPhase = _phases[0];
-            else if (CurrentUnit.GetData().Faction==Faction.Enemy)
+                _input.NoUICombatActions.Enable(); 
+            }
+            else if (CurrentUnit.GetData().Faction == Faction.Enemy)
+            {
                 _currentPhase = _phases[1];
+            }
             else
                 return;
             CurrentUnit.ResetValues();
@@ -364,6 +390,9 @@ namespace _Scripts.Runtime.Managers
             return TileControllers[TileCubeCoords[CurrentUnit.TileCoords]];
         }
         
+        /// <summary>
+        /// Sets cursor position to position of the current unit 
+        /// </summary>
         private void ResetCurrentTile()
         {
             SelectedTile = CurrentUnit.TileCoords;
@@ -397,7 +426,6 @@ namespace _Scripts.Runtime.Managers
                     Debug.Log("items are not implemented in mvp");
                     break;
                 case CombatActions.View:
-                    ExamineTile();
                     _currentPhase.PushState();
                     break;
                 default:
@@ -509,8 +537,9 @@ namespace _Scripts.Runtime.Managers
             battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit); //calls this to make the UI pop up again even when turn is same
         }
 
-        private void ExamineTile()
+        private void ExamineTile(InputAction.CallbackContext context)
         {
+           HandleAction(CombatActions.View);
            examinedTile?.Invoke(GetTileController(SelectedTile)); 
         }
 
@@ -568,7 +597,12 @@ namespace _Scripts.Runtime.Managers
             }
         }
 
-        public void ExitExamine() { exitedExamine?.Invoke(); }
+        public void ExitExamine()
+        {
+            exitedExamine?.Invoke();
+            Debug.Log("e");
+        }
+
         public UnitController GetCurrentUnit() { return CurrentUnit; }
         public Vector3Int GetSelectedTile() { return _currentTile; }
 

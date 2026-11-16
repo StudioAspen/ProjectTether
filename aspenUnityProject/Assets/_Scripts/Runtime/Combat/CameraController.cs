@@ -2,6 +2,7 @@ using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 
+/*
 namespace _Scripts.Runtime.Combat {
     
     //OLD camera code for MVP. Check Byron's code for Cinemachine stuff?
@@ -50,3 +51,4 @@ namespace _Scripts.Runtime.Combat {
     }
 
 }
+*/

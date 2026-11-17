@@ -21,7 +21,7 @@ public class YoyoTool : MonoBehaviour
     [SerializeField] private float _extendingProjectileSpeed = 10f;
     [SerializeField] private Ease _extendingEase = Ease.OutCubic;
     [SerializeField] private float _retractingProjectileSpeed = 10f;
-    [SerializeField] private Ease _retractingEase = Ease.InCubic;
+    [SerializeField] private Ease _retractingEase = Ease.OutCubic;
     
     [Header("Charge")]
     [SerializeField] private bool _hasCharge;
@@ -110,6 +110,7 @@ public class YoyoTool : MonoBehaviour
         switch (state) 
         {
             case State.Ready:
+                _renderer.enabled = true;
                 _playerController.OverrideWithCustomMovement(false);
                 _targetPowerSource = null;
                 break;
@@ -156,6 +157,7 @@ public class YoyoTool : MonoBehaviour
         switch (state) 
         {
             case State.Ready:
+                _renderer.enabled = false;
                 _playerController.OverrideWithCustomMovement(false);
                 break;
             case State.Extending:
@@ -204,6 +206,14 @@ public class YoyoTool : MonoBehaviour
         ChangeState(State.Retracting);
     }
 
+    public void OnRetractComplete()
+    {
+        if (_currentState != State.Retracting)
+            return;
+        
+        ChangeState(State.Ready);
+    }
+
     private void SwapCharge()
     {
         if (_targetPowerSource == null)
@@ -231,11 +241,13 @@ public class YoyoTool : MonoBehaviour
         }
             
         _targetIndicatorObject.gameObject.SetActive(true);
-        _targetIndicatorObject.transform.position =  _targetPowerSource.Value.hitPoint;
+        _targetIndicatorObject.transform.position = _targetPowerSource.Value.hitPoint;
     }
 
     private void UpdateLightCharge()
     {
         _lightChargeObject.SetActive(_hasCharge);
+        if(_currentProjectile != null)
+            _lightChargeObject.transform.position = _currentProjectile.transform.position;
     }
 }

@@ -7,14 +7,7 @@ public class YoyoProjectile : MonoBehaviour
 {
     private YoyoTool _tool;
     private Vector3 _destination;
-
-    private Rigidbody _rigidbody;
-
-    private void Awake()
-    {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
-
+    
     public void Init(YoyoTool tool, Vector3 destination)
     {
         _tool = tool;
@@ -23,18 +16,26 @@ public class YoyoProjectile : MonoBehaviour
     
     public void Extend(float speed, Ease ease)
     {
+        transform.DOKill();
         float duration = Vector3.Distance(_destination, transform.position) / speed;
-        _rigidbody.DOMove(_destination, duration).SetEase(ease).OnComplete(OnDestinationReached);
+        transform.DOMove(_destination, duration).SetEase(ease).OnComplete(OnExtendFinished);
     }
 
-    private void OnDestinationReached()
+    private void OnExtendFinished()
     {
         _tool.OnProjectileDestinationReached();
     }
 
     public void Retract(float speed, Ease ease)
     {
+        transform.DOKill();
         float duration = Vector3.Distance(_tool.transform.position, transform.position) / speed;
-        _rigidbody.DOMove(_tool.transform.position, duration).SetEase(ease);
+        transform.DOMove(_tool.transform.position, duration).SetEase(ease).OnComplete(OnRetractComplete);
+    }
+
+    private void OnRetractComplete()
+    {
+        _tool.OnRetractComplete();
+        Destroy(gameObject);
     }
 }

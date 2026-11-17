@@ -158,7 +158,7 @@ public class YoyoTool : MonoBehaviour
         {
             case State.Ready:
                 _renderer.enabled = false;
-                _playerController.OverrideWithCustomMovement(false);
+                _playerController.OverrideWithCustomMovement(true);
                 break;
             case State.Extending:
                 break;

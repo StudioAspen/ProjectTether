@@ -150,7 +150,7 @@ MonoBehaviour:
   _extendingEase: 9
   _retractingProjectileSpeed: 10
   _retractingEase: 8
-  _hasCharge: 1
+  _hasCharge: 0
   _currentState: 0
 --- !u!33 &5101021601422272234
 MeshFilter:

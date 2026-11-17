@@ -13,17 +13,25 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
 
         private Rigidbody _rigidBody;
         public Rigidbody RigidBody => _rigidBody;
+        public Collider Collider { get; private set; }
 
         private void OnValidate()
         {
-            if(IsPullable && !TryGetComponent(out _rigidBody))
+            if (IsPullable && !TryGetComponent(out _rigidBody))
+            {
                 _rigidBody = gameObject.AddComponent<Rigidbody>();
+                _rigidBody.freezeRotation = true;
+                _rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                _rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            }
         }
 
         private void Awake()
         {
             if(IsPullable && !TryGetComponent(out _rigidBody))
                 Debug.LogError($"Pullable grapple object {name} is missing a Rigidbody component");
+            
+            Collider = GetComponent<Collider>();
         }
     }
 }

@@ -88,7 +88,7 @@ MonoBehaviour:
   _projectileSpeed: 30
   _pullToObjectSpeed: 20
   _pullToPlayerSpeed: 20
-  _pullStopDistance: 1
+  _pullStopDistance: 0.1
   _pullTimeoutDuration: 10
   _shootCooldown: 1
   _currentState: 0

@@ -67,7 +67,12 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
         {
             FixedUpdateState(_currentState);
         }
-        
+
+        private void LateUpdate()
+        {
+            UpdateLightIndicator();
+        }
+
         private void OnDrawGizmos()
         {
             if (_projectileSpawnTransform == null)
@@ -108,13 +113,13 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             switch (state) 
             {
                 case State.Ready:
+                    _playerController.OverrideWithCustomMovement(false);
                     break;
                 case State.Shooting:
                     _currentProjectile = Instantiate(_projectilePrefab, _projectileSpawnTransform.position, Quaternion.identity);
                     _currentProjectile.Shoot(this, _targetGrappleObject.Value.targetGrappleable, _targetGrappleObject.Value.targetProjectileDestination, _projectileSpeed);
                     break;
                 case State.PullingUserToObject:
-                    _playerController.OverrideWithCustomMovement(true);
                     _pullDuration = 0f;
                     break;
                 case State.PullingObjectToUser:
@@ -122,6 +127,7 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                     _pullDuration = 0f;
                     break;
                 case State.Cooldown:
+                    _playerController.OverrideWithCustomMovement(false);
                     if(_currentProjectile != null)
                         Destroy(_currentProjectile.gameObject);
                     _currentProjectile = null;
@@ -137,7 +143,6 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             {
                 case State.Ready:
                     ScanForAimSurfaces();
-                    UpdateLightIndicator();
                     break;
                 case State.Shooting:
                     break;
@@ -155,12 +160,12 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                         return;
                     }
 
-                    Vector3 directionToObject = _currentProjectile.transform.position - _playerController.transform.position;
+                    Vector3 directionToObject = _currentProjectile.transform.position - _projectileSpawnTransform.transform.position;
                     directionToObject.Normalize();
             
                     _playerController.MoveWithVelocity(directionToObject * _pullToObjectSpeed);
 
-                    if (Vector3.SqrMagnitude(_playerController.transform.position - _currentProjectile.transform.position) <
+                    if (Vector3.SqrMagnitude(_projectileSpawnTransform.transform.position - _currentProjectile.transform.position) <
                         _pullStopDistance * _pullStopDistance)
                     {
                         ChangeState(State.Cooldown);
@@ -181,7 +186,8 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                         return;
                     }
                     
-                    if (Vector3.SqrMagnitude(_playerController.transform.position - _currentProjectile.transform.position) <
+                    Vector3 closestPointOnGrappleable = _targetGrappleObject.Value.targetGrappleable.Collider.ClosestPoint(_projectileSpawnTransform.position);
+                    if (Vector3.SqrMagnitude(_projectileSpawnTransform.position - closestPointOnGrappleable) <
                         _pullStopDistance * _pullStopDistance)
                     {
                         ChangeState(State.Cooldown);
@@ -217,7 +223,7 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                         return;
                     }
                     
-                    Vector3 directionToPlayer = _playerController.transform.position - _currentProjectile.transform.position;
+                    Vector3 directionToPlayer = _projectileSpawnTransform.position - _currentProjectile.transform.position;
                     directionToPlayer.Normalize();
                     
                     Rigidbody grappleableRigidbody = _targetGrappleObject.Value.targetGrappleable.RigidBody;
@@ -243,12 +249,15 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                     _targetIndicatorObject.gameObject.SetActive(false);
                     break;
                 case State.Shooting:
+                    _playerController.OverrideWithCustomMovement(true);
                     break;
                 case State.PullingUserToObject:
-                    _playerController.OverrideWithCustomMovement(false);
+                    _playerController.OverrideWithCustomMovement(true);
                     break;
                 case State.PullingObjectToUser:
+                    _playerController.OverrideWithCustomMovement(true);
                     _targetGrappleObject.Value.targetGrappleable.RigidBody.isKinematic = false;
+                    _targetGrappleObject.Value.targetGrappleable.RigidBody.linearVelocity = Vector3.zero;
                     break;
                 case State.Cooldown:
                     break;
@@ -285,6 +294,9 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
 
         private void UpdateLightIndicator()
         {
+            if (_currentState != State.Ready)
+                return;
+            
             if (_targetGrappleObject == null)
             {
                 _targetIndicatorObject.gameObject.SetActive(false);

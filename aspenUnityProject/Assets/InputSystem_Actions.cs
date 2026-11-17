@@ -127,6 +127,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwapPartyMember"",
+                    ""type"": ""Value"",
+                    ""id"": ""829efc11-d573-44e7-ab39-5423a0559e13"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -316,6 +325,116 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""SecondaryToolAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1234"",
+                    ""id"": ""e011e4ec-6a70-4247-823e-4028330043cf"",
+                    ""path"": ""NumberKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""one"",
+                    ""id"": ""48a803e2-c483-443a-b298-42456b48388b"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""two"",
+                    ""id"": ""7df1ab3e-818b-4b94-8e44-3ba8530a1437"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""three"",
+                    ""id"": ""722f0f72-74ae-4d97-a1c4-93e903974079"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""four"",
+                    ""id"": ""c04fe224-0c55-473f-9313-2c07d4e67235"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""D-Pad"",
+                    ""id"": ""6834614a-2877-43e6-a844-5a1910da9f6c"",
+                    ""path"": ""NumberKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""one"",
+                    ""id"": ""065f7504-3e28-49b7-86bc-48af377052e8"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""two"",
+                    ""id"": ""ab81f175-c529-4d27-a0d8-574eb1746317"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""three"",
+                    ""id"": ""efd798f8-e85f-4ccf-9fca-515ca52567cf"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""four"",
+                    ""id"": ""fbe2b896-24cd-4071-a29f-c5cfae329139"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwapPartyMember"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -1139,6 +1258,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_PrimaryToolAction = m_Player.FindAction("PrimaryToolAction", throwIfNotFound: true);
         m_Player_SecondaryToolAction = m_Player.FindAction("SecondaryToolAction", throwIfNotFound: true);
+        m_Player_SwapPartyMember = m_Player.FindAction("SwapPartyMember", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1250,6 +1370,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_PrimaryToolAction;
     private readonly InputAction m_Player_SecondaryToolAction;
+    private readonly InputAction m_Player_SwapPartyMember;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1277,6 +1398,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/SecondaryToolAction".
         /// </summary>
         public InputAction @SecondaryToolAction => m_Wrapper.m_Player_SecondaryToolAction;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/SwapPartyMember".
+        /// </summary>
+        public InputAction @SwapPartyMember => m_Wrapper.m_Player_SwapPartyMember;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1315,6 +1440,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @SecondaryToolAction.started += instance.OnSecondaryToolAction;
             @SecondaryToolAction.performed += instance.OnSecondaryToolAction;
             @SecondaryToolAction.canceled += instance.OnSecondaryToolAction;
+            @SwapPartyMember.started += instance.OnSwapPartyMember;
+            @SwapPartyMember.performed += instance.OnSwapPartyMember;
+            @SwapPartyMember.canceled += instance.OnSwapPartyMember;
         }
 
         /// <summary>
@@ -1338,6 +1466,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @SecondaryToolAction.started -= instance.OnSecondaryToolAction;
             @SecondaryToolAction.performed -= instance.OnSecondaryToolAction;
             @SecondaryToolAction.canceled -= instance.OnSecondaryToolAction;
+            @SwapPartyMember.started -= instance.OnSwapPartyMember;
+            @SwapPartyMember.performed -= instance.OnSwapPartyMember;
+            @SwapPartyMember.canceled -= instance.OnSwapPartyMember;
         }
 
         /// <summary>
@@ -1976,6 +2107,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSecondaryToolAction(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SwapPartyMember" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSwapPartyMember(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

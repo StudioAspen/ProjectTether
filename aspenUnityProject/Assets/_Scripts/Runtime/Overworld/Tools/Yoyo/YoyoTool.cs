@@ -1,3 +1,4 @@
+using System;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Overworld.Tools.Defibulator;
 using DG.Tweening;
@@ -66,13 +67,17 @@ namespace _Scripts.Runtime.Overworld.Tools.Yoyo
         private void Update()
         {
             UpdateState(_currentState);
-            UpdateTargetIndicator();
-            UpdateLightCharge();
         }
 
         private void FixedUpdate()
         {
             FixedUpdateState(_currentState);
+        }
+
+        private void LateUpdate()
+        {
+            UpdateTargetIndicator();
+            UpdateLightCharge();
         }
 
         private void OnDrawGizmos()
@@ -234,6 +239,9 @@ namespace _Scripts.Runtime.Overworld.Tools.Yoyo
     
         private void UpdateTargetIndicator()
         {
+            if (_currentState != State.Ready)
+                return;
+            
             if (_targetPowerSource == null)
             {
                 _targetIndicatorObject.gameObject.SetActive(false);

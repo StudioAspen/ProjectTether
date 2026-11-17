@@ -87,9 +87,14 @@ namespace _Scripts.Consystently.UI
         }
 
         
-
-        public static event Action<CombatActions> PlayerAction;
-        public static event Action<CombatActions, int> PlayerSelectiveAction;
+        /// <summary>
+        /// Event that handles player actions that do not involve UI
+        /// </summary>
+        public static event Action<CombatActions> PlayerWorldAction = delegate { };
+        /// <summary>
+        /// Event that handles player actions that involve UI
+        /// </summary>
+        public static event Action<CombatActions> PlayerUIAction = delegate { };
         public static event Action<bool> ToggledManualEnemy;
 
         protected void Awake()
@@ -116,19 +121,19 @@ namespace _Scripts.Consystently.UI
 
             if (_attackButton != null)
                 _attackButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Attack));
+                    () => OnWorldActionButtonClicked(CombatActions.Attack));
 
             if (_defendButton != null)
                 _defendButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Defend));
+                    () => OnWorldActionButtonClicked(CombatActions.Defend));
 
             if (_moveButton != null)
                 _moveButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Move));
+                    () => OnWorldActionButtonClicked(CombatActions.Move));
 
             if (_abilityButton != null)
                 _abilityButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Ability));
+                    () => OnUIActionButtonClicked(CombatActions.Ability));
         }
 
         protected virtual void OnDestroy()
@@ -163,9 +168,13 @@ namespace _Scripts.Consystently.UI
                 MenuManager.Instance.OpenMenu(_menu);
         }
 
-        private void OnActionButtonClicked(CombatActions action)
+        /// <summary>
+        /// Handles action buttons that do not open a UI panel
+        /// </summary>
+        /// <param name="action"></param>
+        private void OnWorldActionButtonClicked(CombatActions action)
         {
-            Debug.Log($"[BattleMenuHE] Player confirmed action: {action}");
+            Debug.Log($"[BattleMenuHE] Player Confirmed World Action: {action}");
 
             if (action != CombatActions.Defend)
             {
@@ -174,7 +183,19 @@ namespace _Scripts.Consystently.UI
                 cursor.SetActive(true);
             }
 
-            PlayerAction?.Invoke(action);
+            PlayerWorldAction?.Invoke(action);
+        }
+
+        /// <summary>
+        /// Handles action buttons that do open a UI panel
+        /// </summary>
+        /// <param name="action"></param>
+        void OnUIActionButtonClicked(CombatActions action)
+        {
+            Debug.Log($"[BattleMenuHE] Player Confirmed UI Action: {action}");
+
+            // This event is prob mainly for camera movement and stuff. We'll let the combat action panels themselves handle the actual implementation
+            PlayerUIAction?.Invoke(action);
         }
 
         private void HandleUserActions(

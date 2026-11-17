@@ -203,6 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Consystently.UI.AbilityButtonVE
   _iconChild: {fileID: 4472118690419509907}
   _textChild: {fileID: 347161977649048791}
+  _currentAbility: {fileID: 0}
 --- !u!1 &5876027929054292401
 GameObject:
   m_ObjectHideFlags: 0

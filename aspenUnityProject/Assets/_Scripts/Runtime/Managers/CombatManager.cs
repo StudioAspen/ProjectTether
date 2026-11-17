@@ -14,8 +14,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Debug = UnityEngine.Debug;
 
-
-
 //TODO: NEED COROUTINES when we are past the mvp(?)
 namespace _Scripts.Runtime.Managers
 {
@@ -125,8 +123,8 @@ namespace _Scripts.Runtime.Managers
             
             _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
             _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, PlayerUnits, this));
-            BattleMenuHE.PlayerWorldAction += HandleWorldAction;
-            BattleMenuHE.PlayerUIAction += HandleUIAction;
+            BattleMenuHE.PlayerAction += HandleAction;
+            BattleMenuHE.PlayerSelectiveAction += HandleAction;
             BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;
             foreach (StatusSO status in _actionStatuses)
                 _actionStatusDic.Add(status.StatusId, status);
@@ -135,8 +133,8 @@ namespace _Scripts.Runtime.Managers
 
         private void OnDestroy()
         {
-            BattleMenuHE.PlayerWorldAction -= HandleWorldAction;
-            BattleMenuHE.PlayerUIAction -= HandleUIAction;
+            BattleMenuHE.PlayerAction -= HandleAction;
+            BattleMenuHE.PlayerSelectiveAction -= HandleAction;
             BattleMenuHE.ToggledManualEnemy -= ToggleManualEnemy;
             _input.TileSelect.Disable();
             TurnOrder.Clear();
@@ -296,7 +294,7 @@ namespace _Scripts.Runtime.Managers
         /// Actions that require tile selection lead to SelectTile
         /// </summary>
         /// <param name="action"></param>
-        private void HandleWorldAction(CombatActions action)
+        private void HandleAction(CombatActions action)
         {
             _receivedAction = action;
             UnitController currUnit = CurrentUnit;
@@ -321,6 +319,17 @@ namespace _Scripts.Runtime.Managers
                     if(currUnit.GetData().Faction == Faction.Ally)
                         Overclock(currUnit);
                     return;
+                    /*
+                     * Putting the ability action here till we figure out how to isolate buttons that open a UI Menu - Jason
+                     */
+                case CombatActions.Ability:
+                    Debug.Log("Ability Button Clicked");
+                    //_currentPhase.PushState();
+                    _abilitySelectionPanel.OnSetUp(CurrentUnit);
+                    _abilitySelectionPanel.Open();
+                    Debug.Log(CurrentUnit);
+                    break;
+
                 default:
                     Debug.Log($"Unknown action: {action}");
                     return;
@@ -332,17 +341,16 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         /// <param name="action"></param>
         /// <param name="selection"></param>
-        private void HandleUIAction(CombatActions action)
+        private void HandleAction(CombatActions action, int selection)
         {
             _receivedAction = action;
+            ActionSelection = selection;
             UnitController currUnit = CurrentUnit;
-
             switch (action)
             {
                 case CombatActions.Ability:
                     _currentPhase.PushState();
-                    _abilitySelectionPanel.Intialize(currentUnit: currUnit, rangeDisplay: rangeDisplay, tileController: TileControllers);
-                    //rangeDisplay.DisplayAbilityRange(TileControllers, currUnit, currUnit.GetData().Moves[selection]);
+                    rangeDisplay.DisplayAbilityRange(TileControllers, currUnit, currUnit.GetData().Moves[selection]);
                     return;
                 case CombatActions.Item:
                     Debug.Log($"unknown action: {action}" );

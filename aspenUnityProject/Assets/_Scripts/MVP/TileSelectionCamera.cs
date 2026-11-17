@@ -2,7 +2,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
-using _Scripts.Consystently.UI;
 
 public class TileSelectionCamera : MonoBehaviour
 {
@@ -18,18 +17,12 @@ public class TileSelectionCamera : MonoBehaviour
     {
         SelectTileState.TileSelectionStarted += ActivateCamera;
         SelectTileState.TileSelectionEnded += DeactivateCamera;
-
-        AbilitySelectionPanel.OnAbilityMenuClose += DeactivateCamera;
-        AbilityButtonVE.OnAbilitySelectView += ActivateCamera;
     }
 
     void OnDisable()
     {
         SelectTileState.TileSelectionStarted -= ActivateCamera;
         SelectTileState.TileSelectionEnded -= DeactivateCamera;
-
-        AbilitySelectionPanel.OnAbilityMenuClose -= DeactivateCamera;
-        AbilityButtonVE.OnAbilitySelectView -= ActivateCamera;
     }
   
     // Switch to the tile selection camera.

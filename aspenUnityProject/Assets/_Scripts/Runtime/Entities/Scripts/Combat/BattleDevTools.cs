@@ -1,5 +1,5 @@
 using _Scripts.Runtime.Persistent_Data;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
@@ -9,13 +9,13 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     /// </summary>
     public class BattleDevTools : MonoBehaviour
     {
-        [Button("Win", EButtonEnableMode.Playmode)]
+        [Button("Win"), EnableIf("@UnityEngine.Application.isPlaying")]
         public void WinBattle()
         {
             GameSession.Instance.MarkCurrentOverworldEnemyDefeated();
         }
 
-        [Button("Lose", EButtonEnableMode.Playmode)]
+        [Button("Lose"), EnableIf("@UnityEngine.Application.isPlaying")]
         public void LoseBattle()
         {
             GameSession.Instance.PlayerData.OverworldPosition = Vector3.zero; // So it doesnt respawn on the undefeated enemy

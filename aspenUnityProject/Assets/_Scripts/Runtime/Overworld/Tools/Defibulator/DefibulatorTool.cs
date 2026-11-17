@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Overworld;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

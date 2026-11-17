@@ -1,5 +1,5 @@
 using System;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,14 +22,14 @@ public class PowerSource : MonoBehaviour
         return true;
     }
 
-    [Button("Activate", EButtonEnableMode.Playmode)]
+    [Button("Activate"), EnableIf("@UnityEngine.Application.isPlaying")]
     public void ForceActivate()
     {
         IsActive = true;
         OnActivateChanged?.Invoke(IsActive);
     }
 
-    [Button("Deactivate", EButtonEnableMode.Playmode)]
+    [Button("Deactivate"), EnableIf("@UnityEngine.Application.isPlaying")]
     public void Deactivate()
     {
         IsActive = false;

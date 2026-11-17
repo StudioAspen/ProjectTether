@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using AYellowpaper.SerializedCollections;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 //misc directory is temp name? 

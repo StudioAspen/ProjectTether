@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using _Scripts.Runtime.Persistent_Data;
 
 namespace _Scripts.Runtime.Entities.Scripts.Overworld
@@ -21,10 +21,10 @@ namespace _Scripts.Runtime.Entities.Scripts.Overworld
         }
 
 #if UNITY_EDITOR
-        [Button("Generate New Persistent ID", EButtonEnableMode.Editor)]
+        [Button("Generate New Persistent ID"), EnableIf("@!UnityEngine.Application.isPlaying")]
         private void GenerateNewPersistentId() => PersistentId = Guid.NewGuid().ToString("N");
 
-        [Button("Validate Enemy IDs in Build Scenes", EButtonEnableMode.Editor)]
+        [Button("Validate Enemy IDs in Build Scenes"), EnableIf("@!UnityEngine.Application.isPlaying")]
         private void ValidateEnemyIdsInBuildScenes()
         {
             OverworldEnemyIdValidator.ValidateBuildScenes();

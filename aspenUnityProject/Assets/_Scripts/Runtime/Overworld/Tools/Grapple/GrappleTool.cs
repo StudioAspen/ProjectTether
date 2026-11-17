@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Runtime.Managers;
 using DG.Tweening;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

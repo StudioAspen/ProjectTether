@@ -26,8 +26,9 @@ namespace _Scripts.Consystently.UI
         [SerializeField] private Button _attackButton;
         [SerializeField] private Button _defendButton;
         [SerializeField] private Button _moveButton;
+        [SerializeField] private Button _abilityButton;
 
-      
+
         //todo: needs to be moved to a separate script attached to the battle log, not this script for the action ring 
         [Header("Battle Announcements")]
 
@@ -124,6 +125,10 @@ namespace _Scripts.Consystently.UI
             if (_moveButton != null)
                 _moveButton.onClick.AddListener(
                     () => OnActionButtonClicked(CombatActions.Move));
+
+            if (_abilityButton != null)
+                _abilityButton.onClick.AddListener(
+                    () => OnActionButtonClicked(CombatActions.Ability));
         }
 
         protected virtual void OnDestroy()
@@ -144,6 +149,9 @@ namespace _Scripts.Consystently.UI
 
             if (_moveButton != null)
                 _moveButton.onClick.RemoveAllListeners();
+
+            if (_abilityButton != null)
+                _abilityButton.onClick.RemoveAllListeners();
 
             if (announcementCoroutine != null)
                 StopCoroutine(announcementCoroutine);

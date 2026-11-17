@@ -7,7 +7,7 @@ namespace _Scripts.Runtime.Combat
        Move,
        Ability,
        Item,
-       View,
+       View, //possibly redundant(?) because it was moved to an input that bypasses the switch 
        Overclock
     }
 }

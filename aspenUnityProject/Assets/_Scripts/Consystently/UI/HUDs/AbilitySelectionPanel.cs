@@ -1,35 +1,45 @@
 using _Scripts.Runtime.Characters.Scripts;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts.Combat;
+using _Scripts.Runtime.Tile_System.Scripts;
+using _Scripts.Runtime.UI;
 using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
 
 namespace _Scripts.Consystently.UI
 {
     public class AbilitySelectionPanel : Panel
     {
-        [Header("Ability Selection")]
-        #region Ability_Selection
-        [SerializeField] GameObject _abilityButtonPrefab;
-        [SerializeField] Transform _buttonsSpawnPoint;
-        [SerializeField] Transform _abilityButtonHolder;
-        #endregion
-
-        [Header("UI Section")]
-        #region UI_Section
+        [Header("UI References")]
+        #region UI_Referemces
         [SerializeField] HUDElement _actionRing;
+        [SerializeField] AbilityButtonVE[] _abilityButtonVEs = new AbilityButtonVE[7];
         #endregion
 
-        // For Testing Purposes
-        [SerializeField] PlayableCharacterUnitSO _character;
+        #region References
+        RangeDisplay _rangeDisplay;
+        TileController[] _tileController;
+        UnitController _currentUnit;
+        #endregion
+
+        #region Actions
+        public static event Action OnAbilityMenuClose = delegate { };
+        #endregion
+
+        private void OnEnable()
+        {
+            AbilityButtonVE.OnAbilitySelect += RunAbilityRangeSelection;
+        }
+
+        private void OnDisable()
+        {
+            AbilityButtonVE.OnAbilitySelect -= RunAbilityRangeSelection;
+        }
+
 
         private void OnValidate()
         {
-            if (_abilityButtonPrefab == null) Debug.LogError("Ability Button Prefab Field is empty");
-            if (_buttonsSpawnPoint == null) Debug.LogError("Button Spawn Point Field is empty");
-            if (_abilityButtonHolder == null) Debug.LogError("Ability Button Holder Field is empty");
-
             if (_actionRing == null) Debug.LogError("Action Ring Field is empty");
         }
 
@@ -37,80 +47,52 @@ namespace _Scripts.Consystently.UI
         void Start()
         {
             Close();
-        }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        // Rewrite this function to take in the all the current unit's abilites
-        public void OnSetUp(UnitController currentUnit)
-        {
-            List<AbilitySO> listOfAllCharacterAbilites = new List<AbilitySO>();
-
-            // Adding From Playable Character
-            listOfAllCharacterAbilites.AddRange(_character.Moves);
-            // Adding From Combat Class
-            listOfAllCharacterAbilites.AddRange(_character.CombatClass.ClassAbilityList);
-            // Adding From All Suits (Including Starting Suit)
-            List<SuitBaseDataSO> suits = _character.Suits.ToList();
-            suits.Add(_character.StartingSuit);
-
-            foreach (SuitBaseDataSO suit in suits)
+            for (int i = 0; i < _abilityButtonVEs.Length; i++)
             {
-                listOfAllCharacterAbilites.AddRange(suit.SkillTree.GetActiveAbilities());
+                AbilityButtonVE btn = _abilityButtonVEs[i];
+
+                btn.Hide();
             }
+        }
+        public void Intialize(UnitController currentUnit, RangeDisplay rangeDisplay, TileController[] tileController)
+        {
+            _currentUnit = currentUnit;
+            _rangeDisplay = rangeDisplay;
+            _tileController = tileController;
 
+            Unit unit = currentUnit.GetData();
 
-            // Printing
-            foreach (AbilitySO ability in listOfAllCharacterAbilites)
-            {
-                Debug.Log(ability.Name);
-            }
-
-            SpawnAbilityButtons(listOfAllCharacterAbilites);
-
+            SetAbilityButtons(abilities: unit.Moves);
+            // Activates the submenu
+            _actionRing.Close();
+            this.Open();
         }
 
-        public void BackToActionRing()
+        public void CloseAbilitiesMenu()
         {
             Close();
             _actionRing.Open();
+
+            OnAbilityMenuClose?.Invoke();
         }
-        
-        /*
-         * Note: Once ryan give a maxiumum of how many abilites a character can have, we'll create an object pool of AbilityButtonVE to
-         * replace instantie/destroying as it will be memory extensive, espcially if a player keeps backing in and out of the 
-         * ability menu
-         */
 
-        void SpawnAbilityButtons(List<AbilitySO> abilites)
+        public void RunAbilityRangeSelection(AbilitySO ability)
         {
-            const float BUTTON_BOTTOM_SPACING = 80f;
+            _rangeDisplay.DisplayAbilityRange(tileControllers: _tileController, cc: _currentUnit, ability);
+        }
 
-            for (int i = 0; i < abilites.Count; i++)
+        void SetAbilityButtons(List<AbilitySO> abilities)
+        {
+            if (abilities.Count == 0) return;
+
+            for (int i = 0; i < abilities.Count; i++)
             {
-                if (i == 0)
-                {
-                    GameObject abilityButton = Instantiate(_abilityButtonPrefab, _abilityButtonHolder);
-                    abilityButton.transform.position = _buttonsSpawnPoint.position;
-                    abilityButton.GetComponent<AbilityButtonVE>().OnInstantiate(currentAbility: abilites[i]);
-                } else
-                {
-                    Vector3 newPosition = new Vector3(_buttonsSpawnPoint.position.x, (_buttonsSpawnPoint.position.y - (BUTTON_BOTTOM_SPACING * i)), _buttonsSpawnPoint.position.z);
-                    GameObject abilityButton = Instantiate(_abilityButtonPrefab, _abilityButtonHolder);
-                    abilityButton.transform.position = newPosition;
-                    abilityButton.GetComponent<AbilityButtonVE>().OnInstantiate(currentAbility: abilites[i]);
-                }
-            }
-        }
+                AbilityButtonVE btn = _abilityButtonVEs[i];
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_buttonsSpawnPoint.position, radius: 10f);
+                btn.Show();
+                btn.OnSetup(currentAbility: abilities[i], abilitySelectionPanel: this, unitController: _currentUnit);
+            }
         }
     }
 }

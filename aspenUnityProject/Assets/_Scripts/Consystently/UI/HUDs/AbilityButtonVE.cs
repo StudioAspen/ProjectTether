@@ -1,6 +1,8 @@
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Scripts.Consystently.UI
@@ -8,12 +10,14 @@ namespace _Scripts.Consystently.UI
 
     public class AbilityButtonVE : ButtonVE
     {
-        AbilitySO _currentAbility;
+        AbilitySelectionPanel _abilitySelectionPanel;
+        [field: SerializeField] public AbilitySO CurrentAbility { get; private set; }
+        [field: SerializeField] public UnitController CurrentUnit { get; private set; }
 
-        private void Awake()
-        {
-            //GetComponent<Button>().onClick.AddListener(AA);
-        }
+        #region Events
+        public static event Action<AbilitySO> OnAbilitySelect = delegate { };
+        public static event Action OnAbilitySelectView = delegate { };
+        #endregion
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -27,15 +31,23 @@ namespace _Scripts.Consystently.UI
 
         }
 
-        public void AA()
+        public void SendAbility()
         {
+            Debug.Log("Ive been clicked");
 
+            OnAbilitySelect?.Invoke(CurrentAbility);
+            OnAbilitySelectView?.Invoke();
         }
 
-        public void OnInstantiate(AbilitySO currentAbility)
+        public void OnSetup(AbilitySO currentAbility, AbilitySelectionPanel abilitySelectionPanel, UnitController unitController)
         {
-            _currentAbility = currentAbility;
-            TextChild.text = _currentAbility.Name;
+            CurrentAbility = currentAbility;
+            _abilitySelectionPanel = abilitySelectionPanel;
+            CurrentUnit = unitController;
+
+            Component.onClick.AddListener(SendAbility);
+
+            TextChild.text = CurrentAbility.Name;
         }
     }
 }

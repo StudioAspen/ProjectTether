@@ -1,38 +1,40 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PowerSource : MonoBehaviour
+namespace _Scripts.Runtime.Overworld.Tools.Defibulator
 {
-    [field: SerializeField] public UnityEvent<bool> OnActivateChanged { get; private set; } = new();
-    [field: SerializeField] public bool IsActive { get; private set; }
-
-    private void Start()
+    public class PowerSource : MonoBehaviour
     {
-        OnActivateChanged?.Invoke(IsActive);
-    }
+        [field: SerializeField] public UnityEvent<bool> OnActivateChanged { get; private set; } = new();
+        [field: SerializeField] public bool IsActive { get; private set; }
 
-    public bool TryActivate()
-    {
-        if (IsActive)
-            return false;
+        private void Start()
+        {
+            OnActivateChanged?.Invoke(IsActive);
+        }
 
-        ForceActivate();
-        return true;
-    }
+        public bool TryActivate()
+        {
+            if (IsActive)
+                return false;
 
-    [Button("Activate"), EnableIf("@UnityEngine.Application.isPlaying")]
-    public void ForceActivate()
-    {
-        IsActive = true;
-        OnActivateChanged?.Invoke(IsActive);
-    }
+            ForceActivate();
+            return true;
+        }
 
-    [Button("Deactivate"), EnableIf("@UnityEngine.Application.isPlaying")]
-    public void Deactivate()
-    {
-        IsActive = false;
-        OnActivateChanged?.Invoke(IsActive);
+        [Button("Activate"), EnableIf("@UnityEngine.Application.isPlaying")]
+        public void ForceActivate()
+        {
+            IsActive = true;
+            OnActivateChanged?.Invoke(IsActive);
+        }
+
+        [Button("Deactivate"), EnableIf("@UnityEngine.Application.isPlaying")]
+        public void Deactivate()
+        {
+            IsActive = false;
+            OnActivateChanged?.Invoke(IsActive);
+        }
     }
 }

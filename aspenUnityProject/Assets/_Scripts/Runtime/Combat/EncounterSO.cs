@@ -5,6 +5,10 @@ using _Scripts.Runtime.Entities.Scripts.Combat;
 using AYellowpaper.SerializedCollections;
 using Sirenix.OdinInspector;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+using Sirenix.Utilities.Editor;
+#endif
 
 //misc directory is temp name? 
 namespace _Scripts.Runtime.Combat
@@ -21,7 +25,244 @@ namespace _Scripts.Runtime.Combat
             public List<UnitDataSO> Units = new();
         }
         
-        [field: SerializeField] public List<UnitListWrapper> Tiles { get; private set; } = new List<UnitListWrapper>();
+        [field: SerializeField, HideInInspector] public List<UnitListWrapper> Tiles { get; private set; } = new List<UnitListWrapper>();
+
+#if UNITY_EDITOR
+        private const int GridRadius = 2;
+        [NonSerialized] private int _selectedTileIndex;
+        private static GUIStyle _tileTitleStyle;
+        private static GUIStyle _tileUnitStyle;
+
+        /// <summary>
+        /// Shows the encounter's 19 serialized tile slots in the same center-out spiral used by CombatManager,
+        /// arranged spatially as a three-ring hex grid.
+        /// </summary>
+        [OnInspectorGUI]
+        private void DrawEncounterGrid()
+        {
+            EnsureTileData();
+
+            SirenixEditorGUI.BeginBox("Encounter Layout");
+            EditorGUILayout.LabelField("Select a tile, then place up to four units on it.", EditorStyles.miniLabel);
+
+            List<Vector3Int> coordinatesByTileIndex = BuildTileCoordinates();
+            float tileSize = Mathf.Clamp((EditorGUIUtility.currentViewWidth - 110f) / 5f - 4f, 56f, 88f);
+            for (int z = GridRadius; z >= -GridRadius; z--)
+            {
+                List<int> rowTileIndices = new List<int>();
+                for (int x = -GridRadius; x <= GridRadius; x++)
+                {
+                    int y = -x - z;
+                    if (Mathf.Abs(y) > GridRadius)
+                        continue;
+
+                    rowTileIndices.Add(coordinatesByTileIndex.IndexOf(new Vector3Int(x, y, z)));
+                }
+
+                DrawGridRow(rowTileIndices, tileSize);
+                EditorGUILayout.Space(3f);
+            }
+
+            DrawSelectedTile(coordinatesByTileIndex);
+            SirenixEditorGUI.EndBox();
+        }
+
+        private void DrawGridRow(List<int> tileIndices, float tileSize)
+        {
+            const float spacing = 4f;
+            Rect rowRect = EditorGUILayout.GetControlRect(false, tileSize);
+            float rowWidth = tileIndices.Count * tileSize + (tileIndices.Count - 1) * spacing;
+            float startX = rowRect.x + (rowRect.width - rowWidth) * 0.5f;
+
+            for (int i = 0; i < tileIndices.Count; i++)
+            {
+                int tileIndex = tileIndices[i];
+                Rect tileRect = new Rect(startX + i * (tileSize + spacing), rowRect.y, tileSize, tileSize);
+                bool selected = DrawTileButton(tileRect, tileIndex);
+                if (selected)
+                    _selectedTileIndex = tileIndex;
+            }
+        }
+
+        private bool DrawTileButton(Rect rect, int tileIndex)
+        {
+            bool isSelected = _selectedTileIndex == tileIndex;
+            bool isHovered = rect.Contains(Event.current.mousePosition);
+            Color fillColor = EditorGUIUtility.isProSkin
+                ? new Color(0.24f, 0.24f, 0.24f)
+                : new Color(0.78f, 0.78f, 0.78f);
+            if (isHovered)
+                fillColor *= 1.15f;
+            if (isSelected)
+                fillColor = EditorGUIUtility.isProSkin
+                    ? new Color(0.20f, 0.38f, 0.50f)
+                    : new Color(0.48f, 0.68f, 0.84f);
+
+            EditorGUI.DrawRect(rect, fillColor);
+            Color borderColor = EditorGUIUtility.isProSkin
+                ? new Color(0.10f, 0.10f, 0.10f)
+                : new Color(0.40f, 0.40f, 0.40f);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, 1f), borderColor);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - 1f, rect.width, 1f), borderColor);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, 1f, rect.height), borderColor);
+            EditorGUI.DrawRect(new Rect(rect.xMax - 1f, rect.y, 1f, rect.height), borderColor);
+
+            bool clicked = GUI.Button(rect, GUIContent.none, GUIStyle.none);
+
+            float padding = Mathf.Max(2f, rect.width * 0.04f);
+            float titleHeight = rect.height * 0.20f;
+            UnitListWrapper tile = Tiles[tileIndex];
+            GUI.Label(
+                new Rect(rect.x + padding, rect.y + 2f, rect.width - padding * 2f, titleHeight),
+                $"Tile {tileIndex} ({tile.Units.Count}/{TILE_MAX_UNITS})",
+                GetTileTitleStyle());
+
+            float contentTop = rect.y + titleHeight;
+            float unitLineHeight = (rect.height - titleHeight - 2f) / TILE_MAX_UNITS;
+            for (int unitIndex = 0; unitIndex < tile.Units.Count; unitIndex++)
+            {
+                UnitDataSO unit = tile.Units[unitIndex];
+                string unitName = unit == null
+                    ? "(Empty)"
+                    : string.IsNullOrWhiteSpace(unit.Name) ? unit.name : unit.Name;
+
+                GUI.Label(
+                    new Rect(
+                        rect.x + padding,
+                        contentTop + unitIndex * unitLineHeight,
+                        rect.width - padding * 2f,
+                        unitLineHeight),
+                    unitName,
+                    GetTileUnitStyle());
+            }
+
+            return clicked;
+        }
+
+        private static GUIStyle GetTileTitleStyle()
+        {
+            if (_tileTitleStyle == null)
+            {
+                _tileTitleStyle = new GUIStyle(EditorStyles.miniBoldLabel)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    wordWrap = false,
+                    clipping = TextClipping.Ellipsis
+                };
+            }
+
+            return _tileTitleStyle;
+        }
+
+        private static GUIStyle GetTileUnitStyle()
+        {
+            if (_tileUnitStyle == null)
+            {
+                _tileUnitStyle = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    wordWrap = false,
+                    clipping = TextClipping.Ellipsis
+                };
+            }
+
+            return _tileUnitStyle;
+        }
+
+        private void DrawSelectedTile(List<Vector3Int> coordinatesByTileIndex)
+        {
+            _selectedTileIndex = Mathf.Clamp(_selectedTileIndex, 0, TILE_COUNT - 1);
+            UnitListWrapper tile = Tiles[_selectedTileIndex];
+            Vector3Int coordinate = coordinatesByTileIndex[_selectedTileIndex];
+            int ring = Mathf.Max(Mathf.Abs(coordinate.x), Mathf.Abs(coordinate.y), Mathf.Abs(coordinate.z));
+
+            EditorGUILayout.Space(6f);
+            EditorGUILayout.LabelField($"Tile {_selectedTileIndex}  |  Ring {ring}", EditorStyles.boldLabel);
+            EditorGUI.BeginChangeCheck();
+            Undo.RecordObject(this, "Edit Encounter Layout");
+
+            for (int unitIndex = 0; unitIndex < tile.Units.Count; unitIndex++)
+            {
+                GUILayout.BeginHorizontal();
+                tile.Units[unitIndex] = (UnitDataSO)EditorGUILayout.ObjectField(
+                    $"Unit {unitIndex + 1}", tile.Units[unitIndex], typeof(UnitDataSO), false);
+
+                if (GUILayout.Button("Remove", EditorStyles.miniButton, GUILayout.Width(58f)))
+                {
+                    tile.Units.RemoveAt(unitIndex);
+                    unitIndex--;
+                }
+                GUILayout.EndHorizontal();
+            }
+
+            using (new EditorGUI.DisabledScope(tile.Units.Count >= TILE_MAX_UNITS))
+            {
+                if (GUILayout.Button("+ Add Unit", GUILayout.Height(30f)))
+                    tile.Units.Add(null);
+            }
+
+            if (EditorGUI.EndChangeCheck())
+                EditorUtility.SetDirty(this);
+
+        }
+
+        private void EnsureTileData()
+        {
+            if (Tiles == null)
+                Tiles = new List<UnitListWrapper>();
+
+            while (Tiles.Count < TILE_COUNT)
+                Tiles.Add(new UnitListWrapper());
+
+            if (Tiles.Count > TILE_COUNT)
+                Tiles.RemoveRange(TILE_COUNT, Tiles.Count - TILE_COUNT);
+
+            for (int i = 0; i < Tiles.Count; i++)
+            {
+                if (Tiles[i] == null)
+                    Tiles[i] = new UnitListWrapper();
+                if (Tiles[i].Units == null)
+                    Tiles[i].Units = new List<UnitDataSO>();
+                if (Tiles[i].Units.Count > TILE_MAX_UNITS)
+                    Tiles[i].Units.RemoveRange(TILE_MAX_UNITS, Tiles[i].Units.Count - TILE_MAX_UNITS);
+            }
+        }
+
+        /// <summary>
+        /// Mirrors CombatManager.GenerateCoords so inspector tile indices keep their runtime meaning.
+        /// </summary>
+        private static List<Vector3Int> BuildTileCoordinates()
+        {
+            List<Vector3Int> coordinates = new List<Vector3Int>(TILE_COUNT)
+            {
+                Vector3Int.zero
+            };
+
+            Vector3Int current = Vector3Int.zero;
+            for (int ring = 1; ring <= GridRadius; ring++)
+            {
+                current += CubeCoordDirections.NE.Vector();
+                coordinates.Add(current);
+
+                for (int southEastSteps = ring - 1; southEastSteps > 0; southEastSteps--)
+                {
+                    current += CubeCoordDirections.SE.Vector();
+                    coordinates.Add(current);
+                }
+
+                for (int direction = (int)CubeCoordDirections.S; direction < 6; direction++)
+                {
+                    for (int steps = ring; steps > 0; steps--)
+                    {
+                        current += ((CubeCoordDirections)direction).Vector();
+                        coordinates.Add(current);
+                    }
+                }
+            }
+
+            return coordinates;
+        }
+#endif
         
         private void OnValidate()
         {
@@ -30,21 +271,30 @@ namespace _Scripts.Runtime.Combat
 
         public void Validate()
         {
+            if (Tiles == null)
+                Tiles = new List<UnitListWrapper>();
+
             while (Tiles.Count < TILE_COUNT)
                 Tiles.Add(new UnitListWrapper());
             
             if (Tiles.Count > TILE_COUNT)
                 Tiles = Tiles.GetRange(0, TILE_COUNT);
 
-            foreach (UnitListWrapper listWrapper in Tiles)
+            for (int i = 0; i < Tiles.Count; i++)
             {
+                UnitListWrapper listWrapper = Tiles[i];
+                if (listWrapper == null)
+                    Tiles[i] = listWrapper = new UnitListWrapper();
+                if (listWrapper.Units == null)
+                    listWrapper.Units = new List<UnitDataSO>();
+
                 // Truncate the list if more than TILE_MAX_UNITS
                 if (listWrapper.Units.Count > TILE_MAX_UNITS)
                     listWrapper.Units = listWrapper.Units.GetRange(0, TILE_MAX_UNITS);
             }
         }
         
-        [Button("Clean Null Units")]
+        [Button("Clear Empty Units", ButtonSizes.Large)]
         public void CleanNullUnits()
         {
             foreach (UnitListWrapper listWrapper in Tiles)

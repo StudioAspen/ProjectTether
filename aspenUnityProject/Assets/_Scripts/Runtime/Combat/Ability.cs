@@ -2,6 +2,7 @@ using _Scripts.Runtime.Tile_System.Scripts;
 
 namespace _Scripts.Runtime.Combat
 {
+    
     public class Ability
     {
        public string Id { get; private set; } 

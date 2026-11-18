@@ -59,7 +59,6 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 
         public override void Exit()
         {
-            Debug.Log("exiting");
             CombatContext.CombatFunctionProvider.ExitExamine(); 
             if(CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile()).UnitCount() > 0)
                 CombatContext.Input.TileSelect.Move.started -= OnMove;

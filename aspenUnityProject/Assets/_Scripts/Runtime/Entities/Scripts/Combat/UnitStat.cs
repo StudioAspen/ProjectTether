@@ -6,7 +6,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
     /// <summary>
     /// Stats should not be modified by statuses directly, as that
-    /// would introduce stat drifting due to rounding. These stats will
+    /// would introduce stat drifting due to rounding. EffectiveStat will
     /// be used for damage calculation.
     /// </summary>
     public class UnitStat

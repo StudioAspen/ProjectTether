@@ -1,7 +1,7 @@
 using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Persistent_Data;
 using _Scripts.Runtime.Entities.Scripts.Overworld;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
@@ -10,7 +10,7 @@ namespace _Scripts.Runtime.Combat
     {
         [SerializeField, Required] private EncounterSO _encounterData;
 
-        [Button("Start Encounter", EButtonEnableMode.Playmode)]
+        [Button("Start Encounter"), EnableIf("@UnityEngine.Application.isPlaying")]
         public void StartEncounter()
         {
             if (_encounterData == null)

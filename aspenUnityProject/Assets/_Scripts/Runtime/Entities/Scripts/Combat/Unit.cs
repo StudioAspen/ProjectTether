@@ -41,6 +41,9 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public int Evasion { get; protected set; }
         */
 
+        /// <summary>
+        /// Stat enum -> UnitStat 
+        /// </summary>
         public Dictionary<Stat, UnitStat> Stats { get; protected set; }
 
         public int HealthRemaining { get; protected set; }
@@ -57,15 +60,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         
         public List<int> tempStats = new List<int>(); 
         public bool Stunned { get; protected set; }
-        
-        //easiest to just have them here whatever man 
-        /// <summary>
-        /// part of turn system. 
-        /// </summary>
-        public int Initiative { get; private set; }
-
-        public float InitModifier { get; private set; } = 1.0f;
-        
 
 //   public event Action HasDied;
 
@@ -193,31 +187,10 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             EndDefend();
         }
 
-        public void SetInit(int init)
-        {
-            Initiative = init;
-        }
-
-        public void SetInitMod(float mod)
-        {
-            InitModifier = mod;
-        }
-
-        /// <summary>
-        /// decreases the rate at which a unit gains initiative by an arbitrary value
-        /// </summary>
-        public void DecInitMod()
-        {
-            InitModifier -= 0.1f;
-            if(InitModifier < 0.1f)
-                InitModifier = 0.1f;
-        }
-        
-
         public int CompareTo(Unit other)
         {
             if (other is null) return 1;
-            return (Initiative, Faction, Level).CompareTo((other.Initiative, other.Faction, other.Level));
+            return (Faction, Level).CompareTo((other.Faction, other.Level));
         }
 
     }

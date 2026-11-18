@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
+using Slinky.NodeWeb;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Characters.Scripts
@@ -23,8 +24,7 @@ namespace _Scripts.Runtime.Characters.Scripts
 
         [SerializeField, Range(1, 10)] private int _abilityCapacity;
         public int AbilityCapacity => _abilityCapacity;
-        
-        //TODO:
-        //Node tree
+       
+        [field: SerializeField, Tooltip("The skill tree for each suit")] public NodeWebGraphSO SkillTree {  get; private set; }
     }
 }

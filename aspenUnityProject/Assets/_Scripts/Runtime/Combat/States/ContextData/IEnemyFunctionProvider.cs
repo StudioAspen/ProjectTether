@@ -9,5 +9,7 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public bool Attack();
         
         public void PopState(); 
+        
+        
     }
 }

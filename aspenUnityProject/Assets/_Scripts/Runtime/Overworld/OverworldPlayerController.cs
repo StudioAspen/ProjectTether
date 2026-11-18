@@ -12,8 +12,7 @@ namespace _Scripts.Runtime.Overworld
         [Range(1f, 10f)]
         [SerializeField] private float _characterMoveSpeed = 5f; // Controls how fast the Player's Character moves:
         [SerializeField] private float _characterRotationSpeed = 10f;
-
-        [SerializeField] private float _gravity = -9.81f;
+        [SerializeField] private bool _useSavedPosition = true;
     
         private float _verticalVelocity;
     
@@ -23,6 +22,8 @@ namespace _Scripts.Runtime.Overworld
         private Vector2 _moveInput;
 
         private bool _isUsingCustomMovement;
+        
+        public bool IsMoving => !_isUsingCustomMovement && _moveInput != Vector2.zero;
     
         void Awake()
         {
@@ -30,7 +31,8 @@ namespace _Scripts.Runtime.Overworld
             _controller = GetComponent<CharacterController>();
             _mainCamera = Camera.main.transform;
             
-            transform.position = GameSession.Instance.PlayerData.OverworldPosition;
+            if(_useSavedPosition)
+                transform.position = GameSession.Instance.PlayerData.OverworldPosition;
         }
 
         void Update()
@@ -75,7 +77,7 @@ namespace _Scripts.Runtime.Overworld
 
             if(_controller.isGrounded && _verticalVelocity < 0)
                 _verticalVelocity = -2;
-            _verticalVelocity += _gravity * Time.deltaTime;
+            _verticalVelocity += Physics.gravity.y * Time.deltaTime;
 
             // Moves the player using the CharacterController:
             Vector3 velocity = moveDirection * _characterMoveSpeed;

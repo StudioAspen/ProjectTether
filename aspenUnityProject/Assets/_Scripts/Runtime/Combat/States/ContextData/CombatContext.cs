@@ -6,11 +6,18 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Combat.States.ContextData
 {
+    /// <summary>
+    /// I did not want to pass the entire CombatManager into the lower states. This is more selective
+    /// </summary>
     public class CombatContext
     {
         public Dictionary<Vector3Int, int> TileCubeCoords { get; private set; }
         public TileController[]  TileControllers { get; private set; }
         public InputSystem_Actions Input { get; private set; }
+        
+        /// <summary>
+        /// General functions the lower states may find useful
+        /// </summary>
         public ICombatFunctionProvider CombatFunctionProvider { get; private set; }
         
         public List<AllyUnitController> AllyUnits { get; private set; }

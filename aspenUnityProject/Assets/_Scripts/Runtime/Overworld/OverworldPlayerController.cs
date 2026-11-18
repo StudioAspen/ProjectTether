@@ -12,6 +12,7 @@ namespace _Scripts.Runtime.Overworld
         [Range(1f, 10f)]
         [SerializeField] private float _characterMoveSpeed = 5f; // Controls how fast the Player's Character moves:
         [SerializeField] private float _characterRotationSpeed = 10f;
+        [SerializeField] private bool _useSavedPosition = true;
     
         private float _verticalVelocity;
     
@@ -30,7 +31,8 @@ namespace _Scripts.Runtime.Overworld
             _controller = GetComponent<CharacterController>();
             _mainCamera = Camera.main.transform;
             
-            transform.position = GameSession.Instance.PlayerData.OverworldPosition;
+            if(_useSavedPosition)
+                transform.position = GameSession.Instance.PlayerData.OverworldPosition;
         }
 
         void Update()

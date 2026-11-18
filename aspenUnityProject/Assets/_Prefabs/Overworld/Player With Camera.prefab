@@ -87,6 +87,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   _characterMoveSpeed: 5
   _characterRotationSpeed: 10
+  _useSavedPosition: 1
 --- !u!143 &8770578419026122728
 CharacterController:
   m_ObjectHideFlags: 0
@@ -109,7 +110,7 @@ CharacterController:
   m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.0001
+  m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &1159329282095729421

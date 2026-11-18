@@ -25,15 +25,13 @@ namespace _Scripts.Runtime.Managers
     //TODO: break this down 
     public class CombatManager : MonoBehaviour, ICombatFunctionProvider
     {
-        private const int TileNum = 19;
-        
         private InputSystem_Actions _input;
         private EncounterSO _currentEncounter;
 
         private bool toggledManualEnemy;
         
         [SerializeField] private Transform tilesParent;
-        private TileController[] TileControllers { get; }= new TileController[TileNum];
+        private TileController[] TileControllers { get; }= new TileController[CombatTileCoordinates.TileCount];
 
         /// <summary>
         /// Vector3Int -> TileControllers index (index is equal to desired count order of tiles)
@@ -219,41 +217,14 @@ namespace _Scripts.Runtime.Managers
         }
 
         
-        /// <summary>
-        ///Starts at tile 0 and spirals outwards to get the cube coords for every tile.
-        ///Coords are for determining proper tile selection when the user moves across the field 
-        /// </summary>
-        //For reference, tile 18 should be (2,0,-2) 
-        //3r(r+1)+1=tiles formula for generic implementation if additional rings are added.
         void GenerateCoords()
         {
-            int tile = 0;
-            Vector3Int currentPos = new Vector3Int(0, 0, 0);
-            TileCubeCoords.Add(currentPos, tile);
-            TileControllers[tile].tileCoordinate = currentPos;
-            for (int ring = 1; ring <= 2; ring++)
+            IReadOnlyList<Vector3Int> coordinates = CombatTileCoordinates.GetAll();
+            for (int tile = 0; tile < coordinates.Count; tile++)
             {
-                currentPos += CubeCoordDirections.NE.Vector();
-                tile++;
-                TileCubeCoords.Add(currentPos, tile);
-                TileControllers[tile].tileCoordinate = currentPos;
-                for (int southEasts = ring - 1; southEasts > 0; southEasts--)
-                {
-                    currentPos += CubeCoordDirections.SE.Vector();
-                    tile++;
-                    TileCubeCoords.Add(currentPos, tile);
-                    TileControllers[tile].tileCoordinate = currentPos;
-                }
-                for (int direction = (int)CubeCoordDirections.S; direction < Enum.GetNames(typeof(CubeCoordDirections)).Length; direction++)
-                {
-                    for (int times = ring; times > 0; times--)
-                    {
-                        currentPos += ((CubeCoordDirections)direction).Vector();
-                        tile++;
-                        TileCubeCoords.Add(currentPos, tile);
-                        TileControllers[tile].tileCoordinate = currentPos;
-                    }
-                }
+                Vector3Int coordinate = coordinates[tile];
+                TileCubeCoords.Add(coordinate, tile);
+                TileControllers[tile].tileCoordinate = coordinate;
             }
         } 
        

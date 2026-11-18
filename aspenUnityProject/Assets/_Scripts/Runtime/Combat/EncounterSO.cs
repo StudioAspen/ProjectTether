@@ -16,7 +16,7 @@ namespace _Scripts.Runtime.Combat
     [CreateAssetMenu(fileName = "NewEncounter", menuName = "Scriptable Objects/Misc/Encounter")]
     public class EncounterSO : ScriptableObject
     {
-        public const int TILE_COUNT = 19;
+        public const int TILE_COUNT = CombatTileCoordinates.TileCount;
         public const int TILE_MAX_UNITS = 4;
 
         [System.Serializable]
@@ -28,7 +28,6 @@ namespace _Scripts.Runtime.Combat
         [field: SerializeField, HideInInspector] public List<UnitListWrapper> Tiles { get; private set; } = new List<UnitListWrapper>();
 
 #if UNITY_EDITOR
-        private const int GridRadius = 2;
         [NonSerialized] private int _selectedTileIndex;
         private static GUIStyle _tileTitleStyle;
         private static GUIStyle _tileUnitStyle;
@@ -45,18 +44,20 @@ namespace _Scripts.Runtime.Combat
             SirenixEditorGUI.BeginBox("Encounter Layout");
             EditorGUILayout.LabelField("Select a tile, then place up to four units on it.", EditorStyles.miniLabel);
 
-            List<Vector3Int> coordinatesByTileIndex = BuildTileCoordinates();
+            IReadOnlyList<Vector3Int> coordinatesByTileIndex = CombatTileCoordinates.GetAll();
             float tileSize = Mathf.Clamp((EditorGUIUtility.currentViewWidth - 110f) / 5f - 4f, 56f, 88f);
-            for (int z = GridRadius; z >= -GridRadius; z--)
+            // Draw negative z at the top so the inspector matches the combat board orientation.
+            for (int z = -CombatTileCoordinates.Radius; z <= CombatTileCoordinates.Radius; z++)
             {
                 List<int> rowTileIndices = new List<int>();
-                for (int x = -GridRadius; x <= GridRadius; x++)
+                for (int x = -CombatTileCoordinates.Radius; x <= CombatTileCoordinates.Radius; x++)
                 {
                     int y = -x - z;
-                    if (Mathf.Abs(y) > GridRadius)
+                    if (Mathf.Abs(y) > CombatTileCoordinates.Radius)
                         continue;
 
-                    rowTileIndices.Add(coordinatesByTileIndex.IndexOf(new Vector3Int(x, y, z)));
+                    if (CombatTileCoordinates.TryGetTileIndex(new Vector3Int(x, y, z), out int tileIndex))
+                        rowTileIndices.Add(tileIndex);
                 }
 
                 DrawGridRow(rowTileIndices, tileSize);
@@ -169,7 +170,7 @@ namespace _Scripts.Runtime.Combat
             return _tileUnitStyle;
         }
 
-        private void DrawSelectedTile(List<Vector3Int> coordinatesByTileIndex)
+        private void DrawSelectedTile(IReadOnlyList<Vector3Int> coordinatesByTileIndex)
         {
             _selectedTileIndex = Mathf.Clamp(_selectedTileIndex, 0, TILE_COUNT - 1);
             UnitListWrapper tile = Tiles[_selectedTileIndex];
@@ -228,40 +229,6 @@ namespace _Scripts.Runtime.Combat
             }
         }
 
-        /// <summary>
-        /// Mirrors CombatManager.GenerateCoords so inspector tile indices keep their runtime meaning.
-        /// </summary>
-        private static List<Vector3Int> BuildTileCoordinates()
-        {
-            List<Vector3Int> coordinates = new List<Vector3Int>(TILE_COUNT)
-            {
-                Vector3Int.zero
-            };
-
-            Vector3Int current = Vector3Int.zero;
-            for (int ring = 1; ring <= GridRadius; ring++)
-            {
-                current += CubeCoordDirections.NE.Vector();
-                coordinates.Add(current);
-
-                for (int southEastSteps = ring - 1; southEastSteps > 0; southEastSteps--)
-                {
-                    current += CubeCoordDirections.SE.Vector();
-                    coordinates.Add(current);
-                }
-
-                for (int direction = (int)CubeCoordDirections.S; direction < 6; direction++)
-                {
-                    for (int steps = ring; steps > 0; steps--)
-                    {
-                        current += ((CubeCoordDirections)direction).Vector();
-                        coordinates.Add(current);
-                    }
-                }
-            }
-
-            return coordinates;
-        }
 #endif
         
         private void OnValidate()

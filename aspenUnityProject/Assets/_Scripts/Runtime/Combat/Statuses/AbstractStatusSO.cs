@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Combat
+namespace _Scripts.Runtime.Combat.Statuses
 {
+    
     [System.Serializable]
     public struct StatModifier
     {
@@ -25,9 +28,8 @@ namespace _Scripts.Runtime.Combat
         public int turnToAdd;
         public StatusSO statusToAdd;
     }
-
-    [CreateAssetMenu(fileName = "StatusSO", menuName = "Scriptable Objects/Misc/StatusSO")]
-    public class StatusSO : ScriptableObject
+    
+    public abstract class AbstractStatusSO : ScriptableObject
     {
         [SerializeField] private string _statusId; 
         public string StatusId => _statusId;
@@ -45,12 +47,13 @@ namespace _Scripts.Runtime.Combat
         [SerializeField] private int _damageTakenPerTurn;
         public int  DamageTakenPerTurn => _damageTakenPerTurn;
 
-        //-1 for infinite duration 
+        [Tooltip("burning status would do fire damage for example")]
+        [SerializeField] private Element[] _damageTypes;
+        public Element[] DamageTypes => _damageTypes;
+
+        [Tooltip("-1 for infinite duration")]
         [SerializeField] private int _duration;
         public int Duration => _duration;
-
-        [SerializeField] private bool _isStun;
-        public bool IsStun => _isStun;
 
         [SerializeField] private bool hasStackableEffects;
         public bool HasStackableEffects => hasStackableEffects;
@@ -79,6 +82,47 @@ namespace _Scripts.Runtime.Combat
         private List<StatusPoint> _statusTimeline;
         public List<StatusPoint> StatusTimeline => _statusTimeline;
 
+
+        public virtual void OnAdd(Unit unit)
+        {
+            if (unit.Faction == Faction.Ally)
+            {
+                foreach (var sm in GetStatMultiplier(((AllyUnit)unit).CurrentSuit.GetClassType()))
+                {
+                    unit.MultiplyEStat(sm.stat, sm.multiplier);
+                }
+            }
+            else
+            {
+                foreach(var sm in GenericStatsModified)
+                    unit.MultiplyEStat(sm.stat, sm.multiplier);
+            }
+        }
+
+
+        /// <summary>
+        /// proc status effect 
+        /// </summary>
+        public virtual void Tick(Unit unit)
+        {
+            CombatFormulas.StatusDamage(_damageTakenPerTurn, _damageTypes, unit);
+        }
+
+        public virtual void OnRemove(Unit unit)
+        {
+            if (unit.Faction == Faction.Ally)
+            {
+                foreach (var sm in GetStatMultiplier(((AllyUnit)unit).CurrentSuit.GetClassType()))
+                {
+                    unit.RevertEStat(sm.stat, sm.multiplier);
+                }
+            }
+            else
+            {
+                foreach(var sm in GenericStatsModified)
+                    unit.RevertEStat(sm.stat, sm.multiplier);
+            }
+        }
 
 
 

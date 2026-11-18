@@ -5,6 +5,7 @@ using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.Mechanics;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
 using _Scripts.Runtime.Combat.States.ContextData;
+using _Scripts.Runtime.Combat.Statuses;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
 using _Scripts.Runtime.Persistent_Data;
@@ -195,7 +196,6 @@ namespace _Scripts.Runtime.Managers
                     {
                         tileController.AddUnit(unitController);
                         _playerUnits.Add(unitController as AllyUnitController);
-                        
                         _totalAllies++;
                     }
                     else if (unitData.Faction == Faction.Enemy)

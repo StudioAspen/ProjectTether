@@ -21,7 +21,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
       //not sure why I have this. May be removed along with other TakeDamage functions from controllers + abstract
       public override void TakeDamage(int damage)
       {
-         stats?.ChangeHealthRemaining(damage); 
+         stats?.DecreaseHealthRemaining(damage); 
       }
 
       //will differ from SetTile in that it will consider game logic with conditionals 

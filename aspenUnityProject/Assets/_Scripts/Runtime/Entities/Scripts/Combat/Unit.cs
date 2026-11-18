@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Statuses;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
@@ -116,19 +118,19 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         /// stat change will only occur when the status is added 
         /// </summary>
         /// <param name="status"></param>
-        public abstract void AddStatus(StatusSO status);
+        public abstract void AddStatus(AbstractStatusSO status);
 
         /// <summary>
         /// triggers per turn. 
         /// </summary>
         public abstract void TriggerStatuses();
 
-        public void RemoveStatus(StatusSO status)
+        public void RemoveStatus(AbstractStatusSO status)
         {
             Statuses.Remove(status.StatusId);
         }
 
-        public abstract void ChangeHealthRemaining(int value);
+        public abstract void DecreaseHealthRemaining(int value);
         public abstract void ChangeEnergyRemaining(int value);
 
         public void Defend()
@@ -176,6 +178,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public void MultiplyEStat(Stat stat, float multiplier)
         {
             Stats[stat].SetEffectiveStat((int)(Stats[stat].EffectiveStat * multiplier));    
+        }
+
+        public void SetStunned(bool value)
+        {
+            Stunned = value;
         }
 
         /// <summary>

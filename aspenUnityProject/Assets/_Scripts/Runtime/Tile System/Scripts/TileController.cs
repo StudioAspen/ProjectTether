@@ -9,9 +9,9 @@ namespace _Scripts.Runtime.Tile_System.Scripts
 {
     public class TileController : MonoBehaviour
     {
-        [SerializeField] private TileSO baseData;
+        [SerializeField] private AbstractTerrainSO baseData;
         
-        private Tile tileData;
+        private Terrain terrainData;
         private const int MAX_UNITS = 4;
         private const float ArbitraryOffset = 5;
 
@@ -24,9 +24,9 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         //I assumed early on that specific positions within the tile mattered (they don't currently) 
         public List<UnitController> UnitControllers { get; private set; }= new List<UnitController>();
 
-        public void Initialize(TileSO baseData)
+        public void Initialize(AbstractTerrainSO baseData)
         {
-            tileData = new Tile(baseData);
+            terrainData = new Terrain(baseData);
         }
             
 

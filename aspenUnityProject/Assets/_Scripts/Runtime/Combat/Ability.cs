@@ -18,7 +18,7 @@ namespace _Scripts.Runtime.Combat
        public bool CanTargetEmptyTiles { get; private set; }
        public bool CanMiss { get; private set; }
        
-//       public TileSO TileEffect {  get; private set; }
+//       public TerrainSO TileEffect {  get; private set; }
 
        public Ability(AbilitySO ability)
        {

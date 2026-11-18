@@ -88,8 +88,8 @@ namespace _Scripts.Runtime.Combat
         //not useful in MVP. This is for when we decide to have attacks affect tiles.
         //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 
         /*
-     [SerializeField] private TileSO tileEffect;
-     public TileSO TileEffect => tileEffect;
+     [SerializeField] private TerrainSO tileEffect;
+     public TerrainSO TileEffect => tileEffect;
      */
 
       // custom range. list of directions walked from the unit's tile

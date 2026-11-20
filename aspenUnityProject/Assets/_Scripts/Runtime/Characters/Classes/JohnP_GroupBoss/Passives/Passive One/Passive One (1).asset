@@ -17,13 +17,14 @@ MonoBehaviour:
   _isPassive: 1
   _isModifiedAbility: 0
   _modifiedFrom: {fileID: 0}
-  _description: 'Swap Unit Affinities (First and Second Phase Effects : 1)'
+  _description: 'Swap Unit Affinities (First and Second Phase Effects : 1)
+
+'
   _damage: 0
   _numberOfHits: 0
   _statusEffects:
   - {fileID: 11400000, guid: 9075c441b346fe24193361d97c12540a, type: 2}
-  _effectAmount: []
-  _numberOfTurnsEffectLasts: 
+  _numberOfTurnsEffectLasts: 01000000
   element: 
   _chanceToHit: 0
   _hitChanceLossPerTileTravelled: 0

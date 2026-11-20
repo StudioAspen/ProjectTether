@@ -13,27 +13,27 @@ MonoBehaviour:
   m_Name: Passive One (2)
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.AbilitySO
   id: 
-  _abilityName: 
-  _isPassive: 0
+  _abilityName: Shared Fate
+  _isPassive: 1
   _isModifiedAbility: 0
   _modifiedFrom: {fileID: 0}
-  _description: 
+  _description: 'Swap Unit Affinities (First and Second Phase Effects : 2)'
   _damage: 0
   _numberOfHits: 0
-  _statusEffects: []
-  _effectAmount: []
-  _numberOfTurnsEffectLasts: 
+  _statusEffects:
+  - {fileID: 11400000, guid: ba0da67615e05c6459d3d7fb5873d72c, type: 2}
+  _numberOfTurnsEffectLasts: 01000000
   element: 
   _chanceToHit: 0
   _hitChanceLossPerTileTravelled: 0
   _macCost: 0
   _energyCost: 0
-  abilityType: 0
+  abilityType: 3
   range: 0
   aoe: 0
   hitsEnemies: 0
   hitsAllies: 0
-  hitsSelf: 0
+  hitsSelf: 1
   canTargetEmptyTile: 0
   canMiss: 0
   customRange: []

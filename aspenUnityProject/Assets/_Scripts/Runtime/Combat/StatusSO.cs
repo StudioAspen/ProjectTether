@@ -16,6 +16,7 @@ namespace _Scripts.Runtime.Combat
     public struct StatMultiplier
     {
         public float multiplier;
+        public float adder; //For when it is not multiplied
         public Stat stat;
     }
     
@@ -43,7 +44,7 @@ namespace _Scripts.Runtime.Combat
         [SerializeField] private string _statusName;
         public string StatusName => _statusName;
 
-        [SerializeField] private string _statusDescription;
+        [SerializeField] [TextArea(2,4)]private string _statusDescription;
         public string StatusDescription => _statusDescription;
 
         [Tooltip("1 for no extra damage taken")]

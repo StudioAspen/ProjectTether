@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Scripts.Runtime.Combat.StatusSO
   _statusId: 
   _statusName: Shared Fate Passive Effects
-  _statusDescription: Phase 1 and 2 Effects_1
+  _statusDescription: Phase 1 and 2 Effects_2
   _damageTakenMultiplier: 0
   _damageTakenPerTurn: 0
   _duration: 0

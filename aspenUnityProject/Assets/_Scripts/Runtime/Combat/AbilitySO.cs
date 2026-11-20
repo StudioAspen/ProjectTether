@@ -1,44 +1,41 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
 {
-   [CreateAssetMenu(fileName = "Ability" , menuName = "Scriptable Objects/Misc/Ability")]
-   public class AbilitySO : ScriptableObject
-   {
-      //e.g., fireball_0 or obliterate_0
-      [SerializeField] private string id;
-      public string Id => id;
-      
-      //name displayed in UI 
-      [SerializeField] private string abilityName;
-      public string Name => name;
+    [CreateAssetMenu(fileName = "Ability", menuName = "Scriptable Objects/Misc/Ability")]
+    public class AbilitySO : ScriptableObject
+    {
+        //e.g., fireball_0 or obliterate_0
+        [SerializeField] private string id;
+        public string Id => id;
 
-      [SerializeField] private bool _isModifiedAbility;
-      public bool IsModifiedAbility => _isModifiedAbility;
+        //name displayed in UI 
+        [SerializeField] private string _abilityName;
+        public string Name => name;
 
-      [Tooltip("If Applicable")]
-      [SerializeField] private AbilitySO _modifiedFrom;
-      public bool ModifiedFrom => _modifiedFrom;
+        [SerializeField] private bool _isPassive;
+        public bool IsPassive => _isPassive;
 
-      [SerializeField][TextArea(3,10)] private string _description;
-      public string Description => _description;
+        [SerializeField] private bool _isModifiedAbility;
+        public bool IsModifiedAbility => _isModifiedAbility;
 
-      //make negative for healing moves 
-      [SerializeField] private int _damage;
-      public int Damage => _damage;
+        [Tooltip("If Applicable")]
+        [SerializeField] private AbilitySO _modifiedFrom;
+        public bool ModifiedFrom => _modifiedFrom;
 
-      [SerializeField] private int _numberOfHits;
-      public int NumberOfHits => _numberOfHits;
+        [SerializeField][TextArea(3, 10)] private string _description;
+        public string Description => _description;
 
-      [SerializeField] private BattleParametersList.BattleParameters[] _effectsDueToAbility;
-      public BattleParametersList.BattleParameters[] EffectsDueToAbility => _effectsDueToAbility;
+        //make negative for healing moves 
+        [SerializeField] private int _damage;
+        public int Damage => _damage;
 
-      [Tooltip("If the number is between 0 and 1 it is the percent change of the " +
-               "battle parameter by the ability. If it is over one, it is simply an addition")]
-      [SerializeField] private float[] _effectAmount;
-      public float[] EffectAmount => _effectAmount;
+        [SerializeField] private int _numberOfHits;
+        public int NumberOfHits => _numberOfHits;
+
+        [SerializeField] private StatusSO[] _statusEffects;
+        public StatusSO[] StatusEffects => _statusEffects;
 
       [SerializeField] private int[] _numberOfTurnsEffectLasts;
       public int[] NumberOfTurnsEffectLasts => _numberOfTurnsEffectLasts;
@@ -98,7 +95,7 @@ namespace _Scripts.Runtime.Combat
       public List<List<CubeCoordDirections>> CustomRange => customRange;
 
 
-        public void SetName(string name) => abilityName = name;
+        public void SetName(string name) => _abilityName = name;
     
     }
     

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
@@ -24,6 +25,13 @@ namespace _Scripts.Runtime.Combat
     {
         public int turnToAdd;
         public StatusSO statusToAdd;
+    }
+
+    [System.Serializable]
+    public struct ElementAffinityChange
+    {
+        public Element elementToChange;
+        public Affinity changeInAffinity;
     }
 
     [CreateAssetMenu(fileName = "StatusSO", menuName = "Scriptable Objects/Misc/StatusSO")]
@@ -63,6 +71,10 @@ namespace _Scripts.Runtime.Combat
         [SerializeField] private List<StatMultiplier> _GenericStatsModified;
         public  List<StatMultiplier> GenericStatsModified => _GenericStatsModified;
 
+        [Tooltip("AFFINITIES MODIFIED")]
+        [SerializeField] private List<ElementAffinityChange> _affinitiesModified;
+        public List<ElementAffinityChange> AffinitiesModified => _affinitiesModified;
+
         public List<StatMultiplier> GetStatMultiplier(CombatClassType ctat) 
         {
             foreach (var c in _statsModified)
@@ -74,15 +86,16 @@ namespace _Scripts.Runtime.Combat
             return null;
         }
         
+        //This function is mainly for the group boss first passive.
+        public void AffinityModifiedDueToStatus(UnitDataSO unitToBeModified , StatusSO status)
+        {
+            foreach (ElementAffinityChange elementAffinityChange in status.AffinitiesModified)
+                unitToBeModified.Affinities[elementAffinityChange.elementToChange] = elementAffinityChange.changeInAffinity;
+        }
+
         //overclock -> burnout + stunned 
         [Tooltip("For statuses that cause other statuses. turnToAdd is used by Status class (irl example: cold -> frostbite")] [SerializeField]
         private List<StatusPoint> _statusTimeline;
         public List<StatusPoint> StatusTimeline => _statusTimeline;
-
-
-
-
-
-
     }
 }

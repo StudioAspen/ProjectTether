@@ -24,7 +24,8 @@ MonoBehaviour:
     above 1, Increase "Base Strength" and "Base Tech" by 5 and "Base Speed" by 2.'
   _damage: 0
   _numberOfHits: 0
-  _statusEffects: []
+  _statusEffects:
+  - {fileID: 11400000, guid: 03936989e885ec14b8b2625de515139f, type: 2}
   _numberOfTurnsEffectLasts: 
   element: 
   _chanceToHit: 0

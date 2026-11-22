@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using _Scripts.Runtime.Combat.Statuses;
 using Unity.VisualScripting;
 using UnityEngine;

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Numerics;
 using _Scripts.Runtime.Combat;
-using _Scripts.Runtime.Entities.Scripts;
+using _Scripts.Runtime.Combat.Abilities;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Tile_System.Scripts;
 using Vector2 = UnityEngine.Vector2;
@@ -47,70 +46,73 @@ namespace _Scripts.Runtime.Math
             }
         }
 
-        public static bool AttackReachable(this UnitController cc, TileController target)
-        {
-            Vector3Int from = cc.TileCoords;
-            bool tileWithinRange = target.tileCoordinate.HexGridDistance(from) <=
-                                   cc.GetData().CombatClass.DefaultAttackRange;
-            if (!tileWithinRange || target.UnitControllers.Count == 0)
-                return false;
-            bool targetContainsAlly = false;
-            foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
-            {
-                if (uc.GetData().Faction == cc.GetData().Faction)
-                    targetContainsAlly = true;
-                break;
-            }
-            return !targetContainsAlly;
-        }
+         public static bool AttackReachable(this UnitController cc, TileController target)
+         {
+             Vector3Int from = cc.TileCoords;
+             bool tileWithinRange = target.tileCoordinate.HexGridDistance(from) <=
+                                    cc.GetData().CombatClass.DefaultAttackRange;
+             if (!tileWithinRange || target.UnitControllers.Count == 0)
+                 return false;
+             bool targetContainsAlly = false;
+             foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
+             {
+                 if (uc.GetData().Faction == cc.GetData().Faction)
+                     targetContainsAlly = true;
+                 break;
+             }
+             return !targetContainsAlly;
+         }
+         
+         /*
 
-        //currently no unique ranges for abilities. We can change this by designing a diff. HexGridDistance function
-        public static bool AbilityReachable(this UnitController cc, AbilitySO ability, TileController target)
-        {
-            Vector3Int from = cc.TileCoords;
-            // use custom range if the ability has one, if not then normal range
-            bool tileWithinRange;
-            if (ability.CustomRange.Count > 0)
-                tileWithinRange = from.CustomRange(ability.CustomRange, target.tileCoordinate);
-            else
-                tileWithinRange = target.tileCoordinate.HexGridDistance(from) <= ability.Range;
+         //currently no unique ranges for abilities. We can change this by designing a diff. HexGridDistance function
+         public static bool AbilityReachable(this UnitController cc, AbilitySO ability, TileController target)
+         {
+             Vector3Int from = cc.TileCoords;
+             // use custom range if the ability has one, if not then normal range
+             bool tileWithinRange;
+             if (ability.CustomRange.Count > 0)
+                 tileWithinRange = from.CustomRange(ability.CustomRange, target.tileCoordinate);
+             else
+                 tileWithinRange = target.tileCoordinate.HexGridDistance(from) <= ability.Range;
 
-            if (!tileWithinRange)
-                return false;
-            bool targetContainsUnit = target.UnitControllers.Count > 0;
-            bool targetContainsAlly = false;
-            bool targetContainsEnemy = false;
-            foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
-            {
-                if (uc.GetData().Faction == cc.GetData().Faction)
-                    targetContainsAlly = true;
-                else
-                {
-                    targetContainsEnemy = true;
-                    break;
-                }
-            }
+             if (!tileWithinRange)
+                 return false;
+             bool targetContainsUnit = target.UnitControllers.Count > 0;
+             bool targetContainsAlly = false;
+             bool targetContainsEnemy = false;
+             foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
+             {
+                 if (uc.GetData().Faction == cc.GetData().Faction)
+                     targetContainsAlly = true;
+                 else
+                 {
+                     targetContainsEnemy = true;
+                     break;
+                 }
+             }
 
-            return (targetContainsAlly && ability.HitsAllies) ||
-                   (!targetContainsUnit && ability.CanTargetEmptyTile) ||
-                   (targetContainsEnemy && ability.HitsEnemies);
-        }
+             return (targetContainsAlly && ability.HitsAllies) ||
+                    (!targetContainsUnit && ability.CanTargetEmptyTile) ||
+                    (targetContainsEnemy && ability.HitsEnemies);
+         }
 
-        // checks if the target tile is on the custom range path
-        public static bool CustomRange(this Vector3Int origin, List<List<CubeCoordDirections>> customRange, Vector3Int target)
-        {
-            Vector3Int current = origin;
-            foreach (List<CubeCoordDirections> l in customRange)
-            {
-                foreach (CubeCoordDirections c in l)
-                {
-                    current += c.Vector();
-                    if (current == target)
-                        return true;
-                }
-                current = origin;
-            }
-            return false;
-        }
+         // checks if the target tile is on the custom range path
+         public static bool CustomRange(this Vector3Int origin, List<List<CubeCoordDirections>> customRange, Vector3Int target)
+         {
+             Vector3Int current = origin;
+             foreach (List<CubeCoordDirections> l in customRange)
+             {
+                 foreach (CubeCoordDirections c in l)
+                 {
+                     current += c.Vector();
+                     if (current == target)
+                         return true;
+                 }
+                 current = origin;
+             }
+             return false;
+         }
+     */
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using _Scripts.Runtime.Combat.Statuses;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;

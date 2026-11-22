@@ -1,6 +1,4 @@
-using _Scripts.Runtime.Tile_System.Scripts;
-
-namespace _Scripts.Runtime.Combat
+namespace _Scripts.Runtime.Combat.Abilities
 {
     
     public class Ability

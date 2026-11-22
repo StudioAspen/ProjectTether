@@ -19,6 +19,8 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         private int tileNum;
 
         public Vector3Int tileCoordinate;
+
+        public Terrain terrain;
         
         //change to array if unit positions should not change on unit removal. Everything else so far has been an array because
         //I assumed early on that specific positions within the tile mattered (they don't currently) 
@@ -81,8 +83,11 @@ namespace _Scripts.Runtime.Tile_System.Scripts
                 UnitControllers[unit].Move(transform.position + new Vector3(ArbitraryOffset * -Mathf.Cos(angle), 0, ArbitraryOffset* Mathf.Sin(angle)));
             }
         }
-        
 
+        /// <summary>
+        /// 0-18
+        /// </summary>
+        /// <returns></returns>
         public int Num()
         {
             return tileNum;
@@ -93,7 +98,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             return UnitControllers.Count;
         }
 
-        //currently, units can only move to adjacent tiles 
+        //currently, units can only move to adjacent tiles with the movement button
         public bool IsMoveable(Vector3Int from, int range, Faction faction)
         {
             if (tileCoordinate == from || UnitControllers.Count >= MAX_UNITS || from.HexGridDistance(tileCoordinate) > range)
@@ -105,6 +110,12 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             }
             return true; 
         }
+
+        public void SetTerrain(AbstractTerrainSO terrainSO)
+        {
+            terrain = new Terrain(terrainSO);
+        }
+        
 
     }
 }

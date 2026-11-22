@@ -3,6 +3,7 @@ using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Runtime.Combat.Abilities;
 using UnityEngine;
 
 namespace _Scripts.Consystently.UI

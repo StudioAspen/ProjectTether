@@ -4,6 +4,7 @@ using AYellowpaper.SerializedCollections;
 using _Scripts.Runtime.Combat;
 using System.Linq;
 using System.Net;
+using _Scripts.Runtime.Combat.Abilities;
 
 
 namespace Slinky.NodeWeb

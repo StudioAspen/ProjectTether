@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Consystently.UI;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using _Scripts.Runtime.Combat.Mechanics;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
 using _Scripts.Runtime.Combat.States.ContextData;
@@ -419,7 +420,7 @@ namespace _Scripts.Runtime.Managers
                         HandleSelectMove(selectedTileController, currentUnit); 
                     return;
                 case CombatActions.Ability:
-                    if(currentUnit.AbilityReachable(currentUnit.GetData().Moves[ActionSelection],selectedTileController))
+                    if(currentUnit.GetData().Moves[ActionSelection].IsReachable(currentUnit,selectedTileController))
                         HandleSelectAbility(currentUnit); 
                     break;
                 case CombatActions.Item:
@@ -462,9 +463,11 @@ namespace _Scripts.Runtime.Managers
             foreach (UnitController enemy in epicenter.UnitControllers)
             {
                 CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
+                
                 CheckDead(enemy);
             }
 
+            
             //hit the area surrounding the epicenter
             if (ability.AOE > 0)
             {

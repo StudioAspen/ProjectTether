@@ -36,9 +36,9 @@ namespace _Scripts.Runtime.Combat.Statuses
 
         public void OnStack(Unit uc)
         {
+            CountUp(StatusData.Duration);
             if (StatusData.HasStackableEffects)
             {
-                CountUp(StatusData.Duration);
                 StatusData.Tick(uc);
             }
         }

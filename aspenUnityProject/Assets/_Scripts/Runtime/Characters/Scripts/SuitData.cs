@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 
 namespace _Scripts.Runtime.Characters.Scripts
 {

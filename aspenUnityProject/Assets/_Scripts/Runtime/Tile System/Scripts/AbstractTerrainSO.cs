@@ -52,8 +52,8 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         public bool HasStatusOnExit => _hasStatusOnExit;
         
         [Tooltip("statuses that the tile gives units when they step on it")]
-        [SerializeField] private List<StatusSO> _statuses;
-        public List<StatusSO> Statuses => _statuses;
+        [SerializeField] private List<AbstractStatusSO> _statuses;
+        public List<AbstractStatusSO> Statuses => _statuses;
 
         [Tooltip("terrain duration. Set to negative for infinite duration")]
         [SerializeField] private int _duration; 
@@ -73,17 +73,35 @@ namespace _Scripts.Runtime.Tile_System.Scripts
 
         public virtual void OnEnter(UnitController unitController)
         {
+            if (_hasStatusOnEnter)
+            {
+                foreach (AbstractStatusSO status in _statuses)
+                {
+                    unitController.GetData().AddStatus(status);
+                }
+            }
             CombatFormulas.TerrainDamage(DamageOnEnter, DamageTypes, unitController);
         }
 
         public virtual void Execute(UnitController unitController)
         {
-            
+            foreach (AbstractStatusSO status in _statuses)
+            {
+                unitController.GetData().AddStatus(status);
+            }
+            CombatFormulas.TerrainDamage(DamageOvertime, DamageTypes, unitController);
         }
 
         public virtual void OnExit(UnitController unitController)
         {
-            
+            if (_hasStatusOnExit)
+            {
+                foreach (AbstractStatusSO status in _statuses)
+                {
+                    unitController.GetData().AddStatus(status);
+                }
+            }
+            CombatFormulas.TerrainDamage(DamageOnExit, DamageTypes, unitController); 
         }
 
     }

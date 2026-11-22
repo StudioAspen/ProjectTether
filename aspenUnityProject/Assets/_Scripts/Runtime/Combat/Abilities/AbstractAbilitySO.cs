@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
+using _Scripts.Runtime.Combat.Statuses;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Tile_System.Scripts;
+using _Scripts.Runtime.Math;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Combat
+namespace _Scripts.Runtime.Combat.Abilities
 {
     public class AbstractAbilitySO : ScriptableObject
     {
@@ -25,7 +28,7 @@ namespace _Scripts.Runtime.Combat
       [SerializeField][TextArea(3,10)] private string _description;
       public string Description => _description;
 
-      //make negative for healing moves 
+      [Tooltip("negative for healing")]
       [SerializeField] private int _damage;
       public int Damage => _damage;
 
@@ -40,6 +43,7 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private float[] _effectAmount;
       public float[] EffectAmount => _effectAmount;
 
+      //prob remove 
       [SerializeField] private int[] _numberOfTurnsEffectLasts;
       public int[] NumberOfTurnsEffectLasts => _numberOfTurnsEffectLasts;
 
@@ -50,6 +54,7 @@ namespace _Scripts.Runtime.Combat
       public float ChanceToHit => _chanceToHit;
 
       //This field is primarily for a move called breakneck rush.
+      //TODO: can add by adding an if to ability damage in CombatFormulas (use genericMathClass's hex distance calc) 
       [SerializeField] private float _hitChanceLossPerTileTravelled;
       public float HitChanceLossPerTileTraveled => _hitChanceLossPerTileTravelled;
 
@@ -59,6 +64,7 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private float _energyCost;
       public float EnergyCost => _energyCost;
       [SerializeField] private AbilityType abilityType;
+      
       public AbilityType AbilityType => abilityType;
 
       //ring-based range. 0 = same tile only 1 = one ring around self, etc. 
@@ -76,6 +82,7 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private bool hitsAllies;
       public bool HitsAllies => hitsAllies;
 
+      //THIS here is unnecessary because self == ally 
       //needs to be true for healing moves 
       [SerializeField] private bool hitsSelf;
       public bool HitsSelf => hitsSelf;
@@ -93,22 +100,81 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private List<List<CubeCoordDirections>> customRange;
       public List<List<CubeCoordDirections>> CustomRange => customRange;
 
+      [SerializeField] private List<AbstractStatusSO> status; 
+      public List<AbstractStatusSO> Status => status;
+
 
       public void SetName(string name) => abilityName = name;
 
-      //mainly one target for now. 11.21.26 - no logic for add. targets
+      //mainly one target for now. 11.21.26 - no logic for additional targets. Add stuff/override if needed
       public virtual void Cast(UnitController caster, TileController target, params TileController[] additionalTargets)
       {
+          target.SetTerrain(TileEffect); 
           foreach (UnitController enemy in target.UnitControllers)
           {
               CombatFormulas.AbilityDamage(caster, enemy, this);
+              foreach (AbstractStatusSO i in status)
+              {
+                 enemy.GetData().AddStatus(i); 
+              }
           }
+      
+
           
       }
 
-      public virtual bool AbilityReachable(UnitController caster, TileController target, params TileController[] additionalTargets)
+      /// <summary>
+      /// checks custom range + regular radius range. Override if needed
+      /// </summary>
+      /// <param name="caster"></param>
+      /// <param name="target"></param>
+      /// <param name="additionalTargets"></param>
+      /// <returns></returns>
+      public virtual bool IsReachable(UnitController caster, TileController target, params TileController[] additionalTargets)
       {
-          return true;
+          Vector3Int from = caster.TileCoords;
+          // use custom range if the ability has one, if not then normal range
+          bool tileWithinRange;
+          if (CustomRange.Count > 0)
+              tileWithinRange = CalcCustomRange(from, target.tileCoordinate);
+          else
+              tileWithinRange = target.tileCoordinate.HexGridDistance(from) <= Range;
+          
+          if (!tileWithinRange)
+              return false;
+          bool targetContainsUnit = target.UnitControllers.Count > 0;
+          bool targetContainsAlly = false;
+          bool targetContainsEnemy = false;
+          foreach (UnitController uc in target.UnitControllers) //ASSUMES tiles can only contain either enemy/ally. No mixing
+          {
+              if (uc.GetData().Faction == caster.GetData().Faction)
+                  targetContainsAlly = true;
+              else
+              {
+                  targetContainsEnemy = true;
+                  break;
+              }
+          }
+
+          return (targetContainsAlly && HitsAllies) ||
+                 (!targetContainsUnit && CanTargetEmptyTile) ||
+                 (targetContainsEnemy && HitsEnemies);
+      }
+
+      protected virtual bool CalcCustomRange(Vector3Int origin, Vector3Int target)
+      {
+          Vector3Int current = origin;
+          foreach (List<CubeCoordDirections> l in customRange)
+          {
+              foreach (CubeCoordDirections c in l)
+              {
+                  current += c.Vector();
+                  if (current == target)
+                      return true;
+              }
+              current = origin;
+          }
+          return false; 
       }
     
     }

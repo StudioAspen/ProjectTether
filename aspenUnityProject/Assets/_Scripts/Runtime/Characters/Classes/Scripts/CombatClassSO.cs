@@ -1,5 +1,6 @@
 using _Scripts.Runtime.Combat;
 using System.Collections.Generic;
+using _Scripts.Runtime.Combat.Abilities;
 using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Serialization;

@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.Animations;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using Codice.CM.WorkspaceServer.DataStore;
 
 namespace Slinky.NodeWeb

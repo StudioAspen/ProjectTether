@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
@@ -52,11 +53,11 @@ namespace _Scripts.Runtime.UI
             }       
         }
 
-        public void DisplayAbilityRange(TileController[] tileControllers, UnitController cc, AbilitySO ability)
+        public void DisplayAbilityRange(TileController[] tileControllers, UnitController cc, AbstractAbilitySO ability)
         {
             for (int ro = 0; ro < rangeObjects.Count; ro++)
             {
-                if (cc.AbilityReachable(ability, tileControllers[ro]))
+                if (ability.IsReachable(cc, tileControllers[ro]))
                 {
                     rangeObjects[ro].SetActive(true);
                     activeObjects.Add(rangeObjects[ro]);

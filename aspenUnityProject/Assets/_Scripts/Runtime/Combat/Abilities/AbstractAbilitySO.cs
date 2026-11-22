@@ -32,6 +32,9 @@ namespace _Scripts.Runtime.Combat.Abilities
       [SerializeField] private int _damage;
       public int Damage => _damage;
 
+      [SerializeField] private bool _isPassive;
+      public  bool IsPassive => _isPassive;
+
       [SerializeField] private int _numberOfHits;
       public int NumberOfHits => _numberOfHits;
 

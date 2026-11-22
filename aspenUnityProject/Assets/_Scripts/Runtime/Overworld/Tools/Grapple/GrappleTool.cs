@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Runtime.Managers;
 using DG.Tweening;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -67,41 +67,24 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
         {
             FixedUpdateState(_currentState);
         }
-        
+
+        private void LateUpdate()
+        {
+            UpdateLightIndicator();
+        }
+
         private void OnDrawGizmos()
         {
             if (_projectileSpawnTransform == null)
                 return;
 
-            Vector3 direction = transform.forward.normalized;
-            float radius = Mathf.Max(0f, _rayDetectionRadius);
-            Vector3 spawnPosition = _projectileSpawnTransform.position;
-            Vector3 origin = spawnPosition + direction * radius;
-            float distance = Mathf.Max(0f, _maxDetectionRadius);
-            Vector3 end = origin + direction * distance;
-
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(spawnPosition, origin);
-            Gizmos.DrawWireSphere(origin, radius);
-            Gizmos.DrawWireSphere(end, radius);
-            Gizmos.DrawLine(origin, end);
-
-            // Draw rails around the sphere's path.
-            Vector3 right = Vector3.Cross(direction, Vector3.up);
-            if (right.sqrMagnitude < 0.001f)
-                right = Vector3.Cross(direction, Vector3.right);
-
-            right.Normalize();
-            Vector3 up = Vector3.Cross(right, direction).normalized;
-
-            const int railCount = 8;
-            for (int i = 0; i < railCount; i++)
-            {
-                float angle = i * Mathf.PI * 2f / railCount;
-                Vector3 offset = (right * Mathf.Cos(angle) + up * Mathf.Sin(angle)) * radius;
-
-                Gizmos.DrawLine(origin + offset, end + offset);
-            }
+            CapsuleDetection.DrawGizmos(
+                _projectileSpawnTransform.position,
+                transform.forward,
+                _maxDetectionRadius,
+                _rayDetectionRadius,
+                Color.cyan
+            );
         }
 
         private void Input_PrimaryToolActionPerformed(InputAction.CallbackContext context)
@@ -130,13 +113,13 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             switch (state) 
             {
                 case State.Ready:
+                    _playerController.OverrideWithCustomMovement(false);
                     break;
                 case State.Shooting:
                     _currentProjectile = Instantiate(_projectilePrefab, _projectileSpawnTransform.position, Quaternion.identity);
                     _currentProjectile.Shoot(this, _targetGrappleObject.Value.targetGrappleable, _targetGrappleObject.Value.targetProjectileDestination, _projectileSpeed);
                     break;
                 case State.PullingUserToObject:
-                    _playerController.OverrideWithCustomMovement(true);
                     _pullDuration = 0f;
                     break;
                 case State.PullingObjectToUser:
@@ -144,6 +127,7 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                     _pullDuration = 0f;
                     break;
                 case State.Cooldown:
+                    _playerController.OverrideWithCustomMovement(false);
                     if(_currentProjectile != null)
                         Destroy(_currentProjectile.gameObject);
                     _currentProjectile = null;
@@ -159,7 +143,6 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
             {
                 case State.Ready:
                     ScanForAimSurfaces();
-                    UpdateLightIndicator();
                     break;
                 case State.Shooting:
                     break;
@@ -177,12 +160,12 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                         return;
                     }
 
-                    Vector3 directionToObject = _currentProjectile.transform.position - _playerController.transform.position;
+                    Vector3 directionToObject = _currentProjectile.transform.position - _projectileSpawnTransform.transform.position;
                     directionToObject.Normalize();
             
                     _playerController.MoveWithVelocity(directionToObject * _pullToObjectSpeed);
 
-                    if (Vector3.SqrMagnitude(_playerController.transform.position - _currentProjectile.transform.position) <
+                    if (Vector3.SqrMagnitude(_projectileSpawnTransform.transform.position - _currentProjectile.transform.position) <
                         _pullStopDistance * _pullStopDistance)
                     {
                         ChangeState(State.Cooldown);
@@ -203,7 +186,8 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                         return;
                     }
                     
-                    if (Vector3.SqrMagnitude(_playerController.transform.position - _currentProjectile.transform.position) <
+                    Vector3 closestPointOnGrappleable = _targetGrappleObject.Value.targetGrappleable.Collider.ClosestPoint(_projectileSpawnTransform.position);
+                    if (Vector3.SqrMagnitude(_projectileSpawnTransform.position - closestPointOnGrappleable) <
                         _pullStopDistance * _pullStopDistance)
                     {
                         ChangeState(State.Cooldown);
@@ -239,7 +223,7 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                         return;
                     }
                     
-                    Vector3 directionToPlayer = _playerController.transform.position - _currentProjectile.transform.position;
+                    Vector3 directionToPlayer = _projectileSpawnTransform.position - _currentProjectile.transform.position;
                     directionToPlayer.Normalize();
                     
                     Rigidbody grappleableRigidbody = _targetGrappleObject.Value.targetGrappleable.RigidBody;
@@ -265,12 +249,15 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
                     _targetIndicatorObject.gameObject.SetActive(false);
                     break;
                 case State.Shooting:
+                    _playerController.OverrideWithCustomMovement(true);
                     break;
                 case State.PullingUserToObject:
-                    _playerController.OverrideWithCustomMovement(false);
+                    _playerController.OverrideWithCustomMovement(true);
                     break;
                 case State.PullingObjectToUser:
+                    _playerController.OverrideWithCustomMovement(true);
                     _targetGrappleObject.Value.targetGrappleable.RigidBody.isKinematic = false;
+                    _targetGrappleObject.Value.targetGrappleable.RigidBody.linearVelocity = Vector3.zero;
                     break;
                 case State.Cooldown:
                     break;
@@ -296,47 +283,20 @@ namespace _Scripts.Runtime.Overworld.Tools.Grapple
         
         private void ScanForAimSurfaces()
         {
-            List<(Grappleable grappleable, Vector3 hitPoint)> validHits = new();
-            
-            RaycastHit[] hits = Physics.SphereCastAll(
-                _projectileSpawnTransform.position + transform.forward * _rayDetectionRadius, 
-                _rayDetectionRadius, 
-                transform.forward, 
-                _maxDetectionRadius
+            CapsuleDetection.TryGetObjectInCapsule<Grappleable>(
+                _projectileSpawnTransform.position,
+                transform.forward,
+                _maxDetectionRadius,
+                _rayDetectionRadius,
+                out _targetGrappleObject
             );
-            foreach (RaycastHit hit in hits)
-            {
-                Grappleable grappleable = hit.collider.GetComponentInParent<Grappleable>();
-                if (grappleable == null)
-                    continue;
-
-                validHits.Add((grappleable, hit.collider.ClosestPoint(_projectileSpawnTransform.position)));
-            }
-
-            if (validHits.Count == 0)
-            {
-                _targetGrappleObject = null;
-                return;
-            }
-            
-            // Get closest hitpoint
-            float closestSqrMagnitude = float.MaxValue;
-            (Grappleable grappleable, Vector3 hitPoint)? closestHit = null;
-            foreach (var hit in validHits)
-            {
-                float sqrMagnitude = (hit.hitPoint - _playerController.transform.position).sqrMagnitude;
-                if (sqrMagnitude < closestSqrMagnitude)
-                {
-                    closestSqrMagnitude = sqrMagnitude;
-                    closestHit = hit;
-                }
-            }
-            
-            _targetGrappleObject = closestHit;
         }
 
         private void UpdateLightIndicator()
         {
+            if (_currentState != State.Ready)
+                return;
+            
             if (_targetGrappleObject == null)
             {
                 _targetIndicatorObject.gameObject.SetActive(false);

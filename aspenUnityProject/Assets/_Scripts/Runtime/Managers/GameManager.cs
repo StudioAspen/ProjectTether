@@ -6,7 +6,7 @@ using _Scripts.Consystently.Essentials;
 using _Scripts.Runtime.Combat.States;
 using _Scripts.Runtime.Managers.Game_States;
 using Eflatun.SceneReference;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -28,7 +28,7 @@ namespace _Scripts.Runtime.Managers
 
         [field: SerializeField, ReadOnly] public State CurrentGameState { get; private set; }
         
-        [ShowNonSerializedField]
+        [ShowInInspector]
         private readonly Stack<State> _previousGameStates = new Stack<State>();
         
         [field: Header("Scenes")]

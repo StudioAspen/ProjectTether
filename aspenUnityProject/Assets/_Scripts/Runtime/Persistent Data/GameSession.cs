@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using _Scripts.Consystently.Essentials;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Save;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Persistent_Data

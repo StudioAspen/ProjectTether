@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
@@ -18,6 +17,7 @@ namespace _Scripts.Runtime.Combat.Statuses
     public struct StatMultiplier
     {
         public float multiplier;
+        public float adder; //For when it is not multiplied
         public Stat stat;
     }
     
@@ -26,7 +26,13 @@ namespace _Scripts.Runtime.Combat.Statuses
     public struct StatusPoint
     {
         public int turnToAdd;
-        public StatusSO statusToAdd;
+    }
+
+    [System.Serializable]
+    public struct ElementAffinityChange
+    {
+        public Element elementToChange;
+        public Affinity changeInAffinity;
     }
     
     public abstract class AbstractStatusSO : ScriptableObject
@@ -37,7 +43,7 @@ namespace _Scripts.Runtime.Combat.Statuses
         [SerializeField] private string _statusName;
         public string StatusName => _statusName;
 
-        [SerializeField] private string _statusDescription;
+        [SerializeField] [TextArea(2,4)]private string _statusDescription;
         public string StatusDescription => _statusDescription;
 
         [Tooltip("1 for no extra damage taken")]
@@ -54,6 +60,9 @@ namespace _Scripts.Runtime.Combat.Statuses
         [Tooltip("-1 for infinite duration")]
         [SerializeField] private int _duration;
         public int Duration => _duration;
+
+        [SerializeField] private bool _isStun;
+        public bool IsStun => _isStun;
 
         [SerializeField] private bool hasStackableEffects;
         public bool HasStackableEffects => hasStackableEffects;

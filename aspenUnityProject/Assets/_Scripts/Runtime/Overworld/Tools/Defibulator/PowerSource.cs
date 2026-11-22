@@ -1,18 +1,40 @@
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PowerSource : MonoBehaviour
+namespace _Scripts.Runtime.Overworld.Tools.Defibulator
 {
-    [field: SerializeField] public UnityEvent OnActivated { get; private set; } = new();
-    [field: SerializeField, ReadOnly] public bool IsActive { get; private set; }
-    
-    public bool TryActivate()
+    public class PowerSource : MonoBehaviour
     {
-        if (IsActive)
-            return false;
-        
-        OnActivated?.Invoke();
-        return true;
+        [field: SerializeField] public UnityEvent<bool> OnActivateChanged { get; private set; } = new();
+        [field: SerializeField] public bool IsActive { get; private set; }
+
+        private void Start()
+        {
+            OnActivateChanged?.Invoke(IsActive);
+        }
+
+        public bool TryActivate()
+        {
+            if (IsActive)
+                return false;
+
+            ForceActivate();
+            return true;
+        }
+
+        [Button("Activate"), EnableIf("@UnityEngine.Application.isPlaying")]
+        public void ForceActivate()
+        {
+            IsActive = true;
+            OnActivateChanged?.Invoke(IsActive);
+        }
+
+        [Button("Deactivate"), EnableIf("@UnityEngine.Application.isPlaying")]
+        public void Deactivate()
+        {
+            IsActive = false;
+            OnActivateChanged?.Invoke(IsActive);
+        }
     }
 }

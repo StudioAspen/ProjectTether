@@ -235,9 +235,16 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         public void ChangeTurn()
         {
-            if (DeadUnits.Count >= (_totalAllies + _totalEnemies))
+            if (_deadAllies >= _totalAllies)
             {
                 _currentPhase = null;
+                finishedBattle?.Invoke(false);
+                return;
+            }
+            if(_deadEnemies >= _totalEnemies)
+            {
+                _currentPhase = null; 
+                finishedBattle?.Invoke(true);
                 return;
             }
             if (_currentPhase != null)
@@ -246,8 +253,18 @@ namespace _Scripts.Runtime.Managers
                 _input.NoUICombatActions.Disable(); 
                 TurnOrder.Consume(); //dequeue only after turn ends to keep portrait of current unit
             }
-
+            CheckDead();
+            RemoveDead();
             CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
+            CurrentUnit.GetData().TriggerStatuses();
+            while (CurrentUnit.GetData().Stunned)
+            {
+                TurnOrder.Consume(); 
+                CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
+                CurrentUnit.GetData().TriggerStatuses();
+                CurrentUnit.ResetValues();
+            }
+            
             if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally)
             {
                 //manual enemy treats enemy phase like an ally phase
@@ -260,7 +277,7 @@ namespace _Scripts.Runtime.Managers
             }
             else
                 return;
-            CurrentUnit.ResetValues();
+            
             _currentPhase.Enter();
             battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit);
         } 
@@ -413,10 +430,7 @@ namespace _Scripts.Runtime.Managers
             foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
             {
                 CombatFormulas.Damage(currentUnit, currentUnit.GetData().DefaultAttackTypes(), enemy);
-                CheckDead(enemy);
             }
-
-            RemoveDead();
             rangeDisplay.HideRange();
             FinishSelection();
         }
@@ -429,40 +443,9 @@ namespace _Scripts.Runtime.Managers
             unitActionStarted?.Invoke(currentUnit);
             TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
             AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
-            rangeDisplay.HideRange();           
+            rangeDisplay.HideRange();
+            ability.Cast(currentUnit, epicenter, _allUnits);
             //epicenter hit 
-            foreach (UnitController enemy in epicenter.UnitControllers)
-            {
-                CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
-                
-                CheckDead(enemy);
-            }
-
-            
-            //hit the area surrounding the epicenter
-            if (ability.AOE > 0)
-            {
-                foreach (CubeCoordDirections direction in Enum.GetValues(typeof(CubeCoordDirections)))
-                {
-                    Vector3Int affectedTile = epicenter.tileCoordinate;
-                    for (int tilesFromEpicenter = 0; tilesFromEpicenter < ability.AOE; tilesFromEpicenter++)
-                    {
-                        affectedTile += direction.Vector();
-                        if (TileCubeCoords.TryGetValue(affectedTile, out _))
-                        {
-                            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]]
-                                         .UnitControllers)
-                            {
-                                CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
-                                CheckDead(enemy);
-                            }
-                        }
-                        else
-                            break;
-                    }
-                }
-                RemoveDead();
-            }
             FinishSelection();
         }
         
@@ -522,28 +505,36 @@ namespace _Scripts.Runtime.Managers
             examinedUnit?.Invoke(unitController);
         }
 
-        /// <summary>
-        /// Must be used in every attack function after the damage calculations
-        /// </summary>
-        /// <param name="unit"></param>
-        public void CheckDead(UnitController unit)
+        public void CheckDead()
         {
             _deadUnitsThisTurn.Clear();
-            Unit u = unit.GetData();
-            if (u.HealthRemaining < 0)
+            foreach (UnitController un in _allUnits)
             {
-                u.SetDead(true);
-                if (u.Faction == Faction.Ally)
-                    _deadAllies++;
-                else
-                    _deadEnemies++;  //neutral units do not exist, apparently
-                DeadUnits.Add(unit);
-                _deadUnitsThisTurn.Add(unit);
+                Unit u = un.GetData();
+                if (u.HealthRemaining < 0)
+                {
+                    u.SetDead(true);
+                    if (u.Faction == Faction.Ally)
+                        _deadAllies++;
+                    else
+                        _deadEnemies++; //neutral units do not exist, apparently
+                    DeadUnits.Add(un);
+                    _deadUnitsThisTurn.Add(un);
+                }
+            }
+
+            foreach (var status in CurrentUnit.GetData().Statuses.Values)
+            {
+                if (status.StatusData.TriggerOnKill)
+                {
+                    status.Trigger(CurrentUnit.GetData());
+                }
             }
             unitsDead?.Invoke(_deadUnitsThisTurn);
             CheckCombatOver();
         }
 
+        //does not work currently because we need to know if revives exist 
         /// <summary>
         /// should be called checkdead() after the for loop 
         /// </summary>

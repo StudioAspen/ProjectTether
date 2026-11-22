@@ -14,6 +14,7 @@ namespace _Scripts.Runtime.Combat.Statuses
         //other crowd control effects here
         public override void OnAdd(Unit unit)
         {
+            //use one stunned bool in unit (other forms of cc determine whether they are stunned depending on unit's immunities)
             base.OnAdd(unit);
             if(_isStun)
                 unit.SetStunned(true);
@@ -26,5 +27,10 @@ namespace _Scripts.Runtime.Combat.Statuses
                 unit.SetStunned(true);
             base.Tick(unit);
        }
+
+        public override void OnRemove(Unit unit)
+        {
+            unit.SetStunned(false); 
+        }
     }
 }

@@ -1,4 +1,5 @@
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Statuses;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SkillSO_StandIn", menuName = "Scriptable Objects/Misc/Skill_StandIn")]
@@ -28,8 +29,8 @@ public class Skill : ScriptableObject
     public bool IsEnemySkill => _isEnemySkill;
 
     [SerializeField]
-    protected StatusSO[] _statusEffectsDueToSkill;
-    public StatusSO[] StatusEffectsDueToSkill => _statusEffectsDueToSkill;
+    protected AbstractStatusSO[] _statusEffectsDueToSkill;
+    public AbstractStatusSO[] StatusEffectsDueToSkill => _statusEffectsDueToSkill;
 
     [Tooltip("Percent change of the effect by the skill.")]
     [SerializeField] protected float[] _percentOfEffect;

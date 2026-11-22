@@ -53,7 +53,7 @@ namespace _Scripts.Runtime.UI
             }       
         }
 
-        public void DisplayAbilityRange(TileController[] tileControllers, UnitController cc, AbstractAbilitySO ability)
+        public void DisplayAbilityRange(TileController[] tileControllers, UnitController cc, AbilitySO ability)
         {
             for (int ro = 0; ro < rangeObjects.Count; ro++)
             {

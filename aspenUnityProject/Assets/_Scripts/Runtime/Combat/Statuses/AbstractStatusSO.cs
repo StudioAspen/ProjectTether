@@ -26,6 +26,7 @@ namespace _Scripts.Runtime.Combat.Statuses
     public struct StatusPoint
     {
         public int turnToAdd;
+        public AbstractStatusSO statusToAdd;
     }
 
     [System.Serializable]
@@ -60,6 +61,14 @@ namespace _Scripts.Runtime.Combat.Statuses
         [Tooltip("-1 for infinite duration")]
         [SerializeField] private int _duration;
         public int Duration => _duration;
+
+        [Tooltip("for statuses like insulated")] 
+        [SerializeField] private bool _durationLoweredOnDamage;
+        public bool DurationLoweredOnDamage => _durationLoweredOnDamage;
+
+        [Tooltip("for stuff like streetwise gambit. Triggers when killing something else")]
+        [SerializeField] private bool _triggerOnKill;
+        public bool TriggerOnKill => _triggerOnKill;
 
         [SerializeField] private bool _isStun;
         public bool IsStun => _isStun;
@@ -133,7 +142,13 @@ namespace _Scripts.Runtime.Combat.Statuses
             }
         }
 
-
+        /// <summary>
+        /// for effects that are not per turn and require conditions like trigger on kill
+        /// </summary>
+        public virtual void Trigger(Unit unit)
+        {
+           //stat buffs here. Change unit effective stat  
+        }
 
 
 

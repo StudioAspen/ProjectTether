@@ -29,7 +29,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
       {
          SetTile(coords);
          Move(position);
-         HasMoved = true;
+         HasMoved = true; //should be fine for movement abilities because this is reset before the turn 
       }
 
       //used by managers to move the unit without triggering events

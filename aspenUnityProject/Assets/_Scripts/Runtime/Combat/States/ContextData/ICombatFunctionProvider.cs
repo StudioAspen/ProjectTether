@@ -15,7 +15,7 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public void MoveTileSelector(CubeCoordDirections directions);
         public Vector3Int GetSelectedTile();
 
-        public void CheckDead(UnitController receiver);
+        public void CheckDead();
         public void RemoveDead();
         
         /// <summary>

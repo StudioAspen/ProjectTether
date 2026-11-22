@@ -61,6 +61,10 @@ namespace _Scripts.Runtime.Combat.Mechanics
 
        }
 
+       /// <summary>
+       /// gets highest prio unit
+       /// </summary>
+       /// <returns></returns>
        public TurnQueueItem GetCurrentTurn()
        {
            return _unitTurns.Min;

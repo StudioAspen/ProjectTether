@@ -113,7 +113,7 @@ public class CustomGraphView : GraphView
                     switch (deletedNode.DataReference)
                     {
                         case AbilityNodeSO abilityNode:
-                            AbstractAbilitySO ability = abilityNode.Ability;
+                            AbilitySO ability = abilityNode.Ability;
                             AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(ability));
                             break;
 

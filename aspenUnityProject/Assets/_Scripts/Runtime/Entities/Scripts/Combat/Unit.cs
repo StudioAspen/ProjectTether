@@ -62,6 +62,10 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public Dictionary<string, Status> Statuses { get; protected set; }
         
         public List<int> tempStats = new List<int>(); 
+        
+        /// <summary>
+        /// generic bool for any form of cc. frozen = stunned 
+        /// </summary>
         public bool Stunned { get; protected set; }
 
 //   public event Action HasDied;
@@ -191,7 +195,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         /// </summary>
         public void ResetValues()
         {
-            Stunned = false;
             EndDefend();
         }
 

@@ -48,7 +48,8 @@ namespace _Scripts.Runtime.Combat.Statuses
         /// </summary>
         public void Tick(Unit uc)
         {
-           CountDown(1); 
+           if(StatusData.DurationLoweredOnDamage) 
+               CountDown(1); 
            StatusData.Tick(uc);
            foreach (var t in StatusData.StatusTimeline)
            {
@@ -63,6 +64,11 @@ namespace _Scripts.Runtime.Combat.Statuses
         public void OnRemove(Unit uc)
         {
             StatusData.OnRemove(uc);
+        }
+
+        public void Trigger(Unit uc)
+        {
+            StatusData.Trigger(uc);
         }
 
     }

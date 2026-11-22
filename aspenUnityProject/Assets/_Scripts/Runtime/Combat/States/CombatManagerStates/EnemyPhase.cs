@@ -91,7 +91,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                          .UnitControllers)
             {
                 CombatFormulas.Damage(Euc, Euc.GetData().DefaultAttackTypes(), receiver);
-                CombatContext.CombatFunctionProvider.CheckDead(receiver);
+                CombatContext.CombatFunctionProvider.CheckDead();
             }
 
             CombatContext.CombatFunctionProvider.RemoveDead();

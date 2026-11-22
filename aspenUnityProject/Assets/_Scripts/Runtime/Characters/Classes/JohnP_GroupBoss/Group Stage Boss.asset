@@ -16,7 +16,10 @@ MonoBehaviour:
   _id: 
   _name: Pending
   _model: {fileID: 0}
-  Level: 0
+  _description: An amalgamation of the remains of the previous 4 bosses in design
+    and model. It seems to possess qualities from all of its components. It defends
+    the reactor with its "life".
+  Level: 1
   ExPtsToNextLevel: 0
   TotalExPtsGained: 0
   RemainingHealth: 100

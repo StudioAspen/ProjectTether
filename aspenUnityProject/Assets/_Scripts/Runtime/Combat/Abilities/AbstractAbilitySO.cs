@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using _Scripts.Runtime.Entities.Scripts.Combat;
+using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
 {
-   [CreateAssetMenu(fileName = "Ability" , menuName = "Scriptable Objects/Misc/Ability")]
-   public class AbilitySO : ScriptableObject
-   {
-      //e.g., fireball_0 or obliterate_0
+    public class AbstractAbilitySO : ScriptableObject
+    {
+           //e.g., fireball_0 or obliterate_0
       [SerializeField] private string id;
       public string Id => id;
       
@@ -85,12 +85,8 @@ namespace _Scripts.Runtime.Combat
       [SerializeField] private bool canMiss;
       public bool CanMiss => canMiss;
 
-        //not useful in MVP. This is for when we decide to have attacks affect tiles.
-        //For example, a meteor attack could set several tiles aflame. Most attacks will have this be null. 
-        /*
-     [SerializeField] private TerrainSO tileEffect;
-     public TerrainSO TileEffect => tileEffect;
-     */
+      [SerializeField] private AbstractTerrainSO tileEffect;
+      public AbstractTerrainSO TileEffect => tileEffect;
 
       // custom range. list of directions walked from the unit's tile
       // e.g. N, N, N = line of 3 tiles north
@@ -98,8 +94,22 @@ namespace _Scripts.Runtime.Combat
       public List<List<CubeCoordDirections>> CustomRange => customRange;
 
 
-        public void SetName(string name) => abilityName = name;
+      public void SetName(string name) => abilityName = name;
+
+      //mainly one target for now. 11.21.26 - no logic for add. targets
+      public virtual void Cast(UnitController caster, TileController target, params TileController[] additionalTargets)
+      {
+          foreach (UnitController enemy in target.UnitControllers)
+          {
+              CombatFormulas.AbilityDamage(caster, enemy, this);
+          }
+          
+      }
+
+      public virtual bool AbilityReachable(UnitController caster, TileController target, params TileController[] additionalTargets)
+      {
+          return true;
+      }
     
     }
-    
 }

@@ -459,7 +459,7 @@ namespace _Scripts.Runtime.Managers
             AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
             rangeDisplay.HideRange();           
             //epicenter hit 
-            foreach (UnitController enemy in TileControllers[TileCubeCoords[SelectedTile]].UnitControllers)
+            foreach (UnitController enemy in epicenter.UnitControllers)
             {
                 CombatFormulas.AbilityDamage(currentUnit, enemy, ability);
                 CheckDead(enemy);

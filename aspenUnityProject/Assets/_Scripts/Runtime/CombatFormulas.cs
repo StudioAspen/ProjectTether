@@ -58,7 +58,7 @@ namespace _Scripts.Runtime
     }
 
   
-    public static void AbilityDamage(UnitController attacker, UnitController defender, AbilitySO ability)
+    public static void AbilityDamage(UnitController attacker, UnitController defender, AbstractAbilitySO ability)
     {
       Unit attackerStats = attacker.GetData();
       Unit defenderStats = defender.GetData();

@@ -119,6 +119,68 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &13969206
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 864820331}
+    m_Modifications:
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.8945
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 25.322151
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551718882146614446, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+      propertyPath: m_Name
+      value: Water_Beam
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+--- !u!4 &13969207 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1819523630791561658, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
+  m_PrefabInstance: {fileID: 13969206}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &46620976 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4833643131254887786, guid: ab72743da67b99f499f790846a39207d, type: 3}
@@ -314,6 +376,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1335609551}
+  - {fileID: 13969207}
   - {fileID: 1906393085}
   - {fileID: 2130823224}
   - {fileID: 664518322}
@@ -968,6 +1032,68 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 400242684064311843, guid: f7db7cdaa8bb0f5479fd0b13276beaf0, type: 3}
   m_PrefabInstance: {fileID: 3487863765750678910}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1335609550
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 864820331}
+    m_Modifications:
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.944727
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 25.952702
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294947810415399850, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+      propertyPath: m_Name
+      value: Water_Impact
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+--- !u!4 &1335609551 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7301117640456082617, guid: 7a16f43b4abbc0846a15aa17f7ba39bd, type: 3}
+  m_PrefabInstance: {fileID: 1335609550}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1472865610 stripped
 Transform:

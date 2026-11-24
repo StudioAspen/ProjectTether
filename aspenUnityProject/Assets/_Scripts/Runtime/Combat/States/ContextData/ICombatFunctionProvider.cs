@@ -13,6 +13,8 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public TileController GetTileController(Vector3Int to);
         public void SelectTile(InputAction.CallbackContext context);
         public void MoveTileSelector(CubeCoordDirections directions);
+        
+        public UnitController GetCurrentUnit();
         public Vector3Int GetSelectedTile();
 
         public void CheckDead();
@@ -22,7 +24,6 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         /// mainly for ally turns where the UI pops up after cancellation
         /// </summary>
         public void RedoSelection();
-        public UnitController GetCurrentUnit();
         
         /// <summary>
         /// Should be called wherever the turn should change after a unit action

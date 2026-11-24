@@ -45,7 +45,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             stateStack.Pop().Exit(); 
             if (stateStack.Count == 0)
             {
-                CombatContext.CombatFunctionProvider.RedoSelection();
+                CombatContext.cfb.RedoSelection();
             }
             else
                 stateStack.Peek().Enter();

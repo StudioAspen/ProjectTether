@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Scripts.Runtime.Combat.Abilities.AdditionalAbilityEffects;
 using _Scripts.Runtime.Combat.Statuses;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Tile_System.Scripts;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Combat.Abilities
 {
-    [CreateAssetMenu(fileName = "Ability" , menuName = "Scriptable Objects/Combat/Ability")]
+    [CreateAssetMenu(fileName = "Ability" , menuName = "Scriptable Objects/Combat/Abilities/Ability")]
     public class AbilitySO : ScriptableObject
     {
            //e.g., fireball_0 or obliterate_0
@@ -19,12 +20,12 @@ namespace _Scripts.Runtime.Combat.Abilities
       [SerializeField] private string abilityName;
       public string Name => name;
 
-      [SerializeField] private bool _isModifiedAbility;
-      public bool IsModifiedAbility => _isModifiedAbility;
-
       [Tooltip("If Applicable")]
       [SerializeField] private AbilitySO _modifiedFrom;
       public bool ModifiedFrom => _modifiedFrom;
+      
+      [SerializeField] private AbilitySO _modifiedTo;
+      public  AbilitySO ModifiedTo => _modifiedTo;
 
       [SerializeField][TextArea(3,10)] private string _description;
       public string Description => _description;
@@ -106,18 +107,24 @@ namespace _Scripts.Runtime.Combat.Abilities
 
       [SerializeField] private List<AbstractStatusSO> status; 
       public List<AbstractStatusSO> Status => status;
+      
+      [SerializeField] private List<AbilityEffectSO> additionalDEffects;  
+      public List<AbilityEffectSO> AdditionalDEffects => additionalDEffects;
+      
+      [SerializeField] private List<AbilityEffectSO> additionalAOEffects;  
+      public List<AbilityEffectSO> AdditionalAOEffects => additionalAOEffects;
 
 
       public void SetName(string name) => abilityName = name;
 
-      //mainly one target for now. 11.21.26 - no logic for additional targets. Add stuff/override if needed
+      //TODO: add logic for additional targets
       //Change parameters to new CombatContext class if needed (contains all data needed) 
-      public virtual void Cast(UnitController caster, TileController target, List<UnitController> allUnitInfo, params TileController[] additionalTargets)
+      public virtual void Cast(AbilityContext context)
       {
-          target.SetTerrain(TileEffect); 
-          foreach (UnitController enemy in target.UnitControllers)
+          context.Target.SetTerrain(TileEffect); 
+          foreach (UnitController enemy in context.Target.UnitControllers)
           {
-              CombatFormulas.AbilityDamage(caster, enemy, this);
+              CombatFormulas.AbilityDamage(context.Caster, enemy, this);
               foreach (AbstractStatusSO i in status)
               {
                  enemy.GetData().AddStatus(i); 
@@ -127,13 +134,13 @@ namespace _Scripts.Runtime.Combat.Abilities
          
           if (AOE > 0) 
           {
-              foreach (UnitController u in allUnitInfo) //going through all units is easier than exploring each tile 
+              foreach (UnitController u in context.AllUnitInfo) //going through all units is easier than exploring each tile 
               {
-                  bool skip = u.TileCoords.HexGridDistance(target.tileCoordinate) > AOE ||
-                              u.GetData().Faction == caster.GetData().Faction && hitsAllies;
+                  bool skip = u.TileCoords.HexGridDistance(context.Target.tileCoordinate) > AOE ||
+                              u.GetData().Faction == context.Caster.GetData().Faction && hitsAllies;
                   if(skip)
                       continue;
-                  CombatFormulas.AbilityDamage(caster,u, this); 
+                  CombatFormulas.AbilityDamage(context.Caster,u, this); 
               }
           }
       
@@ -148,7 +155,7 @@ namespace _Scripts.Runtime.Combat.Abilities
       /// <param name="target"></param>
       /// <param name="additionalTargets"></param>
       /// <returns></returns>
-      public virtual bool IsReachable(UnitController caster, TileController target, params TileController[] additionalTargets)
+      public virtual bool IsReachable(UnitController caster, TileController target)
       {
           Vector3Int from = caster.TileCoords;
           // use custom range if the ability has one, if not then normal range
@@ -179,7 +186,7 @@ namespace _Scripts.Runtime.Combat.Abilities
                  (targetContainsEnemy && HitsEnemies);
       }
 
-      protected virtual bool CalcCustomRange(Vector3Int origin, Vector3Int target)
+      private bool CalcCustomRange(Vector3Int origin, Vector3Int target)
       {
           Vector3Int current = origin;
           foreach (List<CubeCoordDirections> l in customRange)

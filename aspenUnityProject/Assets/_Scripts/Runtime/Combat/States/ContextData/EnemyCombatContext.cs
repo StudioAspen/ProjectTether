@@ -19,7 +19,7 @@ namespace _Scripts.Runtime.Combat.States.ContextData
 
         public EnemyUnitController GetCurrentUnit()
         {
-            return (EnemyUnitController)CombatContext.CombatFunctionProvider.GetCurrentUnit();
+            return (EnemyUnitController)CombatContext.cfb.GetCurrentUnit();
         }
         
     }

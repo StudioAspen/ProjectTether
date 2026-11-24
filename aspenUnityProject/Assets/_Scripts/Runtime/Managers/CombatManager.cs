@@ -322,7 +322,7 @@ namespace _Scripts.Runtime.Managers
                     return;
                 case CombatActions.Move:
                     _currentPhase.PushState();
-                    rangeDisplay.DisplayMoveRange(currUnit.TileCoords, TileControllers, 1, GetCurrentUnit().GetData().Faction); //currently only adjacent tiles
+                    rangeDisplay.DisplayMoveRange(currUnit.TileCoords, TileControllers, 1, CurrentUnit.GetData().Faction); //currently only adjacent tiles
                     return;
                 case CombatActions.View:
                     _currentPhase.PushState();
@@ -408,8 +408,14 @@ namespace _Scripts.Runtime.Managers
                         HandleSelectMove(selectedTileController, currentUnit); 
                     return;
                 case CombatActions.Ability:
-                    if(currentUnit.GetData().Moves[ActionSelection].IsReachable(currentUnit,selectedTileController))
-                        HandleSelectAbility(currentUnit); 
+                    AbilityContext ac = new AbilityContext
+                    {
+                        Caster = currentUnit, 
+                        Target = selectedTileController,
+                        AllUnitInfo = _allUnits
+                    };
+                    if(currentUnit.GetData().Moves[ActionSelection].IsReachable(ac.Caster, ac.Target))
+                        HandleSelectAbility(ac); 
                     break;
                 case CombatActions.Item:
                     Debug.Log("items are not implemented in mvp");
@@ -437,14 +443,14 @@ namespace _Scripts.Runtime.Managers
 
         
         //TODO: move to ability class execute function
-        private void HandleSelectAbility(UnitController currentUnit)
+        private void HandleSelectAbility(AbilityContext ac)
         {
             // Camera Event: Focus on the acting unit when an ability is used.
-            unitActionStarted?.Invoke(currentUnit);
+            unitActionStarted?.Invoke(CurrentUnit);
             TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
-            AbilitySO ability = currentUnit.GetData().Moves[ActionSelection];
+            AbilitySO ability = CurrentUnit.GetData().Moves[ActionSelection];
             rangeDisplay.HideRange();
-            ability.Cast(currentUnit, epicenter, _allUnits);
+            ability.Cast(ac);
             //epicenter hit 
             FinishSelection();
         }

@@ -8,7 +8,7 @@ namespace _Scripts.Runtime.Combat.Abilities
     {
         public UnitController Caster { get; set; }
         public TileController Target { get; set; }
-        public List<UnitController> AllUnitInfo {get; set; }
+        public BattleUnitsList AllUnitInfo { get; set; }
         public List<TileController> AdditionalTargets {get; set; }
         
         //add as needed

@@ -41,25 +41,14 @@ namespace _Scripts.Runtime.Managers
         private Dictionary<Vector3Int, int> TileCubeCoords { get; }= new Dictionary<Vector3Int, int>();
         private TurnQueue TurnOrder;
         
-        private List<UnitController> DeadUnits {get; }= new List<UnitController>();
-        private int _deadEnemies;
-        private int _deadAllies;
         private List<UnitController> _deadUnitsThisTurn = new List<UnitController>();
         
         private readonly BattlePhase[] _phases = new BattlePhase[2];
         private BattlePhase _currentPhase;  
-        [SerializeField] private RangeDisplay rangeDisplay; 
-        
-        #region miscStateManagementVariables
-        
-        //need totals for defeat/win checks
-        private int _totalAllies { get; set; }
-        private int _totalEnemies { get; set; }
-        
-        //for easier targeting calculation
-        private List<AllyUnitController> _playerUnits { get; } = new List<AllyUnitController>();
-        private List<UnitController> _allUnits { get; } = new List<UnitController>();
-        
+        [SerializeField] private RangeDisplay rangeDisplay;
+
+        public BattleUnitsList BattleUnitsList { get; private set; } = new BattleUnitsList();
+       
         /// <summary>
         /// unit who is currently taking their turn 
         /// </summary>
@@ -85,8 +74,6 @@ namespace _Scripts.Runtime.Managers
         [SerializeField] private List<StatusSO> _actionStatuses = new List<StatusSO>();
 
         private Dictionary<string, StatusSO> _actionStatusDic = new Dictionary<string, StatusSO>();
-        
-        #endregion
 
         //TODO: sub to each unit themselves 
         //TODO: figure out what to do when a unit dies 
@@ -128,11 +115,11 @@ namespace _Scripts.Runtime.Managers
             GenerateCoords();
             CreateObjects();
             
-            TurnOrder = new TurnQueue(_allUnits); 
+            TurnOrder = new TurnQueue(BattleUnitsList.AllUnits); 
             rangeDisplay.Initialize(TileControllers);
             
-            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
-            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
+            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, BattleUnitsList.Allies, this));
+            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, BattleUnitsList.Allies, this));
             BattleMenuHE.PlayerAction += HandleAction;
             BattleMenuHE.PlayerSelectiveAction += HandleAction;
             BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;
@@ -151,7 +138,6 @@ namespace _Scripts.Runtime.Managers
             _input.NoUICombatActions.Examine.performed -= ExamineTile;
             
             _input.NoUICombatActions.Disable(); 
-            _playerUnits.Clear();
         }
 
         private void Update()
@@ -191,26 +177,11 @@ namespace _Scripts.Runtime.Managers
                     }
                     
                     UnitController unitController = Instantiate(unitData.Model, TileControllers[tileIndex].Position(), Quaternion.Euler(-90f,0,0));
-                    if (unitData.Faction == Faction.Ally)
-                    {
-                        tileController.AddUnit(unitController);
-                        _playerUnits.Add(unitController as AllyUnitController);
-                        _totalAllies++;
-                    }
-                    else if (unitData.Faction == Faction.Enemy)
-                    {
-                        tileController.AddUnit(unitController);
-                        
-                        _totalEnemies++;
-                    }
-                    else
-                    {
-                        Debug.Log($"Neutral units not yet implemented");
-                    }
+                    tileController.AddUnit(unitController);
+                    BattleUnitsList.AddUnit(unitController);
                     
                     unitController.Initialize(unitData);
                     unitController.SetTile(tileController.tileCoordinate);
-                    _allUnits.Add(unitController);
                 }
                 
                 tileController.RepositionUnits();
@@ -235,34 +206,23 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         public void ChangeTurn()
         {
-            if (_deadAllies >= _totalAllies)
-            {
-                _currentPhase = null;
-                finishedBattle?.Invoke(false);
-                return;
-            }
-            if(_deadEnemies >= _totalEnemies)
-            {
-                _currentPhase = null; 
-                finishedBattle?.Invoke(true);
-                return;
-            }
+            if (CheckDead())
+                 return;
+            RemoveDead();
             if (_currentPhase != null)
             {
                 _currentPhase.Exit();
                 _input.NoUICombatActions.Disable(); 
                 TurnOrder.Consume(); //dequeue only after turn ends to keep portrait of current unit
             }
-            CheckDead();
-            RemoveDead();
             CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
             CurrentUnit.GetData().TriggerStatuses();
             while (CurrentUnit.GetData().Stunned)
             {
-                TurnOrder.Consume(); 
-                CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
-                CurrentUnit.GetData().TriggerStatuses();
-                CurrentUnit.ResetValues();
+               TurnOrder.Consume(); 
+               CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
+               CurrentUnit.GetData().TriggerStatuses();
+               CurrentUnit.ResetValues();
             }
             
             if (toggledManualEnemy || CurrentUnit.GetData().Faction == Faction.Ally)
@@ -412,7 +372,7 @@ namespace _Scripts.Runtime.Managers
                     {
                         Caster = currentUnit, 
                         Target = selectedTileController,
-                        AllUnitInfo = _allUnits
+                        AllUnitInfo = BattleUnitsList
                     };
                     if(currentUnit.GetData().Moves[ActionSelection].IsReachable(ac.Caster, ac.Target))
                         HandleSelectAbility(ac); 
@@ -511,20 +471,20 @@ namespace _Scripts.Runtime.Managers
             examinedUnit?.Invoke(unitController);
         }
 
-        public void CheckDead()
+        /// <summary>
+        /// true == battle over, else false
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckDead()
         {
             _deadUnitsThisTurn.Clear();
-            foreach (UnitController un in _allUnits)
+            foreach (UnitController un in BattleUnitsList.AllUnits)
             {
                 Unit u = un.GetData();
                 if (u.HealthRemaining < 0)
                 {
                     u.SetDead(true);
-                    if (u.Faction == Faction.Ally)
-                        _deadAllies++;
-                    else
-                        _deadEnemies++; //neutral units do not exist, apparently
-                    DeadUnits.Add(un);
+                    BattleUnitsList.KillUnit(un);
                     _deadUnitsThisTurn.Add(un);
                 }
             }
@@ -537,7 +497,7 @@ namespace _Scripts.Runtime.Managers
                 }
             }
             unitsDead?.Invoke(_deadUnitsThisTurn);
-            CheckCombatOver();
+            return CheckCombatOver();
         }
 
         //does not work currently because we need to know if revives exist 
@@ -550,22 +510,28 @@ namespace _Scripts.Runtime.Managers
           //     TileControllers[TileCubeCoords[u.TileCoords]].RemoveUnit(u);
         }
 
-        private void CheckCombatOver()
+        /// <summary>
+        /// returns true if battle is over, else false 
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckCombatOver()
         {
-            if (_deadAllies > _playerUnits.Count)
+            if (BattleUnitsList.DeadAllies >= BattleUnitsList.Allies.Count)
             {
                finishedBattle?.Invoke(false);
-               return;
+               return true;
             }
-            if (_deadEnemies >= _totalEnemies)
+            if (BattleUnitsList.DeadEnemies >= BattleUnitsList.Enemies.Count)
             {
-                foreach (AllyUnitController auc in _playerUnits)
+                foreach (AllyUnitController auc in BattleUnitsList.Allies)
                 {
                     if(!((AllyUnit)auc.GetData()).CheckOverclock())
                        ((AllyUnit)auc.GetData()).Underclock();
                 }
                 finishedBattle?.Invoke(true);
+                return true;
             }
+            return false;
         }
 
         public void ExitExamine()

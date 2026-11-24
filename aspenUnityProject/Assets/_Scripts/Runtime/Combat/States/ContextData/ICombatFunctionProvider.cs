@@ -17,7 +17,7 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public UnitController GetCurrentUnit();
         public Vector3Int GetSelectedTile();
 
-        public void CheckDead();
+        public bool CheckDead();
         public void RemoveDead();
         
         /// <summary>

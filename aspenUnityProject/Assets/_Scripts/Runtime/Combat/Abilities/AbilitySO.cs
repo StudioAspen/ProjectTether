@@ -134,7 +134,7 @@ namespace _Scripts.Runtime.Combat.Abilities
          
           if (AOE > 0) 
           {
-              foreach (UnitController u in context.AllUnitInfo) //going through all units is easier than exploring each tile 
+              foreach (UnitController u in context.AllUnitInfo.AllUnits) //going through all units is easier than exploring each tile 
               {
                   bool skip = u.TileCoords.HexGridDistance(context.Target.tileCoordinate) > AOE ||
                               u.GetData().Faction == context.Caster.GetData().Faction && hitsAllies;
@@ -153,7 +153,6 @@ namespace _Scripts.Runtime.Combat.Abilities
       /// </summary>
       /// <param name="caster"></param>
       /// <param name="target"></param>
-      /// <param name="additionalTargets"></param>
       /// <returns></returns>
       public virtual bool IsReachable(UnitController caster, TileController target)
       {

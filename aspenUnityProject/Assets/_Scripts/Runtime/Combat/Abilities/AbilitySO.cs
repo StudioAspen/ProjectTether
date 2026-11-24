@@ -107,11 +107,11 @@ namespace _Scripts.Runtime.Combat.Abilities
 
       [SerializeField] private List<AbstractStatusSO> status; 
       public List<AbstractStatusSO> Status => status;
-      
-      [SerializeField] private List<AbilityEffectSO> additionalDEffects;  
+
+      [SerializeField] private List<AbilityEffectSO> additionalDEffects = new();  
       public List<AbilityEffectSO> AdditionalDEffects => additionalDEffects;
-      
-      [SerializeField] private List<AbilityEffectSO> additionalAOEffects;  
+
+      [SerializeField] private List<AbilityEffectSO> additionalAOEffects = new();
       public List<AbilityEffectSO> AdditionalAOEffects => additionalAOEffects;
 
 
@@ -121,17 +121,13 @@ namespace _Scripts.Runtime.Combat.Abilities
       //Change parameters to new CombatContext class if needed (contains all data needed) 
       public virtual void Cast(AbilityContext context)
       {
-          context.Target.SetTerrain(TileEffect); 
-          foreach (UnitController enemy in context.Target.UnitControllers)
+          context.AbilityData = this;
+          if (additionalDEffects != null)
           {
-              CombatFormulas.AbilityDamage(context.Caster, enemy, this);
-              foreach (AbstractStatusSO i in status)
-              {
-                 enemy.GetData().AddStatus(i); 
-              }
+              foreach (AbilityEffectSO i in additionalDEffects)
+                  i.Execute(context);
           }
-          //movement effect from abilityeffectso here late r
-         
+
           if (AOE > 0) 
           {
               foreach (UnitController u in context.AllUnitInfo.AllUnits) //going through all units is easier than exploring each tile 
@@ -140,7 +136,11 @@ namespace _Scripts.Runtime.Combat.Abilities
                               u.GetData().Faction == context.Caster.GetData().Faction && hitsAllies;
                   if(skip)
                       continue;
-                  CombatFormulas.AbilityDamage(context.Caster,u, this); 
+                  if (additionalAOEffects != null)
+                  {
+                      foreach (AbilityEffectSO i in additionalAOEffects)
+                          i.Execute(context);
+                  }
               }
           }
       

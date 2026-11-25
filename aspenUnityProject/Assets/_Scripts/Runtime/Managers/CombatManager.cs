@@ -499,7 +499,7 @@ namespace _Scripts.Runtime.Managers
 
         private void ExamineTile(InputAction.CallbackContext context)
         {
-           HandleAction(CombatActions.View);
+           HandleWorldAction(CombatActions.View);
            examinedTile?.Invoke(GetTileController(SelectedTile)); 
         }
 

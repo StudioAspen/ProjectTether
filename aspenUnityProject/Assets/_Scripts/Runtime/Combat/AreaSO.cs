@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
 {
-    //ares will contain spawn pools that contain enemy game objects. 
+    //old code.
     [CreateAssetMenu(fileName = "New Area", menuName = "Scriptable Objects/Misc/Area")]
     public class AreaSO : ScriptableObject
     {

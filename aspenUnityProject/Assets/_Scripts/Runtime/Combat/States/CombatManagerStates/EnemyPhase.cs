@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat.States.ContextData;
-using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
-using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Math;
 using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
@@ -27,10 +25,8 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         public override void Enter()
         {
             ecb = new EnemyCombatContext(CombatContext, this);
-            Debug.Log("enemy phase entered");
             stateStack.Clear();
             Euc = (EnemyUnitController)CombatContext.CombatFunctionProvider.GetCurrentUnit();
-            Debug.Log(((EnemyUnit)Euc.GetData()).behaviourStates[0]);
             behaviourStates = ((EnemyUnit)Euc.GetData()).behaviourStates;
             PushState();
         }
@@ -45,9 +41,11 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 
         public override void Exit()
         {
-            stateStack.Clear();
+            while(stateStack.Count > 0)
+                PopState();
         }
 
+        
         //this will simply reset their behavior stack
         public override void PushState()
         {

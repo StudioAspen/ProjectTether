@@ -4,6 +4,7 @@ using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 {
@@ -12,7 +13,6 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
     {
 
         //I believe we need to pass ep because of how scriptable objects work
-        //the ep usage looks atrocious, but I am not sure how we could connect the SO to the combat states/data
         public override void Enter(EnemyCombatContext ecb)
         {
             ecb.Target=GetNearestTarget(ecb);
@@ -47,7 +47,8 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                 Debug.Log("enemy defended");
             }
 
-            ecb.CombatContext.CombatFunctionProvider.Consume();
+            ecb.CombatContext.CombatFunctionProvider.ChangeTurn();
+
         }
 
         //brainless targeting for now. Target closest player unit 

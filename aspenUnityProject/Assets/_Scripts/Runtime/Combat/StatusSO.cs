@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
+using _Scripts.Runtime.Entities.Scripts.Combat;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Combat
@@ -15,6 +16,7 @@ namespace _Scripts.Runtime.Combat
     public struct StatMultiplier
     {
         public float multiplier;
+        public float adder; //For when it is not multiplied
         public Stat stat;
     }
     
@@ -26,6 +28,13 @@ namespace _Scripts.Runtime.Combat
         public StatusSO statusToAdd;
     }
 
+    [System.Serializable]
+    public struct ElementAffinityChange
+    {
+        public Element elementToChange;
+        public Affinity changeInAffinity;
+    }
+
     [CreateAssetMenu(fileName = "StatusSO", menuName = "Scriptable Objects/Misc/StatusSO")]
     public class StatusSO : ScriptableObject
     {
@@ -35,7 +44,7 @@ namespace _Scripts.Runtime.Combat
         [SerializeField] private string _statusName;
         public string StatusName => _statusName;
 
-        [SerializeField] private string _statusDescription;
+        [SerializeField] [TextArea(2,4)]private string _statusDescription;
         public string StatusDescription => _statusDescription;
 
         [Tooltip("1 for no extra damage taken")]
@@ -63,6 +72,10 @@ namespace _Scripts.Runtime.Combat
         [SerializeField] private List<StatMultiplier> _GenericStatsModified;
         public  List<StatMultiplier> GenericStatsModified => _GenericStatsModified;
 
+        [Tooltip("AFFINITIES MODIFIED")]
+        [SerializeField] private List<ElementAffinityChange> _affinitiesModified;
+        public List<ElementAffinityChange> AffinitiesModified => _affinitiesModified;
+
         public List<StatMultiplier> GetStatMultiplier(CombatClassType ctat) 
         {
             foreach (var c in _statsModified)
@@ -74,15 +87,16 @@ namespace _Scripts.Runtime.Combat
             return null;
         }
         
+        //This function is mainly for the group boss first passive.
+        public void AffinityModifiedDueToStatus(UnitDataSO unitToBeModified , StatusSO status)
+        {
+            foreach (ElementAffinityChange elementAffinityChange in status.AffinitiesModified)
+                unitToBeModified.Affinities[elementAffinityChange.elementToChange] = elementAffinityChange.changeInAffinity;
+        }
+
         //overclock -> burnout + stunned 
         [Tooltip("For statuses that cause other statuses. turnToAdd is used by Status class (irl example: cold -> frostbite")] [SerializeField]
         private List<StatusPoint> _statusTimeline;
         public List<StatusPoint> StatusTimeline => _statusTimeline;
-
-
-
-
-
-
     }
 }

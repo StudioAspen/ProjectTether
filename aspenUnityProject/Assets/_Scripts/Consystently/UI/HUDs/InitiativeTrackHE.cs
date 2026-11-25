@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Globalization;
 using _Scripts.Runtime.Combat.Mechanics;
 using _Scripts.Runtime.Entities.Scripts.Combat;
+using _Scripts.Runtime.Utilities;
 using UnityEngine;
 
 namespace _Scripts.Consystently.UI
@@ -13,8 +15,8 @@ namespace _Scripts.Consystently.UI
     [SerializeField] protected InitiativeSlot _slotPrefab;
 
     public InitiativeSlot[] initiativeSlots { get; protected set; } = new InitiativeSlot[16];
-    private List<UnitController> units; 
-
+    private PriorityQueue<TurnQueueItem, float> _unitTurns; 
+    
     protected override void Start()
     {
       base.Start();
@@ -38,15 +40,14 @@ namespace _Scripts.Consystently.UI
      TurnQueue.OnShuffled -= UpdatePanels; 
     }
 
-    //doesn't seem to work because everything is instant. The enemy performs their actions instantly, 
-    //returning the turn to the player immediately.
-    private void UpdatePanels(List<UnitController> uc)
+    private void UpdatePanels(SortedSet<TurnQueueItem> turnQueue)
     {
-      units = uc;
-      for (int i = 0; i < uc.Count; i++)
+      int i = 0;
+      foreach(TurnQueueItem tqi in turnQueue)
       {
-        initiativeSlots[i].SetText(uc[i].GetData().Name);
-        initiativeSlots[i].SetPortrait(uc[i].GetData().Portrait);
+        initiativeSlots[i].SetText((tqi.Initiative*100).ToString(CultureInfo.CurrentCulture));
+        initiativeSlots[i].SetPortrait(tqi.GetUnitData().Portrait);
+        i++;
       }
     } 
   }

@@ -2,7 +2,10 @@ using _Scripts.Runtime.Managers;
 using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 
+/*
 namespace _Scripts.Runtime.Combat {
+    
+    //OLD camera code for MVP. Check Byron's code for Cinemachine stuff?
     public class CameraController : MonoBehaviour
     {
         private Vector3 cameraStartPosition;
@@ -48,3 +51,4 @@ namespace _Scripts.Runtime.Combat {
     }
 
 }
+*/

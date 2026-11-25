@@ -97,14 +97,18 @@ namespace _Scripts.Runtime.Math
         }
 
         // checks if the target tile is on the custom range path
-        public static bool CustomRange(this Vector3Int origin, List<CubeCoordDirections> customRange, Vector3Int target)
+        public static bool CustomRange(this Vector3Int origin, List<List<CubeCoordDirections>> customRange, Vector3Int target)
         {
             Vector3Int current = origin;
-            foreach (CubeCoordDirections step in customRange)
+            foreach (List<CubeCoordDirections> l in customRange)
             {
-                current += step.Vector();
-                if (current == target)
-                    return true;
+                foreach (CubeCoordDirections c in l)
+                {
+                    current += c.Vector();
+                    if (current == target)
+                        return true;
+                }
+                current = origin;
             }
             return false;
         }

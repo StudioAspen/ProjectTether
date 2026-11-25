@@ -17,8 +17,6 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public UnitController GetCurrentUnit();
         public Vector3Int GetSelectedTile();
 
-        public bool CheckDead();
-        public void RemoveDead();
         
         /// <summary>
         /// mainly for ally turns where the UI pops up after cancellation

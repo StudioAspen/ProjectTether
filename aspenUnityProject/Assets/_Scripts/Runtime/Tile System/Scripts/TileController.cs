@@ -37,7 +37,8 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             if (UnitControllers.Contains(unitController) || UnitControllers.Count >= MAX_UNITS)
                 return false;
             UnitControllers.Add(unitController);
-            terrain.OnEnter(unitController);
+            if(terrain != null)
+                terrain.OnEnter(unitController);
 //            RepositionUnits(ArbitraryOffset);
             return true;
         }
@@ -64,7 +65,8 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             UnitController removed = unitController;
             UnitControllers.Remove(unitController);
             RepositionUnits();
-            terrain.OnExit(unitController);
+            if(terrain != null)
+                terrain.OnExit(unitController);
             return removed;
         }
 

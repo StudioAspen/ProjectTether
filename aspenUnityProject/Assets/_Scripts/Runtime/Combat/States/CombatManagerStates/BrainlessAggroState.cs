@@ -12,11 +12,12 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
     public class BrainlessAggroState : EnemyStateSO
     {
 
-        //I believe we need to pass ep because of how scriptable objects work
         public override void Enter(EnemyCombatContext ecb)
         {
+            var u = ecb.GetCurrentUnit().GetData();
+            Debug.Log($"{u.Name} {u.HealthRemaining}");
             ecb.Target=GetNearestTarget(ecb);
-            if (ecb.GetCurrentUnit().GetData().HealthRemaining * 1.0 <= ecb.GetCurrentUnit().GetData().Health * PercentHPAtExit)
+            if (ecb.GetCurrentUnit().GetData().HealthRemaining * 1.0f <= ecb.GetCurrentUnit().GetData().Health * PercentHPAtExit)
                 ecb.EFunProvider.PopState();
 
             DoBattle(ecb);
@@ -47,6 +48,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                 Debug.Log("enemy defended");
             }
 
+            Debug.Log("change turn");
             ecb.CombatContext.cfb.ChangeTurn();
 
         }

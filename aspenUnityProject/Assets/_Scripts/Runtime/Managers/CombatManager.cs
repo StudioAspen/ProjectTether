@@ -41,6 +41,7 @@ namespace _Scripts.Runtime.Managers
         private Dictionary<Vector3Int, int> TileCubeCoords { get; }= new Dictionary<Vector3Int, int>();
         private TurnQueue TurnOrder;
         
+        //no use for now
         private List<UnitController> _deadUnitsThisTurn = new List<UnitController>();
         
         private readonly BattlePhase[] _phases = new BattlePhase[2];
@@ -61,6 +62,8 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         private Vector3Int _currentTile { get; set; } = new Vector3Int(0, 0, 0);
         private CombatActions _receivedAction { get; set; }
+
+        private bool _combatOver { get; set; } = false;
         
         /// <summary>
         /// int used for knowing which thing is selected from a submenu
@@ -178,10 +181,11 @@ namespace _Scripts.Runtime.Managers
                     
                     UnitController unitController = Instantiate(unitData.Model, TileControllers[tileIndex].Position(), Quaternion.Euler(-90f,0,0));
                     tileController.AddUnit(unitController);
-                    BattleUnitsList.AddUnit(unitController);
                     
                     unitController.Initialize(unitData);
                     unitController.SetTile(tileController.tileCoordinate);
+                    BattleUnitsList.AddUnit(unitController);
+                    unitController.OnDeath += HandleDeath;
                 }
                 
                 tileController.RepositionUnits();
@@ -206,9 +210,8 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         public void ChangeTurn()
         {
-            if (CheckDead())
-                 return;
-            RemoveDead();
+            if (_combatOver)
+                return;
             if (_currentPhase != null)
             {
                 _currentPhase.Exit();
@@ -229,15 +232,22 @@ namespace _Scripts.Runtime.Managers
             {
                 //manual enemy treats enemy phase like an ally phase
                 _currentPhase = _phases[0];
-                _input.NoUICombatActions.Enable(); 
             }
             else if (CurrentUnit.GetData().Faction == Faction.Enemy)
             {
-                _currentPhase = _phases[1];
+//                _currentPhase = _phases[1];
+                TurnOrder.Consume();
+                CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
+                while (CurrentUnit.GetData().Faction == Faction.Enemy)
+                {
+                    TurnOrder.Consume();
+                    CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
+                }
             }
             else
                 return;
-            
+
+            _deadUnitsThisTurn.Clear();
             _currentPhase.Enter();
             battlePhaseChanged?.Invoke(_currentPhase, CurrentUnit);
         } 
@@ -471,55 +481,35 @@ namespace _Scripts.Runtime.Managers
             examinedUnit?.Invoke(unitController);
         }
 
-        /// <summary>
-        /// true == battle over, else false
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckDead()
+        //todo: probably enqueue death effects 
+        private void HandleDeath(UnitController uc)
         {
-            _deadUnitsThisTurn.Clear();
-            foreach (UnitController un in BattleUnitsList.AllUnits)
+            if (uc.GetData().Autopsy.Murderer == CurrentUnit)
             {
-                Unit u = un.GetData();
-                if (u.HealthRemaining < 0)
+                foreach (var status in CurrentUnit.GetData().Statuses.Values)
                 {
-                    u.SetDead(true);
-                    BattleUnitsList.KillUnit(un);
-                    _deadUnitsThisTurn.Add(un);
+                    if (status.StatusData.TriggerOnKill)
+                    {
+                        status.Trigger(CurrentUnit.GetData());
+                    }
                 }
             }
 
-            foreach (var status in CurrentUnit.GetData().Statuses.Values)
-            {
-                if (status.StatusData.TriggerOnKill)
-                {
-                    status.Trigger(CurrentUnit.GetData());
-                }
-            }
-            unitsDead?.Invoke(_deadUnitsThisTurn);
-            return CheckCombatOver();
+            CheckCombatOver();
+            Debug.Log("death");
         }
 
-        //does not work currently because we need to know if revives exist 
-        /// <summary>
-        /// should be called checkdead() after the for loop 
-        /// </summary>
-        public void RemoveDead()
-        {
-         //  foreach(UnitController u in _deadUnitsThisTurn)  
-          //     TileControllers[TileCubeCoords[u.TileCoords]].RemoveUnit(u);
-        }
 
         /// <summary>
         /// returns true if battle is over, else false 
         /// </summary>
         /// <returns></returns>
-        private bool CheckCombatOver()
+        private void CheckCombatOver()
         {
             if (BattleUnitsList.DeadAllies >= BattleUnitsList.Allies.Count)
             {
                finishedBattle?.Invoke(false);
-               return true;
+               _combatOver = true;
             }
             if (BattleUnitsList.DeadEnemies >= BattleUnitsList.Enemies.Count)
             {
@@ -529,9 +519,9 @@ namespace _Scripts.Runtime.Managers
                        ((AllyUnit)auc.GetData()).Underclock();
                 }
                 finishedBattle?.Invoke(true);
-                return true;
+                _combatOver = true;
             }
-            return false;
+            _combatOver = false;
         }
 
         public void ExitExamine()

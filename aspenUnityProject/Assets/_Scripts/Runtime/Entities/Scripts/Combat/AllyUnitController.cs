@@ -4,7 +4,6 @@ using UnityEngine;
 namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
    public class AllyUnitController : UnitController {
-      private AllyUnit stats;
    
 
       //to be called by the combat maanager 
@@ -18,11 +17,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     add movement that is disabled on combat game state  
    */
 
-      //not sure why I have this. May be removed along with other TakeDamage functions from controllers + abstract
-      public override void TakeDamage(int damage)
-      {
-         stats?.DecreaseHealthRemaining(damage); 
-      }
 
       //will differ from SetTile in that it will consider game logic with conditionals 
       public override void TryMove(Vector3 position, Vector3Int coords)

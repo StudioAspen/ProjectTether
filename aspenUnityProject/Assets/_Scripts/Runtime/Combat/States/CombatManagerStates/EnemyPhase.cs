@@ -67,9 +67,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             if (stateStack.Count == 0)
                 return;
             stateStack.Pop().Exit(ecb);
-            if(stateStack.Count == 0)
-                Debug.Log("Enemy should be dead before/at this stage in the future implementation"); 
-            else
+            if(stateStack.Count > 0)
                 stateStack.Peek().Enter(ecb);
         }
         
@@ -91,11 +89,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                          .UnitControllers)
             {
                 CombatFormulas.Damage(Euc, Euc.GetData().DefaultAttackTypes(), receiver);
-                CombatContext.cfb.CheckDead();
             }
-
-            CombatContext.cfb.RemoveDead();
-
             return true;
         }
 

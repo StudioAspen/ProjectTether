@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
@@ -7,11 +8,14 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
     {
        
         private Renderer _renderer;
+        protected Unit stats { get; set; }
 
         void Start()
         {
            _renderer = GetComponent<Renderer>(); 
         }
+
+        public event Action<UnitController> OnDeath; 
         
         //makes more sense to me to have movement-related data in the UnitController 
         //because the controller has access to the actual in-game positions 
@@ -20,8 +24,15 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         
        
         public abstract void Initialize(UnitDataSO baseStats);
-        public abstract void TakeDamage(int damage);
 
+        public void TakeDamage(int damage)
+        {
+            bool alreadyDead = stats.IsDead;
+            stats.DecreaseHealthRemaining(damage);
+            if (!alreadyDead && stats.IsDead)
+                OnDeath?.Invoke(this);
+        }
+        
         /// <summary>
         ///TryMove will change variables to determine other game logic
         /// </summary>

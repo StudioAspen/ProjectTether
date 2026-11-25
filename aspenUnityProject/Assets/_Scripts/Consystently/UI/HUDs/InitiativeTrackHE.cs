@@ -45,6 +45,8 @@ namespace _Scripts.Consystently.UI
       int i = 0;
       foreach(TurnQueueItem tqi in turnQueue)
       {
+        if (i > initiativeSlots.Length-1)
+          break;
         initiativeSlots[i].SetText((tqi.Initiative*100).ToString(CultureInfo.CurrentCulture));
         initiativeSlots[i].SetPortrait(tqi.GetUnitData().Portrait);
         i++;

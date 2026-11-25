@@ -13,7 +13,7 @@ namespace _Scripts.Runtime.Combat
         public List<AllyUnitController> Allies { get; private set; } = new List<AllyUnitController>();
         public List<EnemyUnitController> Enemies { get; private set; } = new List<EnemyUnitController>();
 
-        public List<UnitController> DeadUnits { get; private set; } = new List<UnitController>();
+        HashSet<UnitController> DeadUnits = new HashSet<UnitController>();
         public int DeadAllies { get; private set; }
         public int DeadEnemies { get; private set; }
         

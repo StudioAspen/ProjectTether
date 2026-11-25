@@ -20,10 +20,6 @@ namespace _Scripts.Runtime.Combat.Mechanics
 
         private List<UnitController> units;
 
-        /// <summary>
-        /// +=1 every time all units have their turns calculated 
-        /// </summary>
-        public int TurnCycle { get; private set; }
 
         /// <summary>
         /// basic index for ID
@@ -36,7 +32,6 @@ namespace _Scripts.Runtime.Combat.Mechanics
         public TurnQueue(List<UnitController> units)
         {
             this.units = units;
-            TurnCycle = 1;
             SetNextTurns();
         }
 
@@ -49,13 +44,15 @@ namespace _Scripts.Runtime.Combat.Mechanics
            {
                foreach (UnitController unitController in units)
                {
-                   TurnQueueItem tqi = new  TurnQueueItem(TurnCycle, totalTurns, unitController);
-                   _unitTurns.Add(tqi); 
-                   totalTurns++;
-                   if (_unitTurns.Count >= NUM_TURNS_PRECALCULATED) 
-                       break;
+                   TurnQueueItem tqi = new  TurnQueueItem(unitController.GetData().Turns, totalTurns, unitController);
+                   Debug.Log(units[2].GetData().Name);
+                   if (!unitController.GetData().IsDead)
+                   {
+                       _unitTurns.Add(tqi);
+                       totalTurns++;
+                       unitController.GetData().Turns++;
+                   }
                }
-               TurnCycle++;
            }
            OnShuffled?.Invoke(_unitTurns);
 
@@ -75,11 +72,19 @@ namespace _Scripts.Runtime.Combat.Mechanics
        /// </summary>
        public void Consume()
        {
-           _unitTurns.Remove(_unitTurns.Min);
-           SetNextTurns();
+           if (_unitTurns.Count > 0)
+           {
+               _unitTurns.Remove(_unitTurns.Min);
+               SetNextTurns();
+           }
+
        }
-       
-       
+
+
+       public void RemoveUnit(UnitController unitController)
+       {
+           _unitTurns.RemoveWhere(u => u.CurrentUnit == unitController);
+       }
         
 
 

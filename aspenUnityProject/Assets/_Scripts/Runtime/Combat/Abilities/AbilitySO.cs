@@ -108,22 +108,26 @@ namespace _Scripts.Runtime.Combat.Abilities
       [SerializeField] private List<AbstractStatusSO> status; 
       public List<AbstractStatusSO> Status => status;
 
+      [Tooltip("effects executed on the initial target. Examples of effects: damage, damage+status, etc.")]
       [SerializeField] private List<AbilityEffectSO> additionalDEffects = new();  
       public List<AbilityEffectSO> AdditionalDEffects => additionalDEffects;
 
+      [Tooltip("effects executed on the area surrounding the target. Examples of effects: damage, damage+status, etc.")]     
       [SerializeField] private List<AbilityEffectSO> additionalAOEffects = new();
       public List<AbilityEffectSO> AdditionalAOEffects => additionalAOEffects;
 
 
       public void SetName(string name) => abilityName = name;
 
-      //TODO: add logic for additional targets
+      //TODO: add logic in combatmanager for additional targets
       //Change parameters to new CombatContext class if needed (contains all data needed) 
       public virtual void Cast(AbilityContext context)
       {
           context.AbilityData = this;
           if (additionalDEffects != null)
           {
+              //to do damage, add the DamageWStatusEffect or create a new effect if you want a different effect type and add
+              //it to the AdditionalDEffect
               foreach (AbilityEffectSO i in additionalDEffects)
                   i.Execute(context);
           }
@@ -143,18 +147,15 @@ namespace _Scripts.Runtime.Combat.Abilities
                   }
               }
           }
-      
-
-          
       }
 
       /// <summary>
-      /// checks custom range + regular radius range. Override if needed
+      /// checks custom range + regular radius range. 
       /// </summary>
       /// <param name="caster"></param>
       /// <param name="target"></param>
       /// <returns></returns>
-      public virtual bool IsReachable(UnitController caster, TileController target)
+      public bool IsReachable(UnitController caster, TileController target)
       {
           Vector3Int from = caster.TileCoords;
           // use custom range if the ability has one, if not then normal range

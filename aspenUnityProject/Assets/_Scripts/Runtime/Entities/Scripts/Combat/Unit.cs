@@ -59,14 +59,18 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         //TODO: remove and change shit later 
         public CombatClassSO CombatClass { get; protected set; }
         
-        public Dictionary<string, Status> Statuses { get; protected set; }
+        public Dictionary<string, Status> Statuses { get; protected set; } = new Dictionary<string, Status>();
         
-        public List<int> tempStats = new List<int>(); 
-        
+        public List<int> tempStats = new List<int>();
+
         /// <summary>
         /// generic bool for any form of cc. frozen = stunned 
         /// </summary>
-        public bool Stunned { get; protected set; }
+        public bool Stunned { get; private set; } = false;
+
+        public DeathContext Autopsy { get; protected set; } = null;
+        public int Turns { get; set; } = 1;
+
 
 //   public event Action HasDied;
 
@@ -188,6 +192,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public void SetStunned(bool value)
         {
             Stunned = value;
+        }
+
+        public void SetDeathCause(DeathContext death)
+        {
+            Autopsy = death;
         }
 
         /// <summary>

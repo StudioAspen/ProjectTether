@@ -131,8 +131,8 @@ namespace _Scripts.Runtime.Managers
             
             _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
             _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
-            BattleMenuHE.PlayerAction += HandleAction;
-            BattleMenuHE.PlayerSelectiveAction += HandleAction;
+            BattleMenuHE.PlayerWorldAction += HandleWorldAction;
+            BattleMenuHE.PlayerUIAction += HandleUIAction;
             BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;
             _input.NoUICombatActions.Examine.performed += ExamineTile;
             
@@ -143,8 +143,8 @@ namespace _Scripts.Runtime.Managers
 
         private void OnDestroy()
         {
-            BattleMenuHE.PlayerAction -= HandleAction;
-            BattleMenuHE.PlayerSelectiveAction -= HandleAction;
+            BattleMenuHE.PlayerWorldAction -= HandleWorldAction;
+            BattleMenuHE.PlayerUIAction -= HandleUIAction;
             BattleMenuHE.ToggledManualEnemy -= ToggleManualEnemy;
             _input.NoUICombatActions.Examine.performed -= ExamineTile;
             
@@ -287,7 +287,7 @@ namespace _Scripts.Runtime.Managers
         /// Actions that require tile selection lead to SelectTile
         /// </summary>
         /// <param name="action"></param>
-        private void HandleAction(CombatActions action)
+        private void HandleWorldAction(CombatActions action)
         {
             _receivedAction = action;
             UnitController currUnit = CurrentUnit;
@@ -313,19 +313,8 @@ namespace _Scripts.Runtime.Managers
                     if(currUnit.GetData().Faction == Faction.Ally)
                         Overclock(currUnit);
                     return;
-                    /*
-                     * Putting the ability action here till we figure out how to isolate buttons that open a UI Menu - Jason
-                     */
-                case CombatActions.Ability:
-                    Debug.Log("Ability Button Clicked");
-                    //_currentPhase.PushState();
-                    _abilitySelectionPanel.OnSetUp(CurrentUnit);
-                    _abilitySelectionPanel.Open();
-                    Debug.Log(CurrentUnit);
-                    break;
-
                 default:
-                    Debug.Log($"Unknown action: {action}");
+                    Debug.Log($"Action Not Implemented: {action}");
                     return;
             }
         }
@@ -335,22 +324,22 @@ namespace _Scripts.Runtime.Managers
         /// </summary>
         /// <param name="action"></param>
         /// <param name="selection"></param>
-        private void HandleAction(CombatActions action, int selection)
+        private void HandleUIAction(CombatActions action)
         {
             _receivedAction = action;
-            ActionSelection = selection;
             UnitController currUnit = CurrentUnit;
+
             switch (action)
             {
                 case CombatActions.Ability:
                     _currentPhase.PushState();
-                    rangeDisplay.DisplayAbilityRange(TileControllers, currUnit, currUnit.GetData().Moves[selection]);
+                    _abilitySelectionPanel.Intialize(currentUnit: currUnit, rangeDisplay: rangeDisplay, tileController: TileControllers);
                     return;
                 case CombatActions.Item:
-                    Debug.Log($"unknown action: {action}" );
+                    Debug.Log($"Action Not Implemented: {action}" );
                     return;
                 default:
-                    Debug.Log($"Unknown action: {action}");
+                    Debug.Log($"Action Not Implemented: {action}");
                     break;
             }
 //            rangeDisplay.DisplayRange();
@@ -510,7 +499,7 @@ namespace _Scripts.Runtime.Managers
 
         private void ExamineTile(InputAction.CallbackContext context)
         {
-           HandleAction(CombatActions.View);
+           HandleWorldAction(CombatActions.View);
            examinedTile?.Invoke(GetTileController(SelectedTile)); 
         }
 

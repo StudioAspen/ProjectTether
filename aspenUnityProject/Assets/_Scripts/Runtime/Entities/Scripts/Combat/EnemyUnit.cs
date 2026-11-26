@@ -20,29 +20,22 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
          behaviourStates = unit.BehaviourStates;
       }
 
-      public override void DecreaseHealthRemaining(int value)
-      {
-         if (value == 0)
-            return;
-         HealthRemaining -= value;
-         if (HealthRemaining <= 0)
-            IsDead = true;
-      }
 
       public override void EndDefend()
       {
          IsBlocking = false;
       }
 
-      public override void AddStatus(AbstractStatusSO status)
+      public override void AddStatus(StatusContext statusContext)
       {
+         StatusSO status = statusContext.StatusSOData;
          if(Statuses.TryGetValue(status.StatusId, out Status value))
          {
-            value.OnStack(this);
+            value.OnStack();
          }else {
             Status newStatus = new Status(status);
             Statuses.Add(status.StatusId, newStatus);
-            newStatus.OnAdd(this);
+            newStatus.OnAdd();
          } 
       }
 
@@ -52,13 +45,13 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
          List<string> toDelete = new List<string>();                                          
          foreach(var status in Statuses.Values)
          {
-            if (status.Duration == 0)
+            if (status.StatusData.Duration == 0)
             {
-               toDelete.Add(status.StatusData.StatusId);                                    
-               status.OnRemove(this);
+               toDelete.Add(status.StatusData.StatusSOData.StatusId);                                    
+               status.OnRemove();
                continue;
             }                                                                                
-            status.Tick(this);
+            status.Tick();
          }                                                                                    
          foreach (var delete in toDelete)                                                     
             Statuses.Remove(delete);                                                          

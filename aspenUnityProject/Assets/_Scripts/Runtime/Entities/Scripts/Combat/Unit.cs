@@ -72,6 +72,7 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         public int Turns { get; set; } = 1;
 
 
+
 //   public event Action HasDied;
 
         //level will draw from save
@@ -127,19 +128,34 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         /// stat change will only occur when the status is added 
         /// </summary>
         /// <param name="status"></param>
-        public abstract void AddStatus(AbstractStatusSO status);
+        public abstract void AddStatus(StatusContext status);
 
         /// <summary>
         /// triggers per turn. 
         /// </summary>
         public abstract void TriggerStatuses();
 
-        public void RemoveStatus(AbstractStatusSO status)
+        public void RemoveStatus(StatusSO status)
         {
             Statuses.Remove(status.StatusId);
         }
 
-        public abstract void DecreaseHealthRemaining(int value);
+        public bool DecreaseHealthRemaining(int value)
+        {
+            if (value == 0)
+                return false;
+            bool alreadyDead = IsDead;
+            HealthRemaining -= value;
+            if (HealthRemaining <= 0)
+            {
+                IsDead = true;
+            }
+
+            if (alreadyDead)
+                return false;
+            return IsDead;
+        }
+        
         public abstract void ChangeEnergyRemaining(int value);
 
         public void Defend()

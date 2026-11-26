@@ -7,7 +7,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
     public class Terrain
     {
 
-        public AbstractTerrainSO AbstractTerrainData { get; private set; } 
+        public TerrainSO TerrainData { get; private set; } 
         /// <summary>
         /// Duration of the terrain. Negative if duration is infinite.
         /// </summary>
@@ -18,15 +18,15 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         
 
         //TODO: set up new data members 
-        public Terrain(AbstractTerrainSO baseData)
+        public Terrain(TerrainSO baseData)
         {
             Instantiate(baseData);
         }
 
-        private void Instantiate(AbstractTerrainSO baseData) 
+        private void Instantiate(TerrainSO baseData) 
         {
            Duration = baseData.Duration; 
-           AbstractTerrainData = baseData;
+           TerrainData = baseData;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         /// </summary>
         public void OnEnter(UnitController unitController)
         {
-           AbstractTerrainData.OnEnter(unitController); 
+           TerrainData.OnEnter(unitController); 
         }
 
         
@@ -43,7 +43,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         /// </summary>
         public void Execute(UnitController unitController)
         {
-            AbstractTerrainData.Execute(unitController);
+            TerrainData.Execute(unitController);
             Duration--;
 //            CombatFormulas.TerrainDamage(TerrainData.DamageOvertime, TerrainData.DamageTypes, unitController);
             //TODO: summoning not implemented yet

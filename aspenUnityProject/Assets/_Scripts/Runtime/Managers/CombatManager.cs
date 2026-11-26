@@ -211,7 +211,12 @@ namespace _Scripts.Runtime.Managers
         public void ChangeTurn()
         {
             if (_combatOver)
+            {
+                if(_currentPhase != null)
+                    _currentPhase.Exit();
+                _currentPhase = null;
                 return;
+            }
             if (_currentPhase != null)
             {
                 _currentPhase.Exit();
@@ -235,7 +240,10 @@ namespace _Scripts.Runtime.Managers
             }
             else if (CurrentUnit.GetData().Faction == Faction.Enemy)
             {
-//                _currentPhase = _phases[1];
+                _currentPhase = _phases[1];
+
+                //debugging code for enemy phase 
+                /*
                 TurnOrder.Consume();
                 CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
                 while (CurrentUnit.GetData().Faction == Faction.Enemy)
@@ -243,6 +251,7 @@ namespace _Scripts.Runtime.Managers
                     TurnOrder.Consume();
                     CurrentUnit = TurnOrder.GetCurrentTurn().CurrentUnit;
                 }
+                */
             }
             else
                 return;
@@ -417,7 +426,6 @@ namespace _Scripts.Runtime.Managers
         {
             // Camera Event: Focus on the acting unit when an ability is used.
             unitActionStarted?.Invoke(CurrentUnit);
-            TileController epicenter =  TileControllers[TileCubeCoords[SelectedTile]];
             AbilitySO ability = CurrentUnit.GetData().Moves[ActionSelection];
             rangeDisplay.HideRange();
             ability.Cast(ac);
@@ -442,10 +450,10 @@ namespace _Scripts.Runtime.Managers
         private void Overclock(UnitController unit)
         {
             AllyUnit au = (AllyUnit)unit.GetData();
-            au.AddStatus(_actionStatusDic["overclock"]);
+           // au.AddStatus(_actionStatusDic["overclock"]);
             au.Overclock();
-            if(au.OverclockLevel == OverclockTiers.Extreme)
-                au.AddStatus(_actionStatusDic["burnout_0"]);
+           //if(au.OverclockLevel == OverclockTiers.Extreme)
+           //   au.AddStatus(_actionStatusDic["burnout_0"]);
             Debug.Log("overclocking");
             RedoSelection();
         }
@@ -486,13 +494,15 @@ namespace _Scripts.Runtime.Managers
         {
             if (uc.GetData().Autopsy.Murderer == CurrentUnit)
             {
+                /*
                 foreach (var status in CurrentUnit.GetData().Statuses.Values)
                 {
-                    if (status.StatusData.TriggerOnKill)
+                    if (status.StatusSOData.TriggerOnKill)
                     {
                         status.Trigger(CurrentUnit.GetData());
                     }
                 }
+                */
             }
 
             CheckCombatOver();

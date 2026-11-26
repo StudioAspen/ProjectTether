@@ -53,7 +53,7 @@ namespace _Scripts.Runtime
         Debug.Log($"{defender.name} was blocking!");
       }
       damage = GetElementalDamage(damage, attackElements, defenderStats);
-      defenderStats.DecreaseHealthRemaining(Mathf.CeilToInt(damage));
+      defender.TakeDamage(Mathf.CeilToInt(damage));
       if(defenderStats.IsDead)
         defenderStats.SetDeathCause(new DeathContext{DeathCause = DeathCause.Combat, Murderer=attacker});
       Debug.Log(damage);
@@ -112,7 +112,7 @@ namespace _Scripts.Runtime
         Debug.Log($"{defender.name} was blocking!");
       }
       damage = GetElementalDamage(damage, ability.Element, defenderStats);
-      defenderStats.DecreaseHealthRemaining(Mathf.CeilToInt(damage));
+      defender.TakeDamage(Mathf.CeilToInt(damage));
       if(defenderStats.IsDead)
         defenderStats.SetDeathCause(new DeathContext{DeathCause = DeathCause.Combat, Murderer=attacker});
       Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 
@@ -187,12 +187,12 @@ namespace _Scripts.Runtime
     /// <param name="damage"></param>
     /// <param name="damageTypes"></param>
     /// <param name="receiver"></param>
-    public static void StatusDamage(float damage, Element[] damageTypes, Unit receiver)
+    public static void StatusDamage(float damage, Element[] damageTypes, UnitController receiver)
     {
-      damage = GetElementalDamage(damage, damageTypes, receiver);
-      receiver.DecreaseHealthRemaining(Mathf.CeilToInt(damage));
-      if(receiver.IsDead)
-        receiver.SetDeathCause(new DeathContext{DeathCause = DeathCause.Status, Murderer=null}); //todo: setting someone on fire does not currently count as murder 
+      damage = GetElementalDamage(damage, damageTypes, receiver.GetData());
+      receiver.TakeDamage(Mathf.CeilToInt(damage));
+      if(receiver.GetData().IsDead)
+        receiver.GetData().SetDeathCause(new DeathContext{DeathCause = DeathCause.Status, Murderer=null}); //todo: setting someone on fire does not currently count as murder 
     }
 
     /// <summary>
@@ -204,7 +204,7 @@ namespace _Scripts.Runtime
     public static void TerrainDamage(float damage, Element[] damageTypes, UnitController receiver)
     {
       damage = GetElementalDamage(damage, damageTypes, receiver.GetData());
-      receiver.GetData().DecreaseHealthRemaining(Mathf.CeilToInt(damage));
+      receiver.TakeDamage(Mathf.CeilToInt(damage));
       if(receiver.GetData().IsDead) 
         receiver.GetData().SetDeathCause(new DeathContext{DeathCause = DeathCause.Environment, Murderer=null}); //todo: pushing someone onto lava does not currently count as murder
     }

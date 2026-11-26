@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
-namespace _Scripts.Runtime.Combat.Abilities.AdditionalAbilityEffects
+namespace _Scripts.Runtime.Combat.Abilities.AbilityEffects
 {
     [CreateAssetMenu(fileName = "ExampleAbilityEffect" , menuName = "Scriptable Objects/Combat/Abilities/AbilityEffects/ExampleAbilityEffect")]
     public class ExampleAbilityEffectSO : AbilityEffectSO

@@ -15,22 +15,29 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
            _renderer = GetComponent<Renderer>(); 
         }
 
-        public event Action<UnitController> OnDeath; 
         
         //makes more sense to me to have movement-related data in the UnitController 
         //because the controller has access to the actual in-game positions 
         public bool HasMoved { get; protected set; }
         public Vector3Int TileCoords {get; private set;} 
         
+        public event Action<UnitController> OnDeath;
+        
        
         public abstract void Initialize(UnitDataSO baseStats);
 
+        //passing UnitController is more versatile
+        /// <summary>
+        /// invokes action upon death 
+        /// </summary>
+        /// <param name="damage"></param>
         public void TakeDamage(int damage)
         {
-            bool alreadyDead = stats.IsDead;
-            stats.DecreaseHealthRemaining(damage);
-            if (!alreadyDead && stats.IsDead)
-                OnDeath?.Invoke(this);
+            if (stats.DecreaseHealthRemaining(damage))
+            {
+               if(stats.IsDead) 
+                  OnDeath?.Invoke(this); 
+            }
         }
         
         /// <summary>

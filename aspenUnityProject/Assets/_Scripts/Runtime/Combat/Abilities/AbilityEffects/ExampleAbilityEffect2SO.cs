@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Entities.Scripts.Combat;
-using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 
-namespace _Scripts.Runtime.Combat.Abilities.AdditionalAbilityEffects
+namespace _Scripts.Runtime.Combat.Abilities.AbilityEffects
 {
     [CreateAssetMenu(fileName = "ExampleAbilityEffect2" , menuName = "Scriptable Objects/Combat/Abilities/AbilityEffects/ExampleAbilityEffect2")]
     public class ExampleAbilityEffect2SO : AbilityEffectSO

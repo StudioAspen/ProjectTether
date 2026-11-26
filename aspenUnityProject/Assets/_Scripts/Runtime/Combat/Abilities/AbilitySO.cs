@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using _Scripts.Runtime.Combat.Abilities.AdditionalAbilityEffects;
+using _Scripts.Runtime.Combat.Abilities.AbilityEffects;
 using _Scripts.Runtime.Combat.Statuses;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Tile_System.Scripts;
@@ -9,6 +9,13 @@ using UnityEngine;
 
 namespace _Scripts.Runtime.Combat.Abilities
 {
+
+    [Serializable]
+    public class RangeRow
+    {
+       public List<CubeCoordDirections> columns = new List<CubeCoordDirections>();
+    }
+    
     [CreateAssetMenu(fileName = "Ability" , menuName = "Scriptable Objects/Combat/Abilities/Ability")]
     public class AbilitySO : ScriptableObject
     {
@@ -39,7 +46,8 @@ namespace _Scripts.Runtime.Combat.Abilities
 
       [SerializeField] private int _numberOfHits;
       public int NumberOfHits => _numberOfHits;
-
+      
+      //I am not sure what this is used for
       [SerializeField] private BattleParametersList.BattleParameters[] _effectsDueToAbility;
       public BattleParametersList.BattleParameters[] EffectsDueToAbility => _effectsDueToAbility;
 
@@ -97,16 +105,16 @@ namespace _Scripts.Runtime.Combat.Abilities
       [SerializeField] private bool canMiss;
       public bool CanMiss => canMiss;
 
-      [SerializeField] private AbstractTerrainSO tileEffect;
-      public AbstractTerrainSO TileEffect => tileEffect;
+      [SerializeField] private TerrainSO tileEffect;
+      public TerrainSO TileEffect => tileEffect;
 
       // custom range. list of directions walked from the unit's tile
       // e.g. N, N, N = line of 3 tiles north
-      [SerializeField] private List<List<CubeCoordDirections>> customRange;
-      public List<List<CubeCoordDirections>> CustomRange => customRange;
+      [SerializeField] private List<RangeRow> customRange;
+      public List<RangeRow> CustomRange => customRange;
 
-      [SerializeField] private List<AbstractStatusSO> status; 
-      public List<AbstractStatusSO> Status => status;
+      [SerializeField] private List<StatusSO> status; 
+      public List<StatusSO> Status => status;
 
       [Tooltip("effects executed on the initial target. Examples of effects: damage, damage+status, etc.")]
       [SerializeField] private List<AbilityEffectSO> additionalDEffects = new();  
@@ -189,9 +197,9 @@ namespace _Scripts.Runtime.Combat.Abilities
       private bool CalcCustomRange(Vector3Int origin, Vector3Int target)
       {
           Vector3Int current = origin;
-          foreach (List<CubeCoordDirections> l in customRange)
+          foreach (RangeRow l in customRange)
           {
-              foreach (CubeCoordDirections c in l)
+              foreach (CubeCoordDirections c in l.columns)
               {
                   current += c.Vector();
                   if (current == target)

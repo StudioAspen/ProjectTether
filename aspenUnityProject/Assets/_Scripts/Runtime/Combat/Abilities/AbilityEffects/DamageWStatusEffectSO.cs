@@ -29,6 +29,7 @@ namespace _Scripts.Runtime.Combat.Abilities.AbilityEffects
                     foreach (var t in ab.Target.Terrains)
                     {
                         t.TerrainData.OtherTerrainSOData = ab.AbilityData.TileEffect; 
+                        t.CombineWith(t.TerrainData);
                     }
                 }
                 ab.Target.AddTerrain(tContext);

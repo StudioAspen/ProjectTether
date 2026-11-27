@@ -150,6 +150,11 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Statuses.Remove(status.StatusId);
         }
 
+        /// <summary>
+        /// Should not be used instead of TakeDamage. TakeDamage should be the primary way of damaging
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool DecreaseHealthRemaining(int value)
         {
             if (value == 0)

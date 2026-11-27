@@ -12,6 +12,7 @@ namespace _Scripts.Runtime.Combat.Abilities
         public UnitController Caster { get; set; }
         public TileController Target { get; set; }
         public AbilitySO AbilityData { get; set; }
+        
         public BattleUnitsList AllUnitInfo { get; set; }
         public List<TileController> AdditionalTargets {get; set; }
         

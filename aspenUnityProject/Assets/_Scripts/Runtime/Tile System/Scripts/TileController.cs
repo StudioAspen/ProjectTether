@@ -20,10 +20,9 @@ namespace _Scripts.Runtime.Tile_System.Scripts
 
         public Vector3Int tileCoordinate;
 
+        //too lazy to swap to dictionary. n is literally going to be 10 at most in 99% of situations
         public List<Terrain> Terrains { get; private set; } = new List<Terrain>();
         
-        //change to array if unit positions should not change on unit removal. Everything else so far has been an array because
-        //I assumed early on that specific positions within the tile mattered (they don't currently) 
         public List<UnitController> UnitControllers { get; private set; }= new List<UnitController>();
 
         public void Initialize(TerrainSO baseData)

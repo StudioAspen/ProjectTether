@@ -66,7 +66,7 @@ namespace _Scripts.Runtime.Combat.Mechanics
            {
                for (int i = 0; i < units.Count; i++, unitCycle = (unitCycle + i) % units.Count)
                {
-                   if (!units[unitCycle].GetData().IsDead || true)
+                   if (!units[unitCycle].GetData().IsDead)
                    {
                        TurnQueueItem tqi = new TurnQueueItem(units[unitCycle].GetData().Turns, totalTurns, units[unitCycle]);
                        _unitTurns.Add(tqi);

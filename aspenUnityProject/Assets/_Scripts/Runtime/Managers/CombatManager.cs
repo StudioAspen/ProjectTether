@@ -212,6 +212,7 @@ namespace _Scripts.Runtime.Managers
         {
             if (_combatOver)
             {
+                Debug.Log("combat over");
                 if(_currentPhase != null)
                     _currentPhase.Exit();
                 _currentPhase = null;
@@ -492,8 +493,6 @@ namespace _Scripts.Runtime.Managers
         //todo: probably enqueue death effects 
         private void HandleDeath(UnitController uc)
         {
-            if (uc.GetData().Autopsy.Murderer == CurrentUnit)
-            {
                 /*
                 foreach (var status in CurrentUnit.GetData().Statuses.Values)
                 {
@@ -503,10 +502,9 @@ namespace _Scripts.Runtime.Managers
                     }
                 }
                 */
-            }
-
+            Debug.Log($"{uc.GetData().Name} has died");
+            BattleUnitsList.KillUnit(uc);
             CheckCombatOver();
-            Debug.Log("death");
         }
 
 
@@ -520,6 +518,7 @@ namespace _Scripts.Runtime.Managers
             {
                finishedBattle?.Invoke(false);
                _combatOver = true;
+               return;
             }
             if (BattleUnitsList.DeadEnemies >= BattleUnitsList.Enemies.Count)
             {
@@ -530,6 +529,7 @@ namespace _Scripts.Runtime.Managers
                 }
                 finishedBattle?.Invoke(true);
                 _combatOver = true;
+                return;
             }
             _combatOver = false;
         }

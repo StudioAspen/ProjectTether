@@ -86,10 +86,15 @@ namespace _Scripts.Consystently.UI
             announcementCoroutine = null;
         }
 
-        
 
-        public static event Action<CombatActions> PlayerAction;
-        public static event Action<CombatActions, int> PlayerSelectiveAction;
+        /// <summary>
+        /// Event that handles player actions that do not involve UI
+        /// </summary>
+        public static event Action<CombatActions> PlayerWorldAction;
+        /// <summary>
+        /// Event that handles player actions that involve UI
+        /// </summary>
+        public static event Action<CombatActions> PlayerUIAction;
         public static event Action<bool> ToggledManualEnemy;
 
         protected void Awake()
@@ -116,19 +121,19 @@ namespace _Scripts.Consystently.UI
 
             if (_attackButton != null)
                 _attackButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Attack));
+                    () => OnWorldActionButtonClicked(CombatActions.Attack));
 
             if (_defendButton != null)
                 _defendButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Defend));
+                    () => OnWorldActionButtonClicked(CombatActions.Defend));
 
             if (_moveButton != null)
                 _moveButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Move));
+                    () => OnWorldActionButtonClicked(CombatActions.Move));
 
             if (_abilityButton != null)
                 _abilityButton.onClick.AddListener(
-                    () => OnActionButtonClicked(CombatActions.Ability));
+                    () => OnUIActionButtonClicked(CombatActions.Ability));
         }
 
         protected virtual void OnDestroy()
@@ -163,9 +168,13 @@ namespace _Scripts.Consystently.UI
                 MenuManager.Instance.OpenMenu(_menu);
         }
 
-        private void OnActionButtonClicked(CombatActions action)
+        /// <summary>
+        /// Handles action buttons that do not open UI elements
+        /// </summary>
+        /// <param name="action"></param>
+        private void OnWorldActionButtonClicked(CombatActions action)
         {
-            Debug.Log($"[BattleMenuHE] Player confirmed action: {action}");
+            Debug.Log($"[BattleMenuHE] Player World Confirmed Action: {action}");
 
             if (action != CombatActions.Defend)
             {
@@ -174,7 +183,18 @@ namespace _Scripts.Consystently.UI
                 cursor.SetActive(true);
             }
 
-            PlayerAction?.Invoke(action);
+            PlayerWorldAction?.Invoke(action);
+        }
+
+        /// <summary>
+        /// Handles action buttons that do open UI elements
+        /// </summary>
+        /// <param name="action"></param>
+        private void OnUIActionButtonClicked(CombatActions action)
+        {
+            Debug.Log($"[BattleMenuHE] Player UI Confirmed Action: {action}");
+
+            PlayerUIAction?.Invoke(action);
         }
 
         private void HandleUserActions(

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat {

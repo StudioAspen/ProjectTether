@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Characters.Scripts;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Statuses;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -54,13 +55,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             
         }
     
-        //probably do damage formula later either here or in a diff class 
-        public override void ChangeHealthRemaining(int value)
-        {
-            HealthRemaining -= value;
-            if (HealthRemaining <= 0)
-                IsDead = true;
-        }
 
         //TODO: move to suit
         public override void ChangeEnergyRemaining(int value)
@@ -75,47 +69,18 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             //new event action here for end defend animation
         }
 
-        public override void AddStatus(StatusSO status)
-        {
-            if(Statuses.TryGetValue(status.StatusId, out Status value))
-            {
-                value.CountUp(status.Duration);
-                if (status.HasStackableEffects)
-                {
-                    foreach (StatMultiplier sm in status.GetStatMultiplier(CurrentSuit.GetClassType()))
-                        MultiplyEStat(sm.stat, sm.multiplier);                               
-                }
-            }else
-            {
-                Statuses.Add(status.StatusId, new Status(status));
-                foreach (StatMultiplier sm in status.GetStatMultiplier(CurrentSuit.GetClassType()))
-                    MultiplyEStat(sm.stat, sm.multiplier);            
-            } 
-        }
-
-        //TODO: move status effect execution to status class 
         public override void TriggerStatuses()
         {
             List<string> toDelete = new List<string>();
             foreach (var status in Statuses.Values)
             {
-                if (status.Duration == 0)
+                if (status.StatusData.Duration == 0)
                 {
-                    toDelete.Add(status.StatusData.StatusId);
-                    foreach (StatMultiplier sm in status.StatusData.GetStatMultiplier(CurrentSuit.GetClassType()))
-                        RevertEStat(sm.stat, sm.multiplier);
+                    toDelete.Add(status.StatusData.StatusSOData.StatusId);
+                    status.OnRemove();
                     continue;
                 }
-
-                HealthRemaining -= status.StatusData.DamageTakenPerTurn;
-                if (status.StatusData.IsStun)
-                    Stunned = true;
-                status.CountDown(1);
-                foreach (var t in status.StatusData.StatusTimeline)
-                {
-                    if (status.TurnsPassed == t.turnToAdd)
-                        AddStatus(t.statusToAdd);
-                }
+                status.Tick();
             }
             foreach (var delete in toDelete)                                                     
                 Statuses.Remove(delete);                                                         

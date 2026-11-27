@@ -15,20 +15,22 @@ namespace _Scripts.Runtime.Combat.States.ContextData
         public TileController[]  TileControllers { get; private set; }
         public InputSystem_Actions Input { get; private set; }
         
+        
         /// <summary>
         /// General functions the lower states may find useful
         /// </summary>
-        public ICombatFunctionProvider CombatFunctionProvider { get; private set; }
+        public ICombatFunctionProvider cfb { get; private set; }
         
         public List<AllyUnitController> AllyUnits { get; private set; }
 
-        public CombatContext(TileController[] tileControllers,  Dictionary<Vector3Int, int> tileCubeCoords, InputSystem_Actions input, List<AllyUnitController> allyUnits, ICombatFunctionProvider combatFunctionProvider)
+        //just pass selectively instead?
+        public CombatContext(TileController[] tileControllers,  Dictionary<Vector3Int, int> tileCubeCoords, InputSystem_Actions input, List<AllyUnitController> allyUnits, ICombatFunctionProvider cfb)
         {
            TileControllers = tileControllers;
            TileCubeCoords = tileCubeCoords;
            Input = input;
            AllyUnits = allyUnits;
-           CombatFunctionProvider = combatFunctionProvider;
+           this.cfb = cfb;
         }
 
        

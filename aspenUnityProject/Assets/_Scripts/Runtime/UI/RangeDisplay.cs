@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Math;
@@ -56,7 +57,7 @@ namespace _Scripts.Runtime.UI
         {
             for (int ro = 0; ro < rangeObjects.Count; ro++)
             {
-                if (cc.AbilityReachable(ability, tileControllers[ro]))
+                if (ability.IsReachable(cc, tileControllers[ro]))
                 {
                     rangeObjects[ro].SetActive(true);
                     activeObjects.Add(rangeObjects[ro]);

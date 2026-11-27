@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.Animations;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using Codice.CM.WorkspaceServer.DataStore;
 
 namespace Slinky.NodeWeb
@@ -260,6 +261,7 @@ public class CustomGraphView : GraphView
         switch (node)
         {
             case AbilityNodeSO abilityNodeSO:
+                //problem 
                 AbilitySO abilitySO = ScriptableObject.CreateInstance<AbilitySO>();
                 abilityNodeSO.SetAbilitySO(abilitySO);
 

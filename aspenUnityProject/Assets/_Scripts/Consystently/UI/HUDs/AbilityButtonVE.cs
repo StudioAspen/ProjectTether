@@ -1,6 +1,7 @@
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using System;
+using _Scripts.Runtime.Combat.Abilities;
 using UnityEngine;
 using UnityEngine.UI;
 

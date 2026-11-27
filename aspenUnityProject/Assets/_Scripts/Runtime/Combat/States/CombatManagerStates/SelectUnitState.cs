@@ -46,7 +46,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         {
             //tileSelect's input also works for this case
             CombatContext.Input.TileSelect.Enable();
-            if(CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile()).UnitCount() > 0)
+            if(CombatContext.cfb.GetTileController(CombatContext.cfb.GetSelectedTile()).UnitCount() > 0)
                 CombatContext.Input.TileSelect.Move.started += OnMove;
             //use confirm if we want to display details on unit select specifically
             //CombatManager.Input.TileSelect.Confirm.performed += 
@@ -59,8 +59,8 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
 
         public override void Exit()
         {
-            CombatContext.CombatFunctionProvider.ExitExamine(); 
-            if(CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile()).UnitCount() > 0)
+            CombatContext.cfb.ExitExamine(); 
+            if(CombatContext.cfb.GetTileController(CombatContext.cfb.GetSelectedTile()).UnitCount() > 0)
                 CombatContext.Input.TileSelect.Move.started -= OnMove;
             CombatContext.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
             CombatContext.Input.TileSelect.Disable();
@@ -71,10 +71,10 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             initialPos = new Vector2(0, 0);
             Vector2 move = context.ReadValue<Vector2>();
             Vector2 tryMove = initialPos + move;
-            TileController currTileController = CombatContext.CombatFunctionProvider.GetTileController(CombatContext.CombatFunctionProvider.GetSelectedTile());
+            TileController currTileController = CombatContext.cfb.GetTileController(CombatContext.cfb.GetSelectedTile());
             if (dictionaries[currTileController.UnitCount() - 1].ContainsKey(tryMove)){
                 initialPos = tryMove;
-                CombatContext.CombatFunctionProvider.ExamineUnit(
+                CombatContext.cfb.ExamineUnit(
                     currTileController.GetUnitAt(dictionaries[currTileController.UnitCount() - 1][initialPos]));
             }
         }

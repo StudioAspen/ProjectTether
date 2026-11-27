@@ -1,4 +1,5 @@
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using UnityEngine;
 
 namespace Slinky.NodeWeb

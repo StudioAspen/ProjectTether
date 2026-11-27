@@ -20,7 +20,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         public override void Enter()
         {
             CombatContext.Input.TileSelect.Enable();
-            CombatContext.Input.TileSelect.Confirm.performed += CombatContext.CombatFunctionProvider.SelectTile;
+            CombatContext.Input.TileSelect.Confirm.performed += CombatContext.cfb.SelectTile;
             CombatContext.Input.TileSelect.Exit.performed += ((PlayerPhase)BattlePhase).PopState;
             CombatContext.Input.TileSelect.Move.started += OnMove;
             // Notify the camera system that tile selection has started:
@@ -41,12 +41,12 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         private void OnMove(InputAction.CallbackContext context)
         {
             Vector2 move = context.ReadValue<Vector2>();
-            CombatContext.CombatFunctionProvider.MoveTileSelector(move.GetDirection());
+            CombatContext.cfb.MoveTileSelector(move.GetDirection());
         }
 
         public override void Exit()
         {
-            CombatContext.Input.TileSelect.Confirm.performed -= CombatContext.CombatFunctionProvider.SelectTile;
+            CombatContext.Input.TileSelect.Confirm.performed -= CombatContext.cfb.SelectTile;
             CombatContext.Input.TileSelect.Exit.performed -= ((PlayerPhase)BattlePhase).PopState;
             CombatContext.Input.TileSelect.Move.started -= OnMove;
             CombatContext.Input.TileSelect.Disable();

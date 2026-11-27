@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Entities.Scripts.Combat;
 using _Scripts.Runtime.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -20,15 +21,12 @@ namespace _Scripts.Runtime.Combat.Mechanics
 
         private List<UnitController> units;
 
-        /// <summary>
-        /// +=1 every time all units have their turns calculated 
-        /// </summary>
-        public int TurnCycle { get; private set; }
 
         /// <summary>
         /// basic index for ID
         /// </summary>
-        private int totalTurns; 
+        private int totalTurns;
+        private int unitCycle = 0;
 
        public static event Action<SortedSet<TurnQueueItem>> OnShuffled;
 
@@ -36,31 +34,64 @@ namespace _Scripts.Runtime.Combat.Mechanics
         public TurnQueue(List<UnitController> units)
         {
             this.units = units;
-            TurnCycle = 1;
             SetNextTurns();
         }
 
        /// <summary>
-       /// Best explained by the image attached to initiative system in the gdd
+       /// Best explained by the image attached to initiative system in the gdd.
        /// </summary>
        private void SetNextTurns()
        {
-           while (_unitTurns.Count < NUM_TURNS_PRECALCULATED)
+           //Display currently becomes broken eventually, but the display can be fixed by adding a foreach loop and adding each unit in an unbounded set. This is bad for long fights, I think.
+           while(_unitTurns.Count < NUM_TURNS_PRECALCULATED)
            {
-               foreach (UnitController unitController in units)
+               if (!units[unitCycle].GetData().IsDead)
                {
-                   TurnQueueItem tqi = new  TurnQueueItem(TurnCycle, totalTurns, unitController);
-                   _unitTurns.Add(tqi); 
+                   TurnQueueItem tqi = new TurnQueueItem(units[unitCycle].GetData().Turns, totalTurns, units[unitCycle]);
+                   _unitTurns.Add(tqi);
                    totalTurns++;
-                   if (_unitTurns.Count >= NUM_TURNS_PRECALCULATED) 
-                       break;
+                   units[unitCycle].GetData().Turns++;
                }
-               TurnCycle++;
+               unitCycle=(unitCycle+1)%units.Count;
            }
+
            OnShuffled?.Invoke(_unitTurns);
 
        }
 
+       private void SetNextTurn()
+       {
+           bool allUnitsDead = false;
+           while(!allUnitsDead)
+           {
+               for (int i = 0; i < units.Count; i++, unitCycle = (unitCycle + i) % units.Count)
+               {
+                   if (!units[unitCycle].GetData().IsDead)
+                   {
+                       TurnQueueItem tqi = new TurnQueueItem(units[unitCycle].GetData().Turns, totalTurns, units[unitCycle]);
+                       _unitTurns.Add(tqi);
+                       totalTurns++;
+                       units[unitCycle].GetData().Turns++;
+                       unitCycle=(unitCycle+i+1)%units.Count;
+                       /*
+                       foreach (var unc in _unitTurns)
+                       {
+                           Debug.Log($" {unc.Initiative} {unc.GetUnitData().Name}");
+                       }
+                       */
+                       OnShuffled?.Invoke(_unitTurns);
+                       return;
+                   }
+                       
+               }
+               allUnitsDead = true;
+           }
+       }
+
+       /// <summary>
+       /// gets highest prio unit
+       /// </summary>
+       /// <returns></returns>
        public TurnQueueItem GetCurrentTurn()
        {
            return _unitTurns.Min;
@@ -71,11 +102,18 @@ namespace _Scripts.Runtime.Combat.Mechanics
        /// </summary>
        public void Consume()
        {
-           _unitTurns.Remove(_unitTurns.Min);
-           SetNextTurns();
+           if (_unitTurns.Count > 0)
+           {
+               _unitTurns.Remove(_unitTurns.Min);
+               SetNextTurn();
+           }
        }
-       
-       
+
+
+       public void RemoveUnit(UnitController unitController)
+       {
+           _unitTurns.RemoveWhere(u => u.CurrentUnit == unitController);
+       }
         
 
 

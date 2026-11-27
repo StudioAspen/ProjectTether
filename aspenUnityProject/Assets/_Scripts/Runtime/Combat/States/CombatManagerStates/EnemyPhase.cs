@@ -26,7 +26,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         {
             ecb = new EnemyCombatContext(CombatContext, this);
             stateStack.Clear();
-            Euc = (EnemyUnitController)CombatContext.CombatFunctionProvider.GetCurrentUnit();
+            Euc = (EnemyUnitController)CombatContext.cfb.GetCurrentUnit();
             behaviourStates = ((EnemyUnit)Euc.GetData()).behaviourStates;
             PushState();
         }
@@ -67,9 +67,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
             if (stateStack.Count == 0)
                 return;
             stateStack.Pop().Exit(ecb);
-            if(stateStack.Count == 0)
-                Debug.Log("Enemy should be dead before/at this stage in the future implementation"); 
-            else
+            if(stateStack.Count > 0)
                 stateStack.Peek().Enter(ecb);
         }
         
@@ -91,25 +89,21 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
                          .UnitControllers)
             {
                 CombatFormulas.Damage(Euc, Euc.GetData().DefaultAttackTypes(), receiver);
-                CombatContext.CombatFunctionProvider.CheckDead(receiver);
             }
-
-            CombatContext.CombatFunctionProvider.RemoveDead();
-
             return true;
         }
 
         public bool CanMove(Vector3Int from, Vector3Int to, int range)
         {
-            return CombatContext.TileCubeCoords.ContainsKey(to) && CombatContext.CombatFunctionProvider.GetTileController(to).IsMoveable(from, range, Faction.Enemy);
+            return CombatContext.TileCubeCoords.ContainsKey(to) && CombatContext.cfb.GetTileController(to).IsMoveable(from, range, Faction.Enemy);
         }
 
         public void HandleMove(Vector3Int from, Vector3Int to, int range)
         {
             if(!CanMove(from, to, range))
                 return;
-            TileController selectedTile = CombatContext.CombatFunctionProvider.GetTileController(to);
-            selectedTile.AddUnit(CombatContext.CombatFunctionProvider.GetCurrTileController().RemoveUnit(Euc));
+            TileController selectedTile = CombatContext.cfb.GetTileController(to);
+            selectedTile.AddUnit(CombatContext.cfb.GetCurrTileController().RemoveUnit(Euc));
             Euc.TryMove(selectedTile.Position(),selectedTile.tileCoordinate); 
             selectedTile.RepositionUnits();
         }
@@ -117,7 +111,7 @@ namespace _Scripts.Runtime.Combat.States.CombatManagerStates
         //I guess bro
         public ICombatFunctionProvider GetGM()
         {
-            return CombatContext.CombatFunctionProvider;
+            return CombatContext.cfb;
         }
         #endregion
     }

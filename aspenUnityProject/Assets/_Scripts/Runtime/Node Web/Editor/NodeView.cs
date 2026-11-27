@@ -1,4 +1,5 @@
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 using Slinky.NodeWeb;
 using Unity.VectorGraphics;
 using UnityEditor;

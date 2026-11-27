@@ -1,5 +1,6 @@
 using _Scripts.Runtime.Combat;
 using System.Collections.Generic;
+using _Scripts.Runtime.Combat.Abilities;
 using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -9,7 +10,7 @@ namespace _Scripts.Runtime.Characters.Classes.Scripts
     [CreateAssetMenu(fileName = "CombatClass", menuName = "Scriptable Objects/Misc/Combat Class")]
     public class CombatClassSO : ScriptableObject
     {
-    
+         
         //TODO: add stat modifier later 
         [FormerlySerializedAs("className")] [SerializeField] private string _className;
         public string ClassName => _className;

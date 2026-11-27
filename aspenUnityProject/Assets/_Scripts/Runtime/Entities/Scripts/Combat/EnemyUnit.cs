@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.States.CombatManagerStates;
+using _Scripts.Runtime.Combat.Statuses;
 
 //TODO: xp system
 namespace _Scripts.Runtime.Entities.Scripts.Combat
@@ -19,52 +20,25 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
          behaviourStates = unit.BehaviourStates;
       }
 
-      public override void ChangeHealthRemaining(int value)
-      {
-         HealthRemaining -= value;
-         if (HealthRemaining <= 0)
-            IsDead = true;
-      }
 
       public override void EndDefend()
       {
          IsBlocking = false;
       }
 
-      public override void AddStatus(StatusSO status)
-      {
-         if(Statuses.TryGetValue(status.StatusId, out Status value))
-         {
-            value.CountUp(status.Duration);
-            if (status.HasStackableEffects)
-            {
-               foreach(StatMultiplier sm in status.GenericStatsModified)     
-                  MultiplyEStat(sm.stat,sm.multiplier);              
-            }
-         }else
-         {
-            Statuses.Add(status.StatusId, new Status(status));   
-            foreach(StatMultiplier sm in status.GenericStatsModified)     
-               MultiplyEStat(sm.stat,sm.multiplier);
-         } 
-      }
-
+      //probably no longer needs to override. Can maybe move code to abstract class
       public override void TriggerStatuses()
       {
          List<string> toDelete = new List<string>();                                          
-         foreach(var status in Statuses.Values)                                               
-         {                                                                                    
-            HealthRemaining -= status.StatusData.DamageTakenPerTurn;                         
-            if (status.StatusData.IsStun)                                                    
-               Stunned = true;                                                              
-            status.CountDown(1);                                                             
-            if (status.Duration == 0)
+         foreach(var status in Statuses.Values)
+         {
+            if (status.StatusData.Duration == 0)
             {
-               toDelete.Add(status.StatusData.StatusId);                                    
-               foreach (StatMultiplier sm in status.StatusData.GenericStatsModified)
-                  RevertEStat(sm.stat,sm.multiplier);
+               toDelete.Add(status.StatusData.StatusSOData.StatusId);                                    
+               status.OnRemove();
+               continue;
             }                                                                                
-                                                                                          
+            status.Tick();
          }                                                                                    
          foreach (var delete in toDelete)                                                     
             Statuses.Remove(delete);                                                          

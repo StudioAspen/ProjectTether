@@ -27,9 +27,7 @@ namespace _Scripts.Runtime.Combat.Mechanics
         public int CompareTo(TurnQueueItem other)
         {
             if (other is null) return 1;
-            CalcInitiative();
-            other.CalcInitiative();
-            return (Initiative, CurrentUnit, ID).CompareTo((other.Initiative, other.CurrentUnit, ID));
+            return (Initiative, CurrentUnit, ID).CompareTo((other.Initiative, other.CurrentUnit, other.ID));
         }
 
         private void CalcInitiative()

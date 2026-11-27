@@ -25,6 +25,7 @@ namespace _Scripts.Runtime.Combat.Cameras
         //for following the unit when it does an action
         public void PlayAction(UnitController actingUnit)
         {
+            Debug.Log("Action Playback event received");
             //checks if there is a unit
             if (actingUnit == null)
                 return;
@@ -72,6 +73,6 @@ namespace _Scripts.Runtime.Combat.Cameras
             if (virtualCamera != null)
                 virtualCamera.Priority = 0;
         }
- 
+
     }
 }

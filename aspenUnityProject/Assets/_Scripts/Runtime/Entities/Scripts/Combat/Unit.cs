@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
+using _Scripts.Runtime.Combat.Statuses;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
@@ -56,10 +58,19 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         //TODO: remove and change shit later 
         public CombatClassSO CombatClass { get; protected set; }
         
-        public Dictionary<string, Status> Statuses { get; protected set; }
+        public Dictionary<string, Status> Statuses { get; protected set; } = new Dictionary<string, Status>();
         
-        public List<int> tempStats = new List<int>(); 
-        public bool Stunned { get; protected set; }
+        public List<int> tempStats = new List<int>();
+
+        /// <summary>
+        /// generic bool for any form of cc. frozen = stunned 
+        /// </summary>
+        public bool Stunned { get; private set; } = false;
+
+        public DeathContext Autopsy { get; protected set; } = null;
+        public int Turns { get; set; } = 1;
+
+
 
 //   public event Action HasDied;
 
@@ -113,10 +124,21 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         }
 
         /// <summary>
-        /// stat change will only occur when the status is added 
+        /// checks dict before deciding if the status is stacked on an existing status or added as a new status
         /// </summary>
         /// <param name="status"></param>
-        public abstract void AddStatus(StatusSO status);
+        public void AddStatus(StatusContext statusContext)
+        {
+            if(Statuses.TryGetValue(statusContext.StatusSOData.StatusId, out Status value))
+            {
+                value.OnStack();
+            }else
+            {
+                Status newStatus = new Status(statusContext);
+                Statuses.Add(statusContext.StatusSOData.StatusId, newStatus);
+                newStatus.OnAdd();
+            }
+        }
 
         /// <summary>
         /// triggers per turn. 
@@ -128,7 +150,27 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Statuses.Remove(status.StatusId);
         }
 
-        public abstract void ChangeHealthRemaining(int value);
+        /// <summary>
+        /// Should not be used instead of TakeDamage. TakeDamage should be the primary way of damaging
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool DecreaseHealthRemaining(int value)
+        {
+            if (value == 0)
+                return false;
+            bool alreadyDead = IsDead;
+            HealthRemaining -= value;
+            if (HealthRemaining <= 0)
+            {
+                IsDead = true;
+            }
+
+            if (alreadyDead)
+                return false;
+            return IsDead;
+        }
+        
         public abstract void ChangeEnergyRemaining(int value);
 
         public void Defend()
@@ -178,12 +220,21 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Stats[stat].SetEffectiveStat((int)(Stats[stat].EffectiveStat * multiplier));    
         }
 
+        public void SetStunned(bool value)
+        {
+            Stunned = value;
+        }
+
+        public void SetDeathCause(DeathContext death)
+        {
+            Autopsy = death;
+        }
+
         /// <summary>
         /// resets values that should refresh per turn. Should be called at the very start of the turn
         /// </summary>
         public void ResetValues()
         {
-            Stunned = false;
             EndDefend();
         }
 

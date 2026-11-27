@@ -1,4 +1,5 @@
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Statuses;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SkillSO_StandIn", menuName = "Scriptable Objects/Misc/Skill_StandIn")]

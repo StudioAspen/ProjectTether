@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
 
 namespace _Scripts.Runtime.Characters.Scripts
 {
@@ -20,8 +21,10 @@ namespace _Scripts.Runtime.Characters.Scripts
        //dictionary of equipped skills (wrapper skill class for skillSO), key = skill id
        
        
-       //dictionary of equipped abilities, key = ability id 
-       public Dictionary<string, Ability> EquippedAbilities { get; private set; }
+       /// <summary>
+       /// ability id -> ability. modded abilities will probably need to be their own SO, as they have unique effects
+       /// </summary>
+       public Dictionary<string, AbilitySO> EquippedAbilities { get; private set; }
        
 
        /// <summary>
@@ -40,7 +43,7 @@ namespace _Scripts.Runtime.Characters.Scripts
            //add abilities + skills to dictionaries here
        }
 
-       public void EquipAbility(Ability ability)
+       public void EquipAbility(AbilitySO ability)
        {
           if (EquippedAbilities.Count > (AbilityCapacity + 3))
                return;

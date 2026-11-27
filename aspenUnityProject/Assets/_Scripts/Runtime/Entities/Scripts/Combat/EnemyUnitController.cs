@@ -6,7 +6,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
 {
     public class EnemyUnitController : UnitController
     {
-        private EnemyUnit stats;
         
         //encounters to be passed upon player collision 
         [SerializeField] private EncounterSO[] encounters; 
@@ -24,10 +23,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             Debug.Log($"{gameObject.name} initialized with stats instance ID: {stats.GetHashCode()}"); 
         }
 
-        public override void TakeDamage(int damage)
-        {
-            
-        }
 
         public override void TryMove(Vector3 position, Vector3Int coords)
         {

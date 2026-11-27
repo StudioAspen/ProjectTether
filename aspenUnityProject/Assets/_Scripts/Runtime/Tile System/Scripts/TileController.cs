@@ -9,9 +9,9 @@ namespace _Scripts.Runtime.Tile_System.Scripts
 {
     public class TileController : MonoBehaviour
     {
-        [SerializeField] private TileSO baseData;
+        [SerializeField] private TerrainSO baseData;
         
-        private Tile tileData;
+        private Terrain terrainData;
         private const int MAX_UNITS = 4;
         private const float ArbitraryOffset = 5;
 
@@ -19,14 +19,15 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         private int tileNum;
 
         public Vector3Int tileCoordinate;
+
+        //too lazy to swap to dictionary. n is literally going to be 10 at most in 99% of situations
+        public List<Terrain> Terrains { get; private set; } = new List<Terrain>();
         
-        //change to array if unit positions should not change on unit removal. Everything else so far has been an array because
-        //I assumed early on that specific positions within the tile mattered (they don't currently) 
         public List<UnitController> UnitControllers { get; private set; }= new List<UnitController>();
 
-        public void Initialize(TileSO baseData)
+        public void Initialize(TerrainSO baseData)
         {
-            tileData = new Tile(baseData);
+            terrainData = new Terrain(baseData);
         }
             
 
@@ -35,6 +36,10 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             if (UnitControllers.Contains(unitController) || UnitControllers.Count >= MAX_UNITS)
                 return false;
             UnitControllers.Add(unitController);
+            foreach (var t in Terrains)
+            {
+                t.OnEnter(unitController);
+            }
 //            RepositionUnits(ArbitraryOffset);
             return true;
         }
@@ -61,6 +66,14 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             UnitController removed = unitController;
             UnitControllers.Remove(unitController);
             RepositionUnits();
+            if (Terrains.Count < 1)
+            {
+                foreach (var t in Terrains)
+                {
+                    t.OnExit(unitController);
+                }
+            }
+
             return removed;
         }
 
@@ -81,8 +94,11 @@ namespace _Scripts.Runtime.Tile_System.Scripts
                 UnitControllers[unit].Move(transform.position + new Vector3(ArbitraryOffset * -Mathf.Cos(angle), 0, ArbitraryOffset* Mathf.Sin(angle)));
             }
         }
-        
 
+        /// <summary>
+        /// 0-18
+        /// </summary>
+        /// <returns></returns>
         public int Num()
         {
             return tileNum;
@@ -93,7 +109,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             return UnitControllers.Count;
         }
 
-        //currently, units can only move to adjacent tiles 
+        //currently, units can only move to adjacent tiles with the movement button
         public bool IsMoveable(Vector3Int from, int range, Faction faction)
         {
             if (tileCoordinate == from || UnitControllers.Count >= MAX_UNITS || from.HexGridDistance(tileCoordinate) > range)
@@ -104,6 +120,29 @@ namespace _Scripts.Runtime.Tile_System.Scripts
                     return false;
             }
             return true; 
+        }
+
+        public void AddTerrain(TerrainContext TerrainData)
+        {
+            Terrain terrain = new Terrain(TerrainData);
+            Terrains.Add(terrain);
+        }
+
+        /// <summary>
+        /// checks if terrains need to be removed and deletes terrains that need to be deleted
+        /// </summary>
+        public void CheckTerrain()
+        {
+            for (int i = 0; i < Terrains.Count; i++)
+            {
+                if (Terrains[i].TerrainData.Duration == 0)
+                {
+                    int last = Terrains.Count - 1;
+                    if (i < last)
+                        Terrains[i] = Terrains[last];
+                    Terrains.RemoveAt(last); 
+                }
+            }
         }
 
     }

@@ -1,7 +1,10 @@
 using System;
 using _Scripts.Runtime.Combat;
+using _Scripts.Runtime.Combat.Abilities;
+using _Scripts.Runtime.Combat.Statuses;
 using _Scripts.Runtime.Entities.Scripts;
 using _Scripts.Runtime.Entities.Scripts.Combat;
+using _Scripts.Runtime.Tile_System.Scripts;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +13,7 @@ namespace _Scripts.Runtime
 
   public static class CombatFormulas
   {
+    #region unit vs unit
     //TODO: create a separate function for healing?
     public static void Damage(UnitController attacker, Element[] attackElements, UnitController defender)
     {
@@ -32,15 +36,11 @@ namespace _Scripts.Runtime
       else
         damage = MathF.Round(attackerStats.GetEStat(Stat.TEC) * (166f / (166f + defenderStats.GetEStat(Stat.RES))) *
                              Random.Range(0.9f, 1.1f));
-    
-      //Dodge Chance
       if(miss)
       {
         Debug.Log($"{attacker.name} missed!");
         return;
       }
-      //Modifiers
-      //Crit
       if(crit)
       {
         damage*=2f;
@@ -52,10 +52,10 @@ namespace _Scripts.Runtime
         damage = Mathf.Floor(damage * 0.5f);
         Debug.Log($"{defender.name} was blocking!");
       }
-      Debug.Log(damage);
-//      foreach (Element element in attackElements)
-       // damage *= defenderStats.Affinities[element].Multiplier();
-      defenderStats.ChangeHealthRemaining(Mathf.CeilToInt(damage));
+      damage = GetElementalDamage(damage, attackElements, defenderStats);
+      defender.TakeDamage(Mathf.CeilToInt(damage));
+      if(defenderStats.IsDead)
+        defenderStats.SetDeathCause(new DeathContext{DeathCause = DeathCause.Combat, Murderer=attacker});
       Debug.Log(damage);
       Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 
     }
@@ -111,10 +111,10 @@ namespace _Scripts.Runtime
         damage = Mathf.Floor(damage * 0.5f);
         Debug.Log($"{defender.name} was blocking!");
       }
-
-      foreach (Element element in ability.Element)
-        damage *= defenderStats.Affinities[element].Multiplier();
-      defenderStats.ChangeHealthRemaining(Mathf.CeilToInt(damage));
+      damage = GetElementalDamage(damage, ability.Element, defenderStats);
+      defender.TakeDamage(Mathf.CeilToInt(damage));
+      if(defenderStats.IsDead)
+        defenderStats.SetDeathCause(new DeathContext{DeathCause = DeathCause.Combat, Murderer=attacker});
       Debug.Log($"{attackerStats.Name} dealt {Mathf.Ceil(damage)} damage to {defenderStats.Name}. {defenderStats.Name} has {defenderStats.HealthRemaining} HP remaining."); 
     }
 
@@ -136,7 +136,7 @@ namespace _Scripts.Runtime
 
       return crit;
     }
-
+    
     //true = miss. False = hit 
     private static bool Miss(UnitController attacker, UnitController defender)
     {
@@ -165,8 +165,49 @@ namespace _Scripts.Runtime
         return true;
 
     }
+    #endregion
+
+    private static float GetElementalDamage(float damage, Element[] elements, Unit receiver)
+    {
+      float mean = damage;
+      if (elements.Length > 0)
+        mean /= elements.Length;
+      else
+        return mean;
+      float sum = 0f;
+      foreach (Element element in elements)
+        sum += mean * receiver.Affinities[element].Multiplier();
+      return sum;
+    }
     
 
+    /// <summary>
+    /// for damage taken from statuses
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="damageTypes"></param>
+    /// <param name="receiver"></param>
+    public static void StatusDamage(float damage, Element[] damageTypes, UnitController receiver)
+    {
+      damage = GetElementalDamage(damage, damageTypes, receiver.GetData());
+      receiver.TakeDamage(Mathf.CeilToInt(damage));
+      if(receiver.GetData().IsDead)
+        receiver.GetData().SetDeathCause(new DeathContext{DeathCause = DeathCause.Status, Murderer=null}); //todo: setting someone on fire does not currently count as murder 
+    }
+
+    /// <summary>
+    /// for damage taken from terrain
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="damageTypes"></param>
+    /// <param name="receiver"></param>
+    public static void TerrainDamage(float damage, Element[] damageTypes, UnitController receiver)
+    {
+      damage = GetElementalDamage(damage, damageTypes, receiver.GetData());
+      receiver.TakeDamage(Mathf.CeilToInt(damage));
+      if(receiver.GetData().IsDead) 
+        receiver.GetData().SetDeathCause(new DeathContext{DeathCause = DeathCause.Environment, Murderer=null}); //todo: pushing someone onto lava does not currently count as murder
+    }
   }
   
 

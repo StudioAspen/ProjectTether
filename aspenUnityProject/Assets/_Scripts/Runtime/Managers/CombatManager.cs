@@ -123,8 +123,8 @@ namespace _Scripts.Runtime.Managers
             TurnOrder = new TurnQueue(BattleUnitsList.AllUnits); 
             rangeDisplay.Initialize(TileControllers);
             
-            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
-            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, _playerUnits, this));
+            _phases[0] = new PlayerPhase(new CombatContext(TileControllers, TileCubeCoords, _input, BattleUnitsList.Allies, this));
+            _phases[1] = new EnemyPhase(new CombatContext(TileControllers, TileCubeCoords, _input, BattleUnitsList.Allies, this));
             BattleMenuHE.PlayerWorldAction += HandleWorldAction;
             BattleMenuHE.PlayerUIAction += HandleUIAction;
             BattleMenuHE.ToggledManualEnemy += ToggleManualEnemy;

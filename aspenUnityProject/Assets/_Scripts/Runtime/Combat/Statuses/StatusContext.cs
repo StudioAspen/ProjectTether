@@ -27,7 +27,7 @@ namespace _Scripts.Runtime.Combat.Statuses
        public TileController Target { get; set; }
 
        /// <summary>
-       /// may be useful if the status does crazy shit like swapping unit positions 
+       /// may be useful if the status does stuff like swapping unit positions 
        /// </summary>
        public BattleUnitsList AllUnitInfo { get; set; } 
        

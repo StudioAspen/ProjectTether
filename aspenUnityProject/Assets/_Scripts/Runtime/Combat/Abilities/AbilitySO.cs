@@ -134,7 +134,8 @@ namespace _Scripts.Runtime.Combat.Abilities
           context.AbilityData = this;
           if (additionalDEffects != null)
           {
-              //to do damage, add the DamageWStatusEffect or create a new effect if you want a different effect type and add
+              //to do damage, add the DamageWStatusEffect or create a new effect if you want a different effect type.
+              //PLEASE, PLEASE combine effects instead of creating new effects with reused code 
               //it to the AdditionalDEffect
               foreach (AbilityEffectSO i in additionalDEffects)
                   i.Execute(context);

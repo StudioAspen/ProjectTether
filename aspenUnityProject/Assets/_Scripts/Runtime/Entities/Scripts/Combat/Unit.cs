@@ -4,7 +4,6 @@ using _Scripts.Runtime.Characters.Classes.Scripts;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.Abilities;
 using _Scripts.Runtime.Combat.Statuses;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Scripts.Runtime.Entities.Scripts.Combat
@@ -125,10 +124,21 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
         }
 
         /// <summary>
-        /// stat change will only occur when the status is added 
+        /// checks dict before deciding if the status is stacked on an existing status or added as a new status
         /// </summary>
         /// <param name="status"></param>
-        public abstract void AddStatus(StatusContext status);
+        public void AddStatus(StatusContext statusContext)
+        {
+            if(Statuses.TryGetValue(statusContext.StatusSOData.StatusId, out Status value))
+            {
+                value.OnStack();
+            }else
+            {
+                Status newStatus = new Status(statusContext);
+                Statuses.Add(statusContext.StatusSOData.StatusId, newStatus);
+                newStatus.OnAdd();
+            }
+        }
 
         /// <summary>
         /// triggers per turn. 

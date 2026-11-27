@@ -40,6 +40,9 @@ namespace _Scripts.Runtime.Combat.Statuses
            StatusData.StatusSOData.OnAdd(StatusData); 
         }
 
+        /// <summary>
+        /// used in unit
+        /// </summary>
         public void OnStack()
         {
             CountUp(StatusData.Duration);
@@ -55,6 +58,7 @@ namespace _Scripts.Runtime.Combat.Statuses
         public void Tick()
         {
             StatusData.StatusSOData.Tick(StatusData);
+            CountDown(1);
            /*
            StatusData.StatusSOData.Tick(StatusData);
            foreach (var t in StatusData.StatusSOData.StatusTimeline)
@@ -71,6 +75,11 @@ namespace _Scripts.Runtime.Combat.Statuses
         public void OnRemove()
         {
             StatusData.StatusSOData.OnRemove(StatusData);
+        }
+
+        public void Trigger()
+        {
+            StatusData.StatusSOData.Trigger(StatusData);
         }
 
     }

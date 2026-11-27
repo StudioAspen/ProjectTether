@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using _Scripts.Runtime.Combat;
 using _Scripts.Runtime.Combat.Statuses;
+using _Scripts.Runtime.Tile_System.Scripts.TerrainEffects;
 using _Scripts.Runtime.Entities.Scripts.Combat;
+
 using UnityEngine;
 
 namespace _Scripts.Runtime.Tile_System.Scripts
@@ -12,12 +14,12 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         /// <summary>
         /// terrain to be combined with 
         /// </summary>
-        public AbstractTerrainSO toCombine;
+        public TerrainSO toCombine;
         
         /// <summary>
         /// resulting new terrain from combination
         /// </summary>
-        public AbstractTerrainSO fromCombine; 
+        public TerrainSO fromCombine; 
     } 
 
     
@@ -44,12 +46,6 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         [SerializeField] private int _damageOnExit;
         public int DamageOnExit => _damageOnExit;
 
-        [SerializeField] private bool _hasStatusOnEnter;
-        public bool HasStatusOnEnter => _hasStatusOnEnter;
-        
-        [SerializeField] private bool _hasStatusOnExit;
-        public bool HasStatusOnExit => _hasStatusOnExit;
-        
         [Tooltip("statuses that the tile gives units when they step on it")]
         [SerializeField] private List<StatusSO> _statuses;
         public List<StatusSO> Statuses => _statuses;
@@ -65,42 +61,103 @@ namespace _Scripts.Runtime.Tile_System.Scripts
         [Tooltip("lava terrain = fire element, etc.")] 
         [SerializeField] private Element[] _damageTypes;
         public Element[] DamageTypes => _damageTypes;
-        
-        [Tooltip("original+toCombine=fromCombine. Example: oil terrain + fire terrain = burning oil")] 
-        [SerializeField] private List<Combination> _combinations;
+
+        [Tooltip("original+toCombine=fromCombine. Example: oil terrain + fire terrain = burning oil")] [SerializeField]
+        private List<Combination> _combinations = new();
         public List<Combination> Combinations => _combinations;
 
-        public virtual void OnEnter(UnitController unitController)
+        [SerializeField] private int _startingStacks;
+        public int StartingStacks => _startingStacks;
+
+        [SerializeField] private List<TerrainEffectSO> _enterEffects = new();
+        public List<TerrainEffectSO> EnterEffects => _enterEffects;
+
+        [SerializeField] private List<TerrainEffectSO> _standEffects = new();
+        public List<TerrainEffectSO> StandEffects => _standEffects;
+
+        [SerializeField] private List<TerrainEffectSO> _exitEffects = new();
+        public List<TerrainEffectSO> ExitEffects => _exitEffects;
+
+        [SerializeField] private List<TerrainEffectSO> _combineEffects = new();
+        public List<TerrainEffectSO> CombineEffects => _combineEffects;
+
+        [SerializeField] private List<TerrainEffectSO> _dissipateEffects = new();
+        public List<TerrainEffectSO>  DissipateEFfects => _dissipateEffects;
+        
+        /// <summary>
+        /// called whenever a terrain is set under the unit or when they enter.
+        /// example: setting a portal terrain should teleport the unit instantly, so it warps with OnEnter. The ability
+        /// that sets the portal terrain should not teleport the unit and instead leave it to the terrain
+        /// if it creates a teleporting terrain
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="specificUnit"></param>
+        public void OnEnter(TerrainContext context, params UnitController[] specificUnit)
         {
-            if (_hasStatusOnEnter)
+            if (_enterEffects == null)
+                return;
+            foreach (var effect in _enterEffects)
             {
-                foreach (StatusSO status in _statuses)
-                {
-                    unitController.GetData().AddStatus(status);
-                }
+                effect.Execute(context, specificUnit);
             }
-            CombatFormulas.TerrainDamage(DamageOnEnter, DamageTypes, unitController);
         }
 
-        public virtual void Execute(UnitController unitController)
+        /// <summary>
+        /// called next turn when the unit ends their turn on the tile
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnStand(TerrainContext context)
         {
-            foreach (StatusSO status in _statuses)
+           if (_standEffects == null)
+                return;
+           foreach (var effect in _standEffects)
             {
-                unitController.GetData().AddStatus(status);
+                effect.Execute(context);
             }
-            CombatFormulas.TerrainDamage(DamageOvertime, DamageTypes, unitController);
         }
 
-        public virtual void OnExit(UnitController unitController)
+        /// <summary>
+        /// Called on unit leaves the tile
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="specificUnit"></param>
+        public void OnExit(TerrainContext context, params UnitController[] specificUnit)
         {
-            if (_hasStatusOnExit)
+            if (_exitEffects == null)
+                return;
+            foreach (var effect in _exitEffects)
             {
-                foreach (StatusSO status in _statuses)
-                {
-                    unitController.GetData().AddStatus(status);
-                }
+                effect.Execute(context, specificUnit);
             }
-            CombatFormulas.TerrainDamage(DamageOnExit, DamageTypes, unitController); 
+        }
+        
+
+        /// <summary>
+        /// called when A terrain is added to the tile while 
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnCombine(TerrainContext context)
+        {
+            if (_combineEffects == null)
+                return;
+            foreach (var effect in _combineEffects)
+            {
+                effect.Execute(context);
+            }
+        }
+
+        /// <summary>
+        /// called when the terrain effect goes away. 
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnDissipate(TerrainContext context)
+        {
+            if (_combineEffects == null)
+                return;
+            foreach (var effect in _dissipateEffects)
+            {
+                effect.Execute(context);
+            }
         }
 
  

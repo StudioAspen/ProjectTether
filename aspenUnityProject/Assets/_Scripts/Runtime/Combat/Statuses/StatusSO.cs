@@ -106,25 +106,28 @@ namespace _Scripts.Runtime.Combat.Statuses
 
         public List<StatusPoint> StatusTimeline => _statusTimeline;
 
-        [SerializeField] private List<StatusEffectSO> _statusEffectsOnAdd = new();
-        public List<StatusEffectSO> StatusEffectsOnAdd => _statusEffectsOnAdd;
+        [SerializeField] private List<StatusEffectSO> _effectsOnAdd = new();
+        public List<StatusEffectSO> EffectsOnAdd => _effectsOnAdd;
 
-        [SerializeField] private List<StatusEffectSO> _statusEffectsOnTick = new();
-        public List<StatusEffectSO> StatusEffectsOnTick => _statusEffectsOnTick;
+        [SerializeField] private List<StatusEffectSO> _effectsOnTick = new();
+        public List<StatusEffectSO> EffectsOnTick => _effectsOnTick;
 
-        [SerializeField] private List<StatusEffectSO> _statusEffectsOnRemove = new();
-        public List<StatusEffectSO> StatusEffectsOnRemove => _statusEffectsOnRemove;
+        [SerializeField] private List<StatusEffectSO> _effectsOnRemove = new();
+        public List<StatusEffectSO> EffectsOnRemove => _effectsOnRemove;
+
+        [SerializeField] private List<StatusEffectSO> _effectsOnTrigger = new();
+        public List<StatusEffectSO> EffectsOnTrigger => _effectsOnTrigger;
 
 
         /// <summary>
         /// called on add. Needs status effects slotted in the corresponding list to do anything
         /// </summary>
         /// <param name="statusContext"></param>
-        public virtual void OnAdd(StatusContext statusContext)
+        public void OnAdd(StatusContext statusContext)
         {
-            if (_statusEffectsOnAdd == null)
+            if (_effectsOnAdd == null)
                 return;
-            foreach (var s in _statusEffectsOnAdd)
+            foreach (var s in _effectsOnAdd)
             {
                 s.Execute(statusContext);
             }
@@ -135,11 +138,11 @@ namespace _Scripts.Runtime.Combat.Statuses
         /// called per turn 
         /// </summary>
         /// <param name="statusContext"></param>
-        public virtual void Tick(StatusContext statusContext)
+        public void Tick(StatusContext statusContext)
         {
-            if (_statusEffectsOnTick == null)
+            if (_effectsOnTick == null)
                 return;
-            foreach (var s in _statusEffectsOnTick)
+            foreach (var s in _effectsOnTick)
             {
                 s.Execute(statusContext);
             }
@@ -149,14 +152,29 @@ namespace _Scripts.Runtime.Combat.Statuses
         /// called only on removal (either cleansed(?) or run out of duration) 
         /// </summary>
         /// <param name="statusContext"></param>
-        public virtual void OnRemove(StatusContext statusContext)
+        public void OnRemove(StatusContext statusContext)
         {
-            if (_statusEffectsOnRemove== null)
+            if (_effectsOnRemove== null)
                 return;
-            foreach (var s in _statusEffectsOnTick)
+            foreach (var s in _effectsOnRemove)
             {
                 s.Execute(statusContext);
             }
         }
+
+        /// <summary>
+        /// for unique effects that do not trigger per turn, on add, or on remove. Will be called whenever something could trigger an effect
+        /// an example: 
+        /// </summary>
+        public void Trigger(StatusContext statusContext)
+        {
+            if (_effectsOnTrigger == null)
+                return;
+            foreach (var s in _effectsOnTrigger)
+            {
+                s.Execute(statusContext);
+            }
+        }
+        
     }
 }

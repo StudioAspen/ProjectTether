@@ -26,19 +26,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
          IsBlocking = false;
       }
 
-      public override void AddStatus(StatusContext statusContext)
-      {
-         StatusSO status = statusContext.StatusSOData;
-         if(Statuses.TryGetValue(status.StatusId, out Status value))
-         {
-            value.OnStack();
-         }else {
-            Status newStatus = new Status(status);
-            Statuses.Add(status.StatusId, newStatus);
-            newStatus.OnAdd();
-         } 
-      }
-
       //probably no longer needs to override. Can maybe move code to abstract class
       public override void TriggerStatuses()
       {

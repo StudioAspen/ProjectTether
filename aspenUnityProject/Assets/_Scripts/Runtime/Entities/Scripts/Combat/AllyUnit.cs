@@ -69,20 +69,6 @@ namespace _Scripts.Runtime.Entities.Scripts.Combat
             //new event action here for end defend animation
         }
 
-        public override void AddStatus(StatusContext statusContext)
-        {
-            if(Statuses.TryGetValue(statusContext.StatusSOData.StatusId, out Status value))
-            {
-                value.OnStack();
-            }else
-            {
-                Status newStatus = new Status(statusContext);
-                Statuses.Add(statusContext.StatusSOData.StatusId, newStatus);
-                newStatus.OnAdd();
-            } 
-        }
-
-        //TODO: move status effect execution to status class 
         public override void TriggerStatuses()
         {
             List<string> toDelete = new List<string>();

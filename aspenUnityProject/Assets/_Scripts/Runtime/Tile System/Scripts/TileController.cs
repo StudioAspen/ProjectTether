@@ -20,7 +20,7 @@ namespace _Scripts.Runtime.Tile_System.Scripts
 
         public Vector3Int tileCoordinate;
 
-        public Terrain terrain;
+        public List<Terrain> Terrains { get; private set; } = new List<Terrain>();
         
         //change to array if unit positions should not change on unit removal. Everything else so far has been an array because
         //I assumed early on that specific positions within the tile mattered (they don't currently) 
@@ -37,8 +37,10 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             if (UnitControllers.Contains(unitController) || UnitControllers.Count >= MAX_UNITS)
                 return false;
             UnitControllers.Add(unitController);
-            if(terrain != null)
-                terrain.OnEnter(unitController);
+            foreach (var t in Terrains)
+            {
+                t.OnEnter(unitController);
+            }
 //            RepositionUnits(ArbitraryOffset);
             return true;
         }
@@ -65,8 +67,14 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             UnitController removed = unitController;
             UnitControllers.Remove(unitController);
             RepositionUnits();
-            if(terrain != null)
-                terrain.OnExit(unitController);
+            if (Terrains.Count < 1)
+            {
+                foreach (var t in Terrains)
+                {
+                    t.OnExit(unitController);
+                }
+            }
+
             return removed;
         }
 
@@ -115,9 +123,10 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             return true; 
         }
 
-        public void SetTerrain(AbstractTerrainSO terrainSO)
+        public void AddTerrain(TerrainContext TerrainData)
         {
-            terrain = new Terrain(terrainSO);
+            Terrain terrain = new Terrain(TerrainData);
+            Terrains.Add(terrain);
         }
         
 

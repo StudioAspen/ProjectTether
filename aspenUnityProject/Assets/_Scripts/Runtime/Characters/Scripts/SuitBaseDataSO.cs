@@ -9,11 +9,13 @@ namespace _Scripts.Runtime.Characters.Scripts
     [CreateAssetMenu(fileName = "SuitBaseData", menuName = "Scriptable Objects/Misc/SuitBaseData")]
     public class SuitBaseDataSO : ScriptableObject
     {
-        //possibly remove if we decide to use an enum for classes and have them in order
         [Tooltip("check CombatClassType")]
         [SerializeField] private CombatClassType _classType;
 
         public CombatClassType ClassType => _classType;
+        
+        [SerializeField] private CombatClassSO _combatClassData;
+        public CombatClassSO CombatClassData => _combatClassData;
         
         //range limits are arbitrary  
         [SerializeField, Range(10, 150)] private int _energyCapacity; 

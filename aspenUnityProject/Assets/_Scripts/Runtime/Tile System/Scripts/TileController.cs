@@ -127,7 +127,23 @@ namespace _Scripts.Runtime.Tile_System.Scripts
             Terrain terrain = new Terrain(TerrainData);
             Terrains.Add(terrain);
         }
-        
+
+        /// <summary>
+        /// checks if terrains need to be removed and deletes terrains that need to be deleted
+        /// </summary>
+        public void CheckTerrain()
+        {
+            for (int i = 0; i < Terrains.Count; i++)
+            {
+                if (Terrains[i].TerrainData.Duration == 0)
+                {
+                    int last = Terrains.Count - 1;
+                    if (i < last)
+                        Terrains[i] = Terrains[last];
+                    Terrains.RemoveAt(last); 
+                }
+            }
+        }
 
     }
 }

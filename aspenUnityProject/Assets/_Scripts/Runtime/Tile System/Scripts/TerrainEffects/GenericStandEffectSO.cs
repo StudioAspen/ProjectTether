@@ -25,6 +25,8 @@ namespace _Scripts.Runtime.Tile_System.Scripts.TerrainEffects
                 }
                 CombatFormulas.TerrainDamage(tsd.DamageOvertime,tsd.DamageTypes,uc);
             }
+
+            context.Duration--;
         }
     }
 }
